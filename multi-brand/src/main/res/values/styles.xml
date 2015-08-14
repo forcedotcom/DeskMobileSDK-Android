@@ -1,0 +1,129 @@
+<!--
+  Copyright (c) 2015, Salesforce.com, Inc.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without modification, are permitted provided
+  that the following conditions are met:
+
+     Redistributions of source code must retain the above copyright notice, this list of conditions and the
+     following disclaimer.
+
+     Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+     the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+     Neither the name of Salesforce.com, Inc. nor the names of its contributors may be used to endorse or
+     promote products derived from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+  -->
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <!-- Override the action bar theme -->
+        <item name="actionBarTheme">@style/ActionBarTheme</item>
+    </style>
+
+    <!-- Theme to apply to brand 1 activities -->
+    <style name="AppTheme.Brand1">
+
+        <!-- Set the brand id -->
+        <item name="dk_brandId">1</item>
+
+        <!-- Set an accent color -->
+        <item name="colorAccent">@color/brand_1_primary_color</item>
+
+        <!-- Override the action bar theme with a brand specific one -->
+        <item name="actionBarTheme">@style/ActionBarTheme.Brand1</item>
+
+        <!-- Set a custom text appearance for the list items (Topics, Articles) -->
+        <item name="android:textAppearanceListItemSmall">@style/TextAppearanceListItem</item>
+
+        <!-- Override some view styles -->
+        <item name="dk_topicListViewStyle">@style/TopicListViewStyle.Brand1</item>
+        <item name="dk_articleListViewStyle">@style/ArticleListViewStyle.Brand1</item>
+        <item name="dk_contactUsViewStyle">@style/ContactUsViewStyle.Brand1</item>
+        <item name="dk_createCaseSuccessToast">@string/create_case_success_text_brand_1</item>
+        <item name="dk_createCaseErrorToast">@string/create_case_error_text_brand_1</item>
+        <item name="dk_allArticlesSearchQueryHint">@string/all_articles_query_hint_brand_1</item>
+        <item name="dk_articlesOfTopicSearchQueryHint">@string/topic_articles_query_hint_brand_1</item>
+    </style>
+
+    <!-- Theme to apply to brand 2 activities. Note we are extending a different base theme -->
+    <style name="AppTheme.Brand2" parent="Theme.AppCompat">
+
+        <!-- Set the brand id -->
+        <item name="dk_brandId">2</item>
+
+        <!-- Override a few view styles -->
+        <item name="dk_topicListViewStyle">@style/TopicListViewStyle.Brand2</item>
+        <item name="dk_articleListViewStyle">@style/ArticleListViewStyle.Brand2</item>
+        <item name="dk_allArticlesSearchQueryHint">@string/all_articles_query_hint_brand_2</item>
+        <item name="dk_articlesOfTopicSearchQueryHint">@string/topic_articles_query_hint_brand_2</item>
+    </style>
+
+    <style name="TopicListViewStyle.Brand1">
+        <item name="dk_emptyText">@string/topics_empty_text_brand_1</item>
+        <item name="dk_errorText">@string/topics_error_text_brand_1</item>
+    </style>
+
+    <style name="TopicListViewStyle.Brand2">
+        <item name="dk_emptyText">@string/topics_empty_text_brand_2</item>
+        <item name="dk_errorText">@string/topics_error_text_brand_2</item>
+    </style>
+
+    <style name="ArticleListViewStyle.Brand1">
+        <item name="dk_emptyText">@string/articles_empty_text_brand_1</item>
+        <item name="dk_errorText">@string/articles_error_text_brand_1</item>
+    </style>
+
+    <style name="ArticleListViewStyle.Brand2">
+        <item name="dk_emptyText">@string/articles_empty_text_brand_2</item>
+        <item name="dk_errorText">@string/articles_error_text_brand_2</item>
+    </style>
+
+    <style name="ContactUsViewStyle.Brand1">
+        <item name="dk_nameHint">@string/user_name_hint_brand_1</item>
+        <item name="dk_emailHint">@string/user_email_hint_brand_1</item>
+        <item name="dk_feedbackHint">@string/user_feedback_hint_brand_1</item>
+    </style>
+
+    <!-- List item text appearance with a custom text color -->
+    <style name="TextAppearanceListItem" parent="android:TextAppearance.DeviceDefault.Medium">
+
+        <!-- Set the text color to brand 1 primary color -->
+        <item name="android:textColor">@color/brand_1_primary_color</item>
+    </style>
+
+    <!-- Base ActionBar theme -->
+    <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <!-- Tint the icons white -->
+        <item name="colorControlNormal">@android:color/white</item>
+
+        <!-- Set the background to the app primary color -->
+        <item name="colorPrimary">@color/app_primary_color</item>
+    </style>
+
+    <!-- ActionBar theme for brand 1 which uses a light action bar -->
+    <style name="ActionBarTheme.Brand1" parent="ThemeOverlay.AppCompat.ActionBar">
+
+        <!-- Tint the icons to our primary color -->
+        <item name="colorControlNormal">@color/brand_1_primary_color</item>
+
+        <!-- Set the background to white -->
+        <item name="colorPrimary">#fff</item>
+
+        <!-- Set the title text color to our primary color -->
+        <item name="android:textColorPrimary">@color/brand_1_primary_color</item>
+    </style>
+
+</resources>

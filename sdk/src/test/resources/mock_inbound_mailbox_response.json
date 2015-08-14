@@ -1,0 +1,66 @@
+{
+  "total_entries": 2,
+  "page": 1,
+  "_links": {
+    "self": {
+      "href": "/api/v2/mailboxes/inbound?page=1&per_page=50",
+      "class": "page"
+    },
+    "first": {
+      "href": "/api/v2/mailboxes/inbound?page=1&per_page=50",
+      "class": "page"
+    },
+    "last": {
+      "href": "/api/v2/mailboxes/inbound?page=1&per_page=50",
+      "class": "page"
+    },
+    "previous": null,
+    "next": null
+  },
+  "_embedded": {
+    "entries": [
+      {
+        "id": 121234,
+        "name": "SFDCMation Support",
+        "hostname": "postmarkapp.com",
+        "email": "2fb018115c9f7b5dd58eec4ed7f60431@zzz-sfdcmation.desk-mail.com",
+        "last_checked_at": null,
+        "created_at": "2015-04-02T17:49:55Z",
+        "updated_at": "2015-07-17T22:11:05Z",
+        "last_error": null,
+        "inbound_address_filter": "",
+        "outbound_address_filter": "",
+        "port": "443",
+        "enabled": true,
+        "type": "postmark",
+        "_links": {
+          "self": {
+            "href": "/api/v2/mailboxes/inbound/121234",
+            "class": "inbound_mailbox"
+          }
+        }
+      },
+      {
+        "id": 121406,
+        "name": "SFDCMation Gmail",
+        "hostname": "imap.gmail.com",
+        "email": "sfdcmation@gmail.com",
+        "last_checked_at": "2015-08-11T14:51:40Z",
+        "created_at": "2015-04-04T02:45:46Z",
+        "updated_at": "2015-08-06T17:48:35Z",
+        "last_error": null,
+        "inbound_address_filter": "",
+        "outbound_address_filter": "",
+        "port": "993",
+        "enabled": true,
+        "type": "imaps",
+        "_links": {
+          "self": {
+            "href": "/api/v2/mailboxes/inbound/121406",
+            "class": "inbound_mailbox"
+          }
+        }
+      }
+    ]
+  }
+}

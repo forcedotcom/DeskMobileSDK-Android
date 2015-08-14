@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2015, Salesforce.com, Inc.
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without modification, are permitted provided
+  that the following conditions are met:
+
+     Redistributions of source code must retain the above copyright notice, this list of conditions and the
+     following disclaimer.
+
+     Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+     the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+     Neither the name of Salesforce.com, Inc. nor the names of its contributors may be used to endorse or
+     promote products derived from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+  -->
+<resources>
+
+    <!-- The style to apply to a TopicsView -->
+    <attr name="dk_topicListViewStyle" format="reference"/>
+
+    <!-- The style to apply to a ArticlesView -->
+    <attr name="dk_articleListViewStyle" format="reference"/>
+
+    <!-- The style to apply to a ContactUsView -->
+    <attr name="dk_contactUsViewStyle" format="reference"/>
+
+    <!-- The style to apply to EditText fields in a ContactUsView -->
+    <attr name="dk_contactUsEditTextStyle" format="reference"/>
+
+    <!-- The brand id to limit topics & articles to -->
+    <attr name="dk_brandId" format="integer"/>
+
+    <!-- The text to toast when a case has been created successfully -->
+    <attr name="dk_createCaseSuccessToast" format="string"/>
+
+    <!-- The text to toast when an error occurs while attempting to create a case -->
+    <attr name="dk_createCaseErrorToast" format="string"/>
+
+    <!-- The hint for the SearchView when searching all articles -->
+    <attr name="dk_allArticlesSearchQueryHint" format="string"/>
+
+    <!-- The hint for the SearchView when searching articles of a specific topic -->
+    <attr name="dk_articlesOfTopicSearchQueryHint" format="string"/>
+
+    <!-- Text displayed when there are no results in a list view -->
+    <attr name="dk_emptyText" format="string"/>
+
+    <!-- Text displayed when an error occurs while trying to load list items -->
+    <attr name="dk_errorText" format="string"/>
+
+    <!-- Attributes for a TopicListView -->
+    <declare-styleable name="TopicListView">
+        <!-- Text to display when there are no topics -->
+        <attr name="dk_emptyText"/>
+        <!-- Text to display when an error occurs while loading topics -->
+        <attr name="dk_errorText"/>
+    </declare-styleable>
+
+    <!-- Attributes for a ArticleListView -->
+    <declare-styleable name="ArticleListView">
+        <!-- Text to display when there are no articles -->
+        <attr name="dk_emptyText"/>
+        <!-- Text to display when an error occurs while loading articles -->
+        <attr name="dk_errorText"/>
+    </declare-styleable>
+
+    <!-- Attributes for a ContactUsView -->
+    <declare-styleable name="ContactUsView">
+        <!-- The hint for the user name EditText form field -->
+        <attr name="dk_nameHint" format="string"/>
+        <!-- The hint for the user email address EditText form field -->
+        <attr name="dk_emailHint" format="string"/>
+        <!-- The hint for the subject EditText form field -->
+        <attr name="dk_subjectHint" format="string"/>
+        <!-- The hint for the feedback / message EditText form field -->
+        <attr name="dk_feedbackHint" format="string"/>
+    </declare-styleable>
+
+</resources>

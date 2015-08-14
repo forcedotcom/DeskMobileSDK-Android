@@ -1,0 +1,240 @@
+{
+  "page": 1,
+  "total_entries": 9,
+  "_links": {
+    "self": {
+      "class": "page",
+      "href": "/api/v2/topics?in_support_center=true&page=1&per_page=50&sort_direction=ASC"
+    },
+    "first": {
+      "class": "page",
+      "href": "/api/v2/topics?in_support_center=true&page=1&per_page=50&sort_direction=ASC"
+    },
+    "last": {
+      "class": "page",
+      "href": "/api/v2/topics?in_support_center=true&page=1&per_page=50&sort_direction=ASC"
+    },
+    "next": null,
+    "previous": null
+  },
+  "_embedded": {
+    "entries": [
+      {
+        "id": 22,
+        "name": "Sample :: General",
+        "description": "Sample Topic Description :: Information about our company",
+        "position": 1,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-07-24T17:41:40Z",
+        "created_at": "2015-07-16T17:28:32Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/22"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/22/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/22/translations"
+          }
+        }
+      },
+      {
+        "id": 23,
+        "name": "Canned Responses",
+        "description": "Internal responses to common questions",
+        "position": 2,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-07-24T17:41:40Z",
+        "created_at": "2015-07-16T17:28:32Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/23"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/23/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/23/translations"
+          }
+        }
+      },
+      {
+        "id": 24,
+        "name": "Sample :: Products",
+        "description": "Sample Topic Description :: Information about our products",
+        "position": 3,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-07-24T17:41:40Z",
+        "created_at": "2015-07-16T17:28:32Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/24"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/24/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/24/translations"
+          }
+        }
+      },
+      {
+        "id": 614,
+        "name": "10 Small Acts in a Relationship That Are Actually a Really Big Deal",
+        "description": "",
+        "position": 5,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-08-03T22:44:52Z",
+        "created_at": "2015-07-20T23:24:49Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/614"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/614/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/614/translations"
+          }
+        }
+      },
+      {
+        "id": 615,
+        "name": "Pear :: Articles",
+        "description": "",
+        "position": 7,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-07-24T17:41:40Z",
+        "created_at": "2015-07-21T21:35:51Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/615"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/615/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/615/translations"
+          }
+        }
+      },
+      {
+        "id": 616,
+        "name": "Banana :: Articles",
+        "description": "",
+        "position": 8,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-07-24T17:41:40Z",
+        "created_at": "2015-07-21T21:36:08Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/616"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/616/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/616/translations"
+          }
+        }
+      },
+      {
+        "id": 617,
+        "name": "Grapes :: Articles",
+        "description": "",
+        "position": 9,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-07-24T17:41:40Z",
+        "created_at": "2015-07-21T21:36:23Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/617"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/617/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/617/translations"
+          }
+        }
+      },
+      {
+        "id": 632,
+        "name": "101 EASY WAYS TO SAY NO",
+        "description": "",
+        "position": 6,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-07-24T17:41:40Z",
+        "created_at": "2015-07-23T16:13:33Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/632"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/632/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/632/translations"
+          }
+        }
+      },
+      {
+        "id": 639,
+        "name": "SFDCMation :: Automation",
+        "description": "",
+        "position": 4,
+        "allow_questions": true,
+        "in_support_center": true,
+        "updated_at": "2015-07-24T17:41:40Z",
+        "created_at": "2015-07-24T02:46:17Z",
+        "_links": {
+          "self": {
+            "class": "kb_topic",
+            "href": "/api/v2/kb_topic/639"
+          },
+          "articles": {
+            "class": "article",
+            "href": "/api/v2/kb_topic/639/articles"
+          },
+          "translations": {
+            "class": "topic_translation",
+            "href": "/api/v2/kb_topic/639/translations"
+          }
+        }
+      }
+    ]
+  }
+}

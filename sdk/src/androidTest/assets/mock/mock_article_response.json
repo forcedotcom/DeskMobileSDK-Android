@@ -1,0 +1,126 @@
+{
+  "total_entries": 2,
+  "page": 1,
+  "_links": {
+    "self": {
+      "href": "/api/v2/articles/search?in_support_center=true&page=1&per_page=25&sort_direction=asc&sort_field=position&topic_ids=782168",
+      "class": "page"
+    },
+    "first": {
+      "href": "/api/v2/articles/search?in_support_center=true&page=1&per_page=25&sort_direction=asc&sort_field=position&topic_ids=782168",
+      "class": "page"
+    },
+    "last": {
+      "href": "/api/v2/articles/search?in_support_center=true&page=1&per_page=25&sort_direction=asc&sort_field=position&topic_ids=782168",
+      "class": "page"
+    },
+    "previous": null,
+    "next": null
+  },
+  "_embedded": {
+    "entries": [
+      {
+        "id": 1935902,
+        "locale": "en",
+        "subject": "Sample :: Customizing your Portal",
+        "body": "<p> This is sample content to show you the capabilities of Desk.com&#39;s &nbsp;dynamic articles. &nbsp;The articles and questions are driven from the multi-channel knowledge base to ensure that your customer&#39;s receive a consistent response. &nbsp;To find out more, visit our <a href=\"http://www.desk.com/product-unified-knowledge-base.html\">website</a>.</p> <hr /> <ul> <li> To make the Portal look like your website, read the Desk.com <a href=\"http://support.desk.com/faq/article/1547\">Customizing Portal Themes Article</a></li> <li> To change the content to be your own, read the Desk.com <a href=\"http://support.desk.com/faq/article/1572\">Managing Knowledge Base Articles</a>.&nbsp;</li> </ul> <hr /> <p> The Articles can contain rich content such as pictures or videos.<br /> &nbsp;</p> <p> <iframe width=\"560\" height=\"315\" src=\"http://www.youtube.com/embed/6c3_zSCGGzQ\" frameborder=\"0\" allowfullscreen></iframe> </p>",
+        "body_email": "This is sample content to show you the capabilities of Desk.com's  dynamic articles.  The articles and questions are driven from the multi-channel knowledge base to ensure that your customer's receive a consistent response.  To find out more, visit our website (http://www.desk.com/product-unified-knowledge-base.html).      To make the Portal look like your website, read the Desk.com Customizing Portal Themes Article (http://support.desk.com/faq/article/1547)    To change the content to be your own, read the Desk.com Managing Knowledge Base Articles (http://support.desk.com/faq/article/1572).       The Articles can contain rich content such as pictures or videos.",
+        "body_email_auto": true,
+        "body_chat": "This is sample content to show you the capabilities of Desk.com's  dynamic articles.  The articles and questions are driven from the multi-channel knowledge base to ensure that your customer's receive a consistent response.  To find out more, visit o... https://zzz-sfdcmation.desk.com/customer/portal/articles/1935902-sample-customizing-your-portal",
+        "body_chat_auto": true,
+        "body_web_callback": null,
+        "body_web_callback_auto": true,
+        "body_twitter": "This is sample content to show you the capabilities of Desk.com's  dynamic articles.  The articles and questions ... https://zzz-sfdcmation.desk.com/customer/portal/articles/1935902-sample-customizing-your-portal",
+        "body_twitter_auto": true,
+        "body_qna": "This is sample content to show you the capabilities of Desk.com's  dynamic articles.  The articles and questions are driven from the multi-channel knowledge base to ensure that your customer's receive a consistent response.  To find out more, visit our website.      To make the Portal look like your website, read the Desk.com Customizing Portal Themes Article    To change the content to be your own, read the Desk.com Managing Knowledge Base Articles.       The Articles can contain rich content such as pictures or videos.",
+        "body_qna_auto": true,
+        "body_phone": "This is sample content to show you the capabilities of Desk.com's  dynamic articles.  The articles and questions are driven from the multi-channel knowledge base to ensure that your customer's receive a consistent response.  To find out more, visit our website.      To make the Portal look like your website, read the Desk.com Customizing Portal Themes Article    To change the content to be your own, read the Desk.com Managing Knowledge Base Articles.       The Articles can contain rich content such as pictures or videos.",
+        "body_phone_auto": true,
+        "body_facebook": "This is sample content to show you the capabilities of Desk.com's  dynamic articles.  The articles and questions are driven from the multi-channel knowledge base to ensure that your customer's receive a consistent response.  To find out more, visit our website.      To make the Portal look like your website, read the Desk.com Customizing Portal Themes Article    To change the content to be your own, read the Desk.com Managing Knowledge Base Articles.       The Articles can contain rich content such as pictures or videos.",
+        "body_facebook_auto": true,
+        "rating": 0,
+        "rating_count": 0,
+        "rating_score": 0,
+        "keywords": null,
+        "position": 1,
+        "quickcode": "PORTAL",
+        "publish_at": "2015-04-02T17:49:43Z",
+        "updated_at": "2015-04-02T17:49:43Z",
+        "created_at": "2015-04-02T17:49:43Z",
+        "in_support_center": true,
+        "internal_notes": null,
+        "public_url": "https://zzz-sfdcmation.desk.com/customer/en/portal/articles/1935902-sample-customizing-your-portal",
+        "_links": {
+          "self": {
+            "href": "/api/v2/articles/1935902",
+            "class": "article"
+          },
+          "topic": {
+            "href": "/api/v2/topics/782168",
+            "class": "topic"
+          },
+          "translations": {
+            "href": "/api/v2/articles/1935902/translations",
+            "class": "article_translation"
+          },
+          "attachments": {
+            "href": "/api/v2/articles/1935902/attachments",
+            "class": "attachment",
+            "count": 0
+          }
+        }
+      },
+      {
+        "id": 1935903,
+        "locale": "en",
+        "subject": "Sample :: Contact Us",
+        "body": "<p> Insert your own contact information.</p> <p> <iframe frameborder=\"0\" height=\"250\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=425+2nd+St,+San+Francisco,+CA+94107&sll=37.0625,-95.677068&sspn=47.435825,96.943359&ie=UTF8&hq=&hnear=425+2nd+St,+San+Francisco,+California+94107&ll=37.792694,-122.391987&spn=0.016957,0.055704&z=14&iwloc=A&output=embed\" width=\"650\"></iframe><br /> <small><a href=\"http://maps.google.com/maps?f=q&source=embed&hl=en&geocode=&q=425+2nd+St,+San+Francisco,+CA+94107&sll=37.0625,-95.677068&sspn=47.435825,96.943359&ie=UTF8&hq=&hnear=425+2nd+St,+San+Francisco,+California+94107&ll=37.792694,-122.391987&spn=0.016957,0.055704&z=14&iwloc=A\" style=\"color:#0000FF;text-align:left\">View Larger Map</a></small></p>",
+        "body_email": "Insert your own contact information.\n\n \nView Larger Map (http://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=425+2nd+St,+San+Francisco,+CA+94107&amp;sll=37.0625,-95.677068&amp;sspn=47.435825,96.943359&amp;ie=UTF8&amp;hq=&amp;hnear=425+2nd+St,+San+Francisco,+California+94107&amp;ll=37.792694,-122.391987&amp;spn=0.016957,0.055704&amp;z=14&amp;iwloc=A)",
+        "body_email_auto": true,
+        "body_chat": "Insert your own contact information. View Larger Map https://zzz-sfdcmation.desk.com/customer/portal/articles/1935903-sample-contact-us",
+        "body_chat_auto": true,
+        "body_web_callback": null,
+        "body_web_callback_auto": true,
+        "body_twitter": "Insert your own contact information.    View Larger Map",
+        "body_twitter_auto": true,
+        "body_qna": "Insert your own contact information.\n\n \nView Larger Map",
+        "body_qna_auto": true,
+        "body_phone": "Insert your own contact information.\n\n \nView Larger Map",
+        "body_phone_auto": true,
+        "body_facebook": "Insert your own contact information.\n\n \nView Larger Map",
+        "body_facebook_auto": true,
+        "rating": 0,
+        "rating_count": 0,
+        "rating_score": 0,
+        "keywords": null,
+        "position": 2,
+        "quickcode": "CONTACT",
+        "publish_at": "2015-04-02T17:49:43Z",
+        "updated_at": "2015-04-02T17:49:43Z",
+        "created_at": "2015-04-02T17:49:43Z",
+        "in_support_center": true,
+        "internal_notes": null,
+        "public_url": "https://zzz-sfdcmation.desk.com/customer/en/portal/articles/1935903-sample-contact-us",
+        "_links": {
+          "self": {
+            "href": "/api/v2/articles/1935903",
+            "class": "article"
+          },
+          "topic": {
+            "href": "/api/v2/topics/782168",
+            "class": "topic"
+          },
+          "translations": {
+            "href": "/api/v2/articles/1935903/translations",
+            "class": "article_translation"
+          },
+          "attachments": {
+            "href": "/api/v2/articles/1935903/attachments",
+            "class": "attachment",
+            "count": 0
+          }
+        }
+      }
+    ]
+  }
+}
