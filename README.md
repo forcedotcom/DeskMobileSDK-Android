@@ -16,7 +16,18 @@ Currently, the DeskKit Android SDK supports the following features:
 The DeskKit Android SDK supports Android API level 16 (Jelly Bean, 4.1) and up.
 
 ## Installation
-TODO - we need to have the SDK & Java API Client available in a central repo before writing this section
+
+Place code in your `build.gradle`
+
+```gradle
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile 'com.desk:sdk:1.0.0'
+}
+```
 
 ## Configuration
 The main class you will interface with in the SDK is the `Desk` class. You can get the `Desk` singleton by calling `Desk.with(Context context)`. In order for the `Desk` class to work properly you will first need to configure it to work with your site and authenticate with the Desk.com API.
