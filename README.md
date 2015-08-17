@@ -1,6 +1,3 @@
-# DeskKit Android SDK
-DISCLAIMER: The DeskKit SDK is in Private Customer Pilot. It does not work out-of-box without a prior arrangement with the Desk.com product team. If you are interested in participating in the Private Customer Pilot, please send an email to jpappas@salesforce.com.
-
 # Introduction
 The DeskKit Android SDK is an easy way to get customer support into your app. With just a few lines of code you will be able incorporate your Desk site's support center and allow your users to submit tickets / create cases natively within your app.
 
@@ -38,15 +35,15 @@ Once you have obtained your API token you can configure the `Desk` instance for 
 * Properties based configuration
     1. Create a `desk.properties` file in your app's `assets` directory.
     2. Add the `desk.api.token` & `desk.hostname` properties as follows:
-        
+
         ```
         desk.api.token = <your_api_token>
-        desk.hostname = <your_site_hostname> 
+        desk.hostname = <your_site_hostname>
         # example hostname: mysite.desk.com
         ```
 * Java based configuration
     1. Create a `DeskConfig` object and call `setConfig(DeskConfig config)` on your `Desk` instance, passing your `DeskConfig` object, as follows:
-    
+
     ```
     Desk.with(getApplicationContext()).setConfig(new DeskConfig() {
             @Override
@@ -61,7 +58,7 @@ Once you have obtained your API token you can configure the `Desk` instance for 
             }
         });
     ```
-               
+
 You can configure your `Desk` instance wherever you see fit, we recommend you do so in your `Application` class or your main `Activity`.
 
 Once you have completed one of the options above your `Desk` instance will be ready to communicate with the Desk.com API.
@@ -80,7 +77,7 @@ Once the above configuration is completed there are only two more things to do t
 	    android:name="com.desk.android.sdk.activity.ArticleActivity"/>
 	<activity
 	    android:name="com.desk.android.sdk.activity.ContactUsActivity"
-	    android:label="@string/contact_us_form_activity_title"/>	
+	    android:label="@string/contact_us_form_activity_title"/>
     ...
 </application>
 ```
@@ -96,7 +93,7 @@ Once you've defined the activities in your manifest, you will need to launch the
 ```
 TopicListActivity.start(this);
 ```
-Launching `TopicListActivity` will display a list of topics for the user to choose from. Once they select a topic, `ArticleListActivity` will be launched and they will see a list of articles within the topic. Selecting an article will launch `ArticleActivity` which will display the article for them to read. 
+Launching `TopicListActivity` will display a list of topics for the user to choose from. Once they select a topic, `ArticleListActivity` will be launched and they will see a list of articles within the topic. Selecting an article will launch `ArticleActivity` which will display the article for them to read.
 
 Your users' device locale will be used to determine which language the topics & articles will be translated to as long as your Support Center supports the language.
 
@@ -104,10 +101,12 @@ The user can also search across all articles while looking at topics within the 
 
 Finally, a Contact Us help icon will be available in the ActionBar for the user to tap on if they need additional help. Selecting this will launch the `ContactUsActivity` which displays a native form for the user to leave feedback or submit an issue, which will in return create a case within Desk. The form will ask the user for an *optional* name, *required* email address, and *required* message. Tapping the submit ActionBar icon will create a case within Desk and return the user to the activity they were at prior to launching the `ContactUsActivity`.
 
-This is all you need to do to get a basic Support Center and Contact Us option within your app. 
+This is all you need to do to get a basic Support Center and Contact Us option within your app.
 
 ## Sample Apps
 If you would like to see the SDK in action you can check out the sample apps in the `basic/` & `multi-brand/` folders. The samples will show you the flow between each activity as described above, as well as give you examples on some of the more advanced topics like contact us configuration, custom styles & themes, and supporting multiple brands.
 
 ## Advanced Topics
-The SDK also supports further configuration and customization such as enabling and disabling various features, theming, multiple brands and more. To find out how to further customize the SDK please refer to the Wiki.
+The SDK also supports further configuration and customization such as enabling and disabling various features, theming, multiple brands and more. To find out how to further customize the SDK please refer to the [Wiki][1].
+
+[1]: https://github.com/forcedotcom/DeskMobileSDK-Android/wiki
