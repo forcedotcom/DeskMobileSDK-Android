@@ -10,7 +10,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url System.getenv('HOME') + "/.m2/repository/" }
         jcenter()
     }
 }
