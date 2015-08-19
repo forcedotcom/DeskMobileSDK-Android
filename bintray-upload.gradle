@@ -52,12 +52,15 @@ artifacts {
     archives sourcesJar
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('bintray.properties').newDataInputStream())
+Properties props = new Properties()
+File file = project.rootProject.file('bintray.properties');
+if (file.exists()) {
+    props.load(file.newDataInputStream())
+}
 
 bintray {
-    user = properties.getProperty('bintray.user')
-    key = properties.getProperty('bintray.apikey')
+    user = props.getProperty('bintray.user')
+    key = props.getProperty('bintray.apikey')
     configurations = ['archives']
     pkg {
         userOrg = bintrayOrg
