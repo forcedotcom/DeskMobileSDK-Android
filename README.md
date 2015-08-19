@@ -13,6 +13,7 @@ Currently, the DeskKit Android SDK supports the following features:
 The DeskKit Android SDK supports Android API level 16 (Jelly Bean, 4.1) and up.
 
 ## Installation
+[![Download](https://api.bintray.com/packages/desk/public/sdk/images/download.svg)](https://bintray.com/desk/public/sdk/_latestVersion)
 
 Place code in your `build.gradle`
 
@@ -22,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.desk:sdk:1.0.0'
+  compile 'com.desk:sdk:1.0.1'
 }
 ```
 
