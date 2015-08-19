@@ -1,16 +1,27 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.desk'
-version = '1.0.0'
+version = System.properties['version'] == null ? '0-SNAPSHOT' : System.properties['version'] as String
+
+ext {
+    projectName = 'Desk Android SDK'
+    bintrayOrg = 'desk'
+    bintrayRepo = 'public'
+    bintrayName = 'sdk'
+    siteUrl = 'https://github.com/forcedotcom/DeskMobileSDK-Android'
+    gitUrl = 'scm:git:git@github.com:forcedotcom/DeskMobileSDK-Android.git'
+    licenseName = 'The BSD 3-Clause License'
+    licenseUrl = 'http://opensource.org/licenses/BSD-3-Clause'
+    tag = 'v' + version
+}
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "23.0.0 rc3"
+    compileSdkVersion projectCompileSdkVersion
+    buildToolsVersion projectBuildToolsVersion
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion projectMinSdkVersion
+        targetSdkVersion projectTargetSdkVersion
         versionCode 1
         versionName version
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -35,9 +46,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-annotations:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.desk:api-client:1.0.0'
+    compile 'com.android.support:support-annotations:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.desk:api-client:1.0.1'
 
     // instrumentation test dependencies
     androidTestCompile 'com.android.support.test:runner:0.3'
@@ -54,28 +65,6 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    title = 'Desk Android SDK' + ' ' + version + ' API'
-    options {
-        links "http://docs.oracle.com/javase/7/docs/api/"
-        linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
-    }
-    failOnError false
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
+apply from: '../mvn-install.gradle'
+apply from: '../git-tag.gradle'
+apply from: '../bintray-upload.gradle'

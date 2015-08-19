@@ -9,3 +9,4 @@ sdk/.gitignore
 sample/.gitignore
 *.iml
 build
+bintray.properties
