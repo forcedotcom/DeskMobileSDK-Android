@@ -63,75 +63,75 @@ public class PropertyHelperTest {
     public void getStringReturnsCorrectValue() throws Exception {
         props.clear();
         props.put(STRING_KEY, STRING_VALUE);
-        assertEquals(PropertyHelper.getString(props, STRING_KEY), STRING_VALUE);
+        assertEquals(PropertyHelper.getString(STRING_KEY, props), STRING_VALUE);
     }
 
     @Test
     public void getStringReturnsEmpty() throws Exception {
         props.clear();
-        assertEquals("", PropertyHelper.getString(props, STRING_KEY));
+        assertEquals("", PropertyHelper.getString(STRING_KEY, props));
     }
 
     @Test
     public void getStringReturnsDefaultValue() throws Exception {
         props.clear();
-        assertEquals(STRING_DEFAULT_VALUE, PropertyHelper.getString(props, STRING_DEFAULT_VALUE, STRING_KEY));
+        assertEquals(STRING_DEFAULT_VALUE, PropertyHelper.getString(STRING_KEY, STRING_DEFAULT_VALUE, props));
     }
 
     @Test
     public void getStringWithArgsReturnsCorrectValue() throws Exception {
         props.clear();
         props.put("string.key.1", STRING_VALUE);
-        assertEquals(STRING_VALUE, PropertyHelper.getString(props, STRING_KEY_ARGS, 1));
+        assertEquals(STRING_VALUE, PropertyHelper.getStringWithArgs(STRING_KEY_ARGS, props, 1));
     }
 
     @Test
     public void getStringWithArgsReturnsDefaultValue() throws Exception {
         props.clear();
-        assertEquals(STRING_DEFAULT_VALUE, PropertyHelper.getString(props, STRING_DEFAULT_VALUE, STRING_KEY_ARGS, 1));
+        assertEquals(STRING_DEFAULT_VALUE, PropertyHelper.getStringWithArgs(STRING_KEY_ARGS, STRING_DEFAULT_VALUE, props, 1));
     }
 
     @Test
     public void getStringWithArgsReturnsEmpty() throws Exception {
         props.clear();
-        assertEquals("", PropertyHelper.getString(props, STRING_KEY_ARGS, 1));
+        assertEquals("", PropertyHelper.getStringWithArgs(STRING_KEY_ARGS, props, 1));
     }
 
     @Test
     public void getBooleanReturnsCorrectValue() throws Exception {
         props.clear();
         props.put(BOOLEAN_KEY, BOOLEAN_STRING_VALUE);
-        assertEquals(PropertyHelper.getBoolean(props, BOOLEAN_KEY), BOOLEAN_VALUE);
+        assertEquals(PropertyHelper.getBoolean(BOOLEAN_KEY, props), BOOLEAN_VALUE);
     }
 
     @Test
     public void getBooleanReturnsFalse() throws Exception {
         props.clear();
-        assertEquals(false, PropertyHelper.getBoolean(props, BOOLEAN_KEY));
+        assertEquals(false, PropertyHelper.getBoolean(BOOLEAN_KEY, props));
     }
 
     @Test
     public void getBooleanReturnsDefaultValue() throws Exception {
         props.clear();
-        assertEquals(BOOLEAN_DEFAULT_VALUE, PropertyHelper.getBoolean(props, BOOLEAN_DEFAULT_VALUE, BOOLEAN_KEY));
+        assertEquals(BOOLEAN_DEFAULT_VALUE, PropertyHelper.getBoolean(BOOLEAN_KEY, BOOLEAN_DEFAULT_VALUE, props));
     }
 
     @Test
     public void getBooleanWithArgsReturnsCorrectValue() throws Exception {
         props.clear();
         props.put("boolean.key.1", BOOLEAN_STRING_VALUE);
-        assertEquals(BOOLEAN_VALUE, PropertyHelper.getBoolean(props, BOOLEAN_KEY_ARGS, 1));
+        assertEquals(BOOLEAN_VALUE, PropertyHelper.getBooleanWithArgs(BOOLEAN_KEY_ARGS, props, 1));
     }
 
     @Test
     public void getBooleanWithArgsReturnsDefaultValue() throws Exception {
         props.clear();
-        assertEquals(BOOLEAN_DEFAULT_VALUE, PropertyHelper.getBoolean(props, BOOLEAN_DEFAULT_VALUE, BOOLEAN_KEY_ARGS, 1));
+        assertEquals(BOOLEAN_DEFAULT_VALUE, PropertyHelper.getBooleanWithArgs(BOOLEAN_KEY_ARGS, BOOLEAN_DEFAULT_VALUE, props, 1));
     }
 
     @Test
     public void getBooleanWithArgsReturnsFalse() throws Exception {
         props.clear();
-        assertEquals(false, PropertyHelper.getBoolean(props, BOOLEAN_KEY_ARGS, 1));
+        assertEquals(false, PropertyHelper.getBooleanWithArgs(BOOLEAN_KEY_ARGS, props, 1));
     }
 }

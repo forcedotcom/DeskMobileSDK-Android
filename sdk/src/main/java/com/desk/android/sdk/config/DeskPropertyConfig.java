@@ -73,7 +73,7 @@ public class DeskPropertyConfig extends BaseDeskConfig implements PropertyConfig
      */
     @Override
     public String getApiToken() {
-        return getString(properties, KEY_API_TOKEN);
+        return getString(KEY_API_TOKEN, properties);
     }
 
     /**
@@ -81,6 +81,6 @@ public class DeskPropertyConfig extends BaseDeskConfig implements PropertyConfig
      */
     @Override
     public String getHostname() {
-        return getString(properties, KEY_HOSTNAME);
+        return getString(KEY_HOSTNAME, properties);
     }
 }

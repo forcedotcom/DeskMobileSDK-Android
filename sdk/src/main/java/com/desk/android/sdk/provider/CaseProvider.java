@@ -79,6 +79,7 @@ public class CaseProvider {
         Case newCase = new Case();
         newCase.setType(request.getType());
         newCase.setCustomerName(request.getName());
+        newCase.setCustomFields(request.getCustomFields());
 
         // create message object
         Message message = new Message();

@@ -48,6 +48,8 @@ import com.desk.android.sdk.model.CreateCaseRequest;
 import com.desk.android.sdk.util.TextWatcherAdapter;
 import com.desk.java.apiclient.model.CaseType;
 
+import java.util.HashMap;
+
 /**
  * Displays a contact us form in order for users to submit issues/feedback. To listen for callbacks
  * implement {@link com.desk.android.sdk.widget.ContactUsView.FormListener} and call
@@ -81,6 +83,7 @@ public class ContactUsView extends LinearLayout {
     private String mEmail;
     private String mSubject;
     private String mFeedback;
+    private HashMap<String, String> mCustomFields;
 
     private String mNameHint;
     private String mEmailHint;
@@ -236,6 +239,7 @@ public class ContactUsView extends LinearLayout {
         return new CreateCaseRequest.Builder(CaseType.EMAIL, mFeedback, to, mEmail)
                 .name(mName)
                 .subject(mSubject)
+                .customFields(mCustomFields)
                 .create();
     }
 
@@ -243,6 +247,7 @@ public class ContactUsView extends LinearLayout {
         mSubject = mIsBranded ? config.getSubject(mBrandId) : config.getSubject();
         mUserSubjectEnabled = mIsBranded ? config.isSubjectEnabled(mBrandId) : config.isSubjectEnabled();
         mUserNameEnabled = mIsBranded ? config.isUserNameEnabled(mBrandId) : config.isUserNameEnabled();
+        mCustomFields = mIsBranded ? config.getCustomFieldDefaults(mBrandId) : config.getCustomFieldDefaults();
     }
 
     private void checkIdentity(Identity identity) {
