@@ -30,10 +30,13 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.desk.android.sdk.model.CustomFieldProperties;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -189,5 +192,31 @@ public class ContactUsPropertyConfigTest {
         assertTrue(keys.contains("key_3"));
         assertTrue(keys.contains("key_4"));
         assertEquals(2, keys.size());
+    }
+
+    @Test
+    public void getCustomFieldPropertiesReturnsProperties() throws Exception {
+        HashMap<String, CustomFieldProperties> properties = config.getCustomFieldProperties();
+        assertTrue(properties.containsKey("key_1"));
+        assertTrue(properties.containsKey("key_2"));
+        CustomFieldProperties key1Properties = properties.get("key_1");
+        assertEquals("key_1", key1Properties.getKey());
+        assertEquals("value_1", key1Properties.getValue());
+        CustomFieldProperties key2Properties = properties.get("key_2");
+        assertEquals("key_2", key2Properties.getKey());
+        assertEquals("value_2", key2Properties.getValue());
+    }
+
+    @Test
+    public void getCustomFieldPropertiesReturnsPropertiesForBrand1() throws Exception {
+        HashMap<String, CustomFieldProperties> properties = config.getCustomFieldProperties(1);
+        assertTrue(properties.containsKey("key_3"));
+        assertTrue(properties.containsKey("key_4"));
+        CustomFieldProperties key3Properties = properties.get("key_3");
+        assertEquals("key_3", key3Properties.getKey());
+        assertEquals("value_3", key3Properties.getValue());
+        CustomFieldProperties key4Properties = properties.get("key_4");
+        assertEquals("key_4", key4Properties.getKey());
+        assertEquals("value_4", key4Properties.getValue());
     }
 }

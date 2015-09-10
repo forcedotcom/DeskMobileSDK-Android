@@ -32,6 +32,7 @@ import android.text.TextUtils;
 
 import com.desk.android.sdk.DeskProperties;
 import com.desk.android.sdk.helper.PropertyHelper;
+import com.desk.android.sdk.model.CustomFieldProperties;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -89,12 +90,15 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     public static final String KEY_CONTACT_US_PHONE_NUMBER = "contact.us.phone.number";
 
-//    /**
-//     * Property which maps to {@link TODO have get keys method
-//     */
+    /**
+     * Property which maps to {@link ContactUsConfig#getCustomFieldKeys()}.
+     */
     public static final String KEY_CONTACT_US_CUSTOM_FIELD_KEYS = "contact.us.custom.field.keys";
 
-    private static final String KEY_CONTACT_US_CUSTOM_FIELD = "contact.us.custom.field.%s";
+    /**
+     * Property which maps to a custom field's default value
+     */
+    public static final String KEY_CONTACT_US_CUSTOM_FIELD_VALUE = "contact.us.custom.field.%s.value";
 
     private Properties properties;
 
@@ -248,42 +252,34 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
     }
 
     @Override
-    public HashMap<String, String> getCustomFieldDefaults() {
+    public HashMap<String, CustomFieldProperties> getCustomFieldProperties() {
         List<String> keys = getCustomFieldKeys();
-        HashMap<String, String> customFields = new HashMap<>(keys.size());
+        HashMap<String, CustomFieldProperties> customFields = new HashMap<>(keys.size());
         if (keys.size() > 0) {
             for (String key : keys) {
-                String value = getStringWithArgs(KEY_CONTACT_US_CUSTOM_FIELD, properties, key.trim());
-
-                // ignore empty values
-                if (TextUtils.isEmpty(value)) {
-                    continue;
-                }
-                customFields.put(key, value);
+                String value = getStringWithArgs(KEY_CONTACT_US_CUSTOM_FIELD_VALUE, properties, key.trim());
+                CustomFieldProperties properties = new CustomFieldProperties.Builder(key).value(value).create();
+                customFields.put(key, properties);
             }
         }
         return customFields;
     }
 
     @Override
-    public HashMap<String, String> getCustomFieldDefaults(int brandId) {
+    public HashMap<String, CustomFieldProperties> getCustomFieldProperties(int brandId) {
         List<String> keys = getCustomFieldKeys(brandId);
         if (keys.size() > 0) {
-            HashMap<String, String> customFields = new HashMap<>(keys.size());
+            HashMap<String, CustomFieldProperties> customFields = new HashMap<>(keys.size());
             for (String key : keys) {
-                String value = getStringWithArgs(buildBrandKey(KEY_CONTACT_US_CUSTOM_FIELD), properties, key.trim(), brandId);
-
-                // ignore empty values
-                if (TextUtils.isEmpty(value)) {
-                    continue;
-                }
-                customFields.put(key, value);
+                String value = getStringWithArgs(buildBrandKey(KEY_CONTACT_US_CUSTOM_FIELD_VALUE), properties, key.trim(), brandId);
+                CustomFieldProperties properties = new CustomFieldProperties.Builder(key).value(value).create();
+                customFields.put(key, properties);
             }
             return customFields;
         }
 
         // return default custom fields
-        return getCustomFieldDefaults();
+        return getCustomFieldProperties();
     }
 
     @NonNull

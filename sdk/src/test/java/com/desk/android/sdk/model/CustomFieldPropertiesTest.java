@@ -24,23 +24,49 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'org.ajoberstar:gradle-git:1.3.0'
-    }
-}
+package com.desk.android.sdk.model;
 
-import org.ajoberstar.grgit.*
+import android.test.suitebuilder.annotation.SmallTest;
 
-def repo = Grgit.open(project.file('../.'))
+import org.junit.Before;
+import org.junit.Test;
 
-task tag << {
-    repo.tag.add {
-        name = tag
-        message = "Releasing version ${version}"
+import static org.junit.Assert.*;
+
+/**
+ * <p>
+ *     Unit tests for {@link CustomFieldProperties}
+ * </p>
+ *
+ * Created by Matt Kranzler on 9/10/15.
+ * Copyright (c) 2015 Desk.com. All rights reserved.
+ */
+@SuppressWarnings("ALL")
+@SmallTest
+public class CustomFieldPropertiesTest {
+
+    private static final String KEY = "key";
+    private static final String VALUE = "value";
+
+    private CustomFieldProperties properties;
+
+    @Before
+    public void setUp() throws Exception {
+        properties = new CustomFieldProperties.Builder(KEY).value(VALUE).create();
     }
-    repo.push(tags: true)
+
+    @Test
+    public void getKeyDoesReturnKey() throws Exception {
+        assertEquals(KEY, properties.getKey());
+    }
+
+    @Test
+    public void getValueDoesReturnValue() throws Exception {
+        assertEquals(VALUE, properties.getValue());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void builderDoesThrowNPEWithNullKey() throws Exception {
+        new CustomFieldProperties.Builder(null).create();
+    }
 }

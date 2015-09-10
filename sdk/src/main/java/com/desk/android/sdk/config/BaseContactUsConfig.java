@@ -29,6 +29,7 @@ package com.desk.android.sdk.config;
 import android.content.Context;
 
 import com.desk.android.sdk.R;
+import com.desk.android.sdk.model.CustomFieldProperties;
 
 import java.util.HashMap;
 import java.util.List;
@@ -136,12 +137,12 @@ public abstract class BaseContactUsConfig implements ContactUsConfig {
     }
 
     @Override
-    public HashMap<String, String> getCustomFieldDefaults() {
+    public HashMap<String, CustomFieldProperties> getCustomFieldProperties() {
         return null;
     }
 
     @Override
-    public HashMap<String, String> getCustomFieldDefaults(int brandId) {
+    public HashMap<String, CustomFieldProperties> getCustomFieldProperties(int brandId) {
         return null;
     }
 }

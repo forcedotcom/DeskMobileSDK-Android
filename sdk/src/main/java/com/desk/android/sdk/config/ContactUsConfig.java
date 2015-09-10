@@ -26,6 +26,8 @@
 
 package com.desk.android.sdk.config;
 
+import com.desk.android.sdk.model.CustomFieldProperties;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -155,15 +157,16 @@ public interface ContactUsConfig {
     List<String> getCustomFieldKeys(int brandId);
 
     /**
-     * The custom fields to add when creating a case
+     * The custom field properties for the custom fields defined in {@link #getCustomFieldKeys()}
      * @return the custom fields
      */
-    HashMap<String, String> getCustomFieldDefaults();
+    HashMap<String, CustomFieldProperties> getCustomFieldProperties();
 
     /**
-     * The custom fields to add when creating a case for the brand specified
+     * The custom field properties for the custom fields defined in {@link #getCustomFieldKeys(int)} for
+     * the brand specified
      * @param brandId the brand id
      * @return the custom fields
      */
-    HashMap<String, String> getCustomFieldDefaults(int brandId);
+    HashMap<String, CustomFieldProperties> getCustomFieldProperties(int brandId);
 }
