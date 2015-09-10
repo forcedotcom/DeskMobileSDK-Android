@@ -34,6 +34,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -171,5 +173,21 @@ public class ContactUsPropertyConfigTest {
     @Test
     public void getCallUsPhoneNumberMatchesNoBrandIfNotSet() throws Exception {
         assertEquals(config.getCallUsPhoneNumber(), config.getCallUsPhoneNumber(2));
+    }
+
+    @Test
+    public void getCustomFieldKeysReturnsKeys() {
+        List<String> keys = config.getCustomFieldKeys();
+        assertTrue(keys.contains("key_1"));
+        assertTrue(keys.contains("key_2"));
+        assertEquals(2, keys.size());
+    }
+
+    @Test
+    public void getCustomFieldKeysReturnsKeysForBrand1() throws Exception {
+        List<String> keys = config.getCustomFieldKeys(1);
+        assertTrue(keys.contains("key_3"));
+        assertTrue(keys.contains("key_4"));
+        assertEquals(2, keys.size());
     }
 }
