@@ -36,6 +36,7 @@ import com.desk.android.sdk.config.BaseContactUsConfig;
 import com.desk.android.sdk.error.IncompleteFormException;
 import com.desk.android.sdk.identity.UserIdentity;
 import com.desk.android.sdk.model.CreateCaseRequest;
+import com.desk.android.sdk.model.CustomFieldProperties;
 import com.desk.android.sdk.test.R;
 import com.desk.android.sdk.util.DeskDefaultsRule;
 
@@ -43,6 +44,8 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.HashMap;
 
 import static com.desk.android.sdk.util.TestUtils.getString;
 import static com.desk.android.sdk.util.TestUtils.inflateView;
@@ -397,11 +400,23 @@ public class ContactUsViewTest {
         final String email = "valid@email.com";
         final String feedback = "Valid Feedback";
         final String to = "to@email.com";
+        final String key1 = "key1";
+        final String value1 = "value1";
+        final String key2 = "key2";
+        final String value2 = "value2";
         Desk.with(InstrumentationRegistry.getTargetContext())
                 .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
                     @Override
                     public String getSubject() {
                         return subject;
+                    }
+
+                    @Override
+                    public HashMap<String, CustomFieldProperties> getCustomFieldProperties() {
+                        HashMap<String, CustomFieldProperties> properties = new HashMap<>();
+                        properties.put(key1, new CustomFieldProperties.Builder(key1).value(value1).create());
+                        properties.put(key2, new CustomFieldProperties.Builder(key2).value(value2).create());
+                        return properties;
                     }
                 })
                 .setIdentity(new UserIdentity.Builder(email).name(name).create());
@@ -413,6 +428,11 @@ public class ContactUsViewTest {
         assertEquals(request.getFrom(), email);
         assertEquals(request.getTo(), to);
         assertEquals(request.getBody(), feedback);
+        HashMap<String, String> customFields = request.getCustomFields();
+        assertTrue(customFields.containsKey(key1));
+        assertTrue(customFields.containsKey(key2));
+        assertTrue(customFields.containsValue(value1));
+        assertTrue(customFields.containsValue(value2));
     }
 
     @Test(expected = IncompleteFormException.class)

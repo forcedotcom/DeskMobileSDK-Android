@@ -35,89 +35,89 @@ public class PropertyHelper {
 
     /**
      * Gets the String property from the properties object.
-     * @param properties the properties object to get the property from
      * @param key the key of the String property
+     * @param properties the properties object to get the property from
      * @return the property value, an empty string if the property doesn't exist
      */
-    public static String getString(Properties properties, String key) {
-        return getString(properties, "", key);
+    public static String getString(String key, Properties properties) {
+        return getString(key, "", properties);
     }
 
     /**
      * Gets the String property from the properties object.
-     * @param properties the properties object to get the property from
      * @param key the key of the String property
+     * @param properties the properties object to get the property from
      * @param keyArgs the args to format the key
      * @return the property value, an empty string if the property doesn't exist
      */
-    public static String getString(Properties properties, String key, Object... keyArgs) {
-        return getString(properties, "", key, keyArgs);
+    public static String getStringWithArgs(String key, Properties properties, Object... keyArgs) {
+        return getString(String.format(key, keyArgs), "", properties);
     }
 
     /**
      * Gets the String property from the properties object.
-     * @param properties the properties object to get the property from
-     * @param defaultValue the default value if the property doesn't exist
      * @param key the key of the String property
+     * @param defaultValue the default value if the property doesn't exist
+     * @param properties the properties object to get the property from
      * @param keyArgs the args to format the key
      * @return the property value, defaultValue if the property doesn't exist
      */
-    public static String getString(Properties properties, String defaultValue, String key, Object... keyArgs) {
-        return getString(properties, defaultValue, String.format(key, keyArgs));
+    public static String getStringWithArgs(String key, String defaultValue, Properties properties, Object... keyArgs) {
+        return getString(String.format(key, keyArgs), defaultValue, properties);
     }
 
     /**
      * Gets the String property from the properties object.
-     * @param properties the properties object to get the property from
-     * @param defaultValue the default value if the property doesn't exist
      * @param key the key of the String property
+     * @param defaultValue the default value if the property doesn't exist
+     * @param properties the properties object to get the property from
      * @return the property value, defaultValue if the property doesn't exist
      */
-    public static String getString(Properties properties, String defaultValue, String key) {
+    public static String getString(String key, String defaultValue, Properties properties) {
         return properties.getProperty(key, defaultValue);
     }
 
     /**
      * Gets the boolean property from the properties object.
-     * @param properties the properties object to get the property from
      * @param key the key of the boolean property
+     * @param properties the properties object to get the property from
      * @return the property value, false if the property does not exist
      */
-    public static boolean getBoolean(Properties properties, String key) {
-        return getBoolean(properties, false, key);
+    public static boolean getBoolean(String key, Properties properties) {
+        return getBoolean(key, false, properties);
     }
 
     /**
      * Gets the boolean property from the properties object with format args.
-     * @param properties the properties object to get the property from
      * @param key the key of the boolean property
+     * @param properties the properties object to get the property from
      * @param keyArgs the args to format the key
      * @return the property value, false if the property does not exist
      */
-    public static boolean getBoolean(Properties properties, String key, Object... keyArgs) {
-        return getBoolean(properties, String.format(key, keyArgs));
+    public static boolean getBooleanWithArgs(String key, Properties properties, Object... keyArgs) {
+        return getBoolean(String.format(key, keyArgs), properties);
     }
 
     /**
      * Gets the boolean property from the properties object with format args.
-     * @param properties the properties object to get the property from
+     * @param key the key of the boolean property
      * @param defaultValue the default value if the property doesn't exist
-     * @param key the key of the boolean property
+     * @param properties the properties object to get the property from
      * @param keyArgs the args to format the key
      * @return the property value, false if the property does not exist
      */
-    public static boolean getBoolean(Properties properties, boolean defaultValue, String key, Object... keyArgs) {
-        return getBoolean(properties, defaultValue, String.format(key, keyArgs));
+    public static boolean getBooleanWithArgs(String key, boolean defaultValue, Properties properties, Object... keyArgs) {
+        return getBoolean(String.format(key, keyArgs), defaultValue, properties);
     }
 
     /**
      * Gets the boolean property from the properties object.
-     * @param properties the properties object to get the property from
-     * @param defaultValue the default value if the property doesn't exist
      * @param key the key of the boolean property
+     * @param defaultValue the default value if the property doesn't exist
+     * @param properties the properties object to get the property from
      * @return the property value, defaultValue if the property doesn't exist
      */
-    public static boolean getBoolean(Properties properties, boolean defaultValue, String key) {
+    public static boolean getBoolean(String key, boolean defaultValue, Properties properties) {
         if (properties.containsKey(key)) {
             return Boolean.valueOf(properties.getProperty(key, "false"));
         } else {
