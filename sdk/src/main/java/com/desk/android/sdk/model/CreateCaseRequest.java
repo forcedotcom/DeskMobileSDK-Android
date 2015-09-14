@@ -32,6 +32,7 @@ import android.support.annotation.Nullable;
 import com.desk.java.apiclient.model.CaseType;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Encapsulates the fields necessary for creating a case. To create an instance use
@@ -45,16 +46,19 @@ public class CreateCaseRequest implements Serializable {
     private String from;
     private String subject;
     private String name;
+    private HashMap<String, String> customFields;
 
     private CreateCaseRequest() {}
 
-    private CreateCaseRequest(CaseType type, String body, String to, String from, String subject, String name) {
+    private CreateCaseRequest(CaseType type, String body, String to, String from, String subject,
+                              String name, HashMap<String, String> customFields) {
         this.type = type;
         this.body = body;
         this.to = to;
         this.from = from;
         this.subject = subject;
         this.name = name;
+        this.customFields = customFields;
     }
 
     /**
@@ -106,6 +110,14 @@ public class CreateCaseRequest implements Serializable {
     }
 
     /**
+     * Get the custom fields for this case
+     * @return the custom fields
+     */
+    public HashMap<String, String> getCustomFields() {
+        return customFields;
+    }
+
+    /**
      * Builder which aids in creating {@link CreateCaseRequest} instances.
      */
     public static class Builder {
@@ -116,6 +128,7 @@ public class CreateCaseRequest implements Serializable {
         private String from;
         private String subject;
         private String name;
+        private HashMap<String, String> customFields;
 
         private Builder() {}
 
@@ -164,11 +177,35 @@ public class CreateCaseRequest implements Serializable {
         }
 
         /**
+         * Add *optional* custom fields to the case
+         * @param customFields the custom fields
+         * @return the builder instance
+         */
+        public Builder customFields(HashMap<String, String> customFields) {
+            this.customFields = customFields;
+            return this;
+        }
+
+        /**
+         * Add an *optional* custom field to the case
+         * @param key the custom field key
+         * @param value the custom field value
+         * @return the builder instance
+         */
+        public Builder customField(String key, String value) {
+            if (this.customFields == null) {
+                this.customFields = new HashMap<>();
+            }
+            this.customFields.put(key, value);
+            return this;
+        }
+
+        /**
          * Creates the {@link CreateCaseRequest} instance
          * @return the instance
          */
         public CreateCaseRequest create() {
-            return new CreateCaseRequest(type, body, to, from, subject, name);
+            return new CreateCaseRequest(type, body, to, from, subject, name, customFields);
         }
     }
 }

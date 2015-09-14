@@ -27,11 +27,20 @@
 package com.desk.android.sdk.config;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.desk.android.sdk.DeskProperties;
+import com.desk.android.sdk.helper.PropertyHelper;
+import com.desk.android.sdk.model.CustomFieldProperties;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
+import static com.desk.android.sdk.helper.PropertyHelper.*;
 import static com.desk.android.sdk.helper.PropertyHelper.getBoolean;
 import static com.desk.android.sdk.helper.PropertyHelper.getString;
 
@@ -81,6 +90,16 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     public static final String KEY_CONTACT_US_PHONE_NUMBER = "contact.us.phone.number";
 
+    /**
+     * Property which maps to {@link ContactUsConfig#getCustomFieldKeys()}.
+     */
+    public static final String KEY_CONTACT_US_CUSTOM_FIELD_KEYS = "contact.us.custom.field.keys";
+
+    /**
+     * Property which maps to a custom field's default value
+     */
+    public static final String KEY_CONTACT_US_CUSTOM_FIELD_VALUE = "contact.us.custom.field.%s.value";
+
     private Properties properties;
 
     /**
@@ -97,7 +116,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isContactUsEnabled() {
-        return getBoolean(properties, super.isContactUsEnabled(), KEY_CONTACT_US_ENABLED);
+        return getBoolean(KEY_CONTACT_US_ENABLED, super.isContactUsEnabled(), properties);
     }
 
     /**
@@ -105,7 +124,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isContactUsEnabled(int brandId) {
-        return getBoolean(properties, isCallUsEnabled(), buildBrandKey(KEY_CONTACT_US_ENABLED), brandId);
+        return PropertyHelper.getBooleanWithArgs(buildBrandKey(KEY_CONTACT_US_ENABLED), isCallUsEnabled(), properties, brandId);
     }
 
     /**
@@ -113,7 +132,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public String getSubject() {
-        return getString(properties, super.getSubject(), KEY_CONTACT_US_SUBJECT);
+        return getString(KEY_CONTACT_US_SUBJECT, super.getSubject(), properties);
     }
 
     /**
@@ -121,7 +140,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public String getSubject(int brandId) {
-        return getString(properties, getSubject(), buildBrandKey(KEY_CONTACT_US_SUBJECT), brandId);
+        return getStringWithArgs(buildBrandKey(KEY_CONTACT_US_SUBJECT), getSubject(), properties, brandId);
     }
 
     /**
@@ -129,7 +148,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isSubjectEnabled() {
-        return getBoolean(properties, KEY_CONTACT_US_SUBJECT_ENABLED);
+        return getBoolean(KEY_CONTACT_US_SUBJECT_ENABLED, properties);
     }
 
     /**
@@ -137,7 +156,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isSubjectEnabled(int brandId) {
-        return getBoolean(properties, isSubjectEnabled(), buildBrandKey(KEY_CONTACT_US_SUBJECT_ENABLED), brandId);
+        return PropertyHelper.getBooleanWithArgs(buildBrandKey(KEY_CONTACT_US_SUBJECT_ENABLED), isSubjectEnabled(), properties, brandId);
     }
 
     /**
@@ -145,7 +164,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isUserNameEnabled() {
-        return getBoolean(properties, KEY_CONTACT_US_USER_NAME_ENABLED);
+        return getBoolean(KEY_CONTACT_US_USER_NAME_ENABLED, properties);
     }
 
     /**
@@ -153,7 +172,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isUserNameEnabled(int brandId) {
-        return getBoolean(properties, isUserNameEnabled(), buildBrandKey(KEY_CONTACT_US_USER_NAME_ENABLED), brandId);
+        return PropertyHelper.getBooleanWithArgs(buildBrandKey(KEY_CONTACT_US_USER_NAME_ENABLED), isUserNameEnabled(), properties, brandId);
     }
 
     /**
@@ -161,7 +180,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isWebFormEnabled() {
-        return getBoolean(properties, KEY_CONTACT_US_WEB_FORM_ENABLED);
+        return getBoolean(KEY_CONTACT_US_WEB_FORM_ENABLED, properties);
     }
 
     /**
@@ -169,7 +188,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isWebFormEnabled(int brandId) {
-        return getBoolean(properties, isWebFormEnabled(), buildBrandKey(KEY_CONTACT_US_WEB_FORM_ENABLED), brandId);
+        return PropertyHelper.getBooleanWithArgs(buildBrandKey(KEY_CONTACT_US_WEB_FORM_ENABLED), isWebFormEnabled(), properties, brandId);
     }
 
     /**
@@ -177,7 +196,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public String getEmailAddress() {
-        return getString(properties, KEY_CONTACT_US_EMAIL_ADDRESS);
+        return getString(KEY_CONTACT_US_EMAIL_ADDRESS, properties);
     }
 
     /**
@@ -185,7 +204,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public String getEmailAddress(int brandId) {
-        return getString(properties, getEmailAddress(), buildBrandKey(KEY_CONTACT_US_EMAIL_ADDRESS), brandId);
+        return getStringWithArgs(buildBrandKey(KEY_CONTACT_US_EMAIL_ADDRESS), getEmailAddress(), properties, brandId);
     }
 
     /**
@@ -193,7 +212,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isCallUsEnabled() {
-        return getBoolean(properties, KEY_CONTACT_US_CALL_US_ENABLED);
+        return getBoolean(KEY_CONTACT_US_CALL_US_ENABLED, properties);
     }
 
     /**
@@ -201,7 +220,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isCallUsEnabled(int brandId) {
-        return getBoolean(properties, isCallUsEnabled(), buildBrandKey(KEY_CONTACT_US_CALL_US_ENABLED), brandId);
+        return PropertyHelper.getBooleanWithArgs(buildBrandKey(KEY_CONTACT_US_CALL_US_ENABLED), isCallUsEnabled(), properties, brandId);
     }
 
     /**
@@ -209,7 +228,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public String getCallUsPhoneNumber() {
-        return getString(properties, KEY_CONTACT_US_PHONE_NUMBER);
+        return getString(KEY_CONTACT_US_PHONE_NUMBER, properties);
     }
 
     /**
@@ -217,7 +236,59 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public String getCallUsPhoneNumber(int brandId) {
-        return getString(properties, getCallUsPhoneNumber(), buildBrandKey(KEY_CONTACT_US_PHONE_NUMBER), brandId);
+        return getStringWithArgs(buildBrandKey(KEY_CONTACT_US_PHONE_NUMBER), getCallUsPhoneNumber(), properties, brandId);
+    }
+
+    @Override
+    @NonNull
+    public List<String> getCustomFieldKeys() {
+        return getCustomFieldKeys(KEY_CONTACT_US_CUSTOM_FIELD_KEYS);
+    }
+
+    @Override
+    @NonNull
+    public List<String> getCustomFieldKeys(int brandId) {
+        return getCustomFieldKeys(buildBrandKey(KEY_CONTACT_US_CUSTOM_FIELD_KEYS), brandId);
+    }
+
+    @Override
+    public HashMap<String, CustomFieldProperties> getCustomFieldProperties() {
+        List<String> keys = getCustomFieldKeys();
+        HashMap<String, CustomFieldProperties> customFields = new HashMap<>(keys.size());
+        if (keys.size() > 0) {
+            for (String key : keys) {
+                String value = getStringWithArgs(KEY_CONTACT_US_CUSTOM_FIELD_VALUE, properties, key.trim());
+                CustomFieldProperties properties = new CustomFieldProperties.Builder(key).value(value).create();
+                customFields.put(key, properties);
+            }
+        }
+        return customFields;
+    }
+
+    @Override
+    public HashMap<String, CustomFieldProperties> getCustomFieldProperties(int brandId) {
+        List<String> keys = getCustomFieldKeys(brandId);
+        if (keys.size() > 0) {
+            HashMap<String, CustomFieldProperties> customFields = new HashMap<>(keys.size());
+            for (String key : keys) {
+                String value = getStringWithArgs(buildBrandKey(KEY_CONTACT_US_CUSTOM_FIELD_VALUE), properties, key.trim(), brandId);
+                CustomFieldProperties properties = new CustomFieldProperties.Builder(key).value(value).create();
+                customFields.put(key, properties);
+            }
+            return customFields;
+        }
+
+        // return default custom fields
+        return getCustomFieldProperties();
+    }
+
+    @NonNull
+    private List<String> getCustomFieldKeys(String key, Object... keyArgs) {
+        String keysString = getStringWithArgs(key, properties, keyArgs);
+        if (TextUtils.isEmpty(keysString)) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(keysString.trim().split(","));
     }
 
     private String buildBrandKey(String key) {

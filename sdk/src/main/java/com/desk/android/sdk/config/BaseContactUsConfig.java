@@ -29,6 +29,10 @@ package com.desk.android.sdk.config;
 import android.content.Context;
 
 import com.desk.android.sdk.R;
+import com.desk.android.sdk.model.CustomFieldProperties;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Base implementation of {@link ContactUsConfig} which overrides each method with default values.
@@ -120,5 +124,25 @@ public abstract class BaseContactUsConfig implements ContactUsConfig {
     @Override
     public String getCallUsPhoneNumber(int brandId) {
         return getCallUsPhoneNumber();
+    }
+
+    @Override
+    public List<String> getCustomFieldKeys() {
+        return null;
+    }
+
+    @Override
+    public List<String> getCustomFieldKeys(int brandId) {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, CustomFieldProperties> getCustomFieldProperties() {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, CustomFieldProperties> getCustomFieldProperties(int brandId) {
+        return null;
     }
 }

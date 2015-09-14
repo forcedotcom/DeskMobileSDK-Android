@@ -24,63 +24,78 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.desk.android.sdk.config;
-
-import android.content.Context;
-
-import com.desk.android.sdk.DeskProperties;
-
-import java.util.Properties;
-
-import static com.desk.android.sdk.helper.PropertyHelper.getString;
+package com.desk.android.sdk.model;
 
 /**
- * {@link com.desk.android.sdk.config.DeskConfig} which pulls configuration out of a {@link Properties}
- * object.
+ * <p>
+ *     Defines properties for a custom field
+ * </p>
+ *
+ * Created by Matt Kranzler on 9/10/15.
+ * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public class DeskPropertyConfig extends BaseDeskConfig implements PropertyConfig {
+public class CustomFieldProperties {
 
-    /**
-     * Property which maps to {@link DeskConfig#getApiToken()}
-     */
-    public static final String KEY_API_TOKEN = "desk.api.token";
+    private String key;
+    private String value;
 
-    /**
-     * Property which maps to {@link DeskConfig#getHostname()}
-     */
-    public static final String KEY_HOSTNAME = "desk.hostname";
-
-    private Properties properties;
-
-    /**
-     * Creates an instance which will pull properties from {@link DeskProperties}.
-     * @param applicationContext the application context
-     */
-    public DeskPropertyConfig(Context applicationContext) {
-        this(DeskProperties.with(applicationContext));
+    private CustomFieldProperties(String key, String value) {
+        this.key = key;
+        this.value = value;
     }
 
     /**
-     * Creates an instance which will pull properties from the {@link Properties} object passed in.
-     * @param properties the properties
+     * Get the custom field key
+     * @return the key
      */
-    public DeskPropertyConfig(Properties properties) {
-        this.properties = properties;
+    public String getKey() {
+        return key;
     }
 
     /**
-     * See {@link DeskConfig#getApiToken()}
+     * Get the custom field value
+     * @return the value
      */
-    @Override
-    public String getApiToken() {
-        return getString(KEY_API_TOKEN, properties);
+    public String getValue() {
+        return value;
     }
 
     /**
-     * See {@link DeskConfig#getHostname()}
+     * Builder which aids in creating a {@link CustomFieldProperties} instance
      */
-    @Override
-    public String getHostname() {
-        return getString(KEY_HOSTNAME, properties);
+    public static class Builder {
+
+        private String key;
+        private String value;
+
+        /**
+         * Default constructor with required fields
+         * @param key the custom field key
+         */
+        public Builder(String key) {
+            if (key == null) {
+                throw new NullPointerException("key cannot be null.");
+            }
+            this.key = key;
+        }
+
+        /**
+         * The value for the custom field to default to
+         * @param value the value
+         * @return the builder instance
+         */
+        public Builder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        /**
+         * Creates the {@link CustomFieldProperties} instance
+         * @return the instance
+         */
+        public CustomFieldProperties create() {
+            return new CustomFieldProperties(key, value);
+        }
     }
+
 }

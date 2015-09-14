@@ -45,8 +45,12 @@ import com.desk.android.sdk.error.IncompleteFormException;
 import com.desk.android.sdk.identity.Identity;
 import com.desk.android.sdk.identity.UserIdentity;
 import com.desk.android.sdk.model.CreateCaseRequest;
+import com.desk.android.sdk.model.CustomFieldProperties;
 import com.desk.android.sdk.util.TextWatcherAdapter;
 import com.desk.java.apiclient.model.CaseType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Displays a contact us form in order for users to submit issues/feedback. To listen for callbacks
@@ -92,6 +96,8 @@ public class ContactUsView extends LinearLayout {
 
     private boolean mUserNameEnabled;
     private boolean mUserSubjectEnabled;
+
+    private HashMap<String, CustomFieldProperties> mCustomFieldProperties;
 
     private FormListener mListener;
 
@@ -236,6 +242,7 @@ public class ContactUsView extends LinearLayout {
         return new CreateCaseRequest.Builder(CaseType.EMAIL, mFeedback, to, mEmail)
                 .name(mName)
                 .subject(mSubject)
+                .customFields(getCustomFields())
                 .create();
     }
 
@@ -243,6 +250,7 @@ public class ContactUsView extends LinearLayout {
         mSubject = mIsBranded ? config.getSubject(mBrandId) : config.getSubject();
         mUserSubjectEnabled = mIsBranded ? config.isSubjectEnabled(mBrandId) : config.isSubjectEnabled();
         mUserNameEnabled = mIsBranded ? config.isUserNameEnabled(mBrandId) : config.isUserNameEnabled();
+        mCustomFieldProperties = mIsBranded ? config.getCustomFieldProperties(mBrandId) : config.getCustomFieldProperties();
     }
 
     private void checkIdentity(Identity identity) {
@@ -251,6 +259,19 @@ public class ContactUsView extends LinearLayout {
             mName = userIdentity.getName();
             mEmail = userIdentity.getEmail();
         }
+    }
+
+    private HashMap<String, String> getCustomFields() {
+        if (mCustomFieldProperties == null) {
+            return null;
+        }
+        HashMap<String, String> customFields = new HashMap<>(mCustomFieldProperties.size());
+        for (Map.Entry<String, CustomFieldProperties> entry : mCustomFieldProperties.entrySet()) {
+            String key = entry.getKey();
+            CustomFieldProperties properties = entry.getValue();
+            customFields.put(key, properties.getValue());
+        }
+        return customFields;
     }
 
     private void checkForm() {

@@ -26,6 +26,11 @@
 
 package com.desk.android.sdk.config;
 
+import com.desk.android.sdk.model.CustomFieldProperties;
+
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Configuration options for 'Contact Us' which allows submitting feedback / issues and creating a
  * case.
@@ -40,6 +45,7 @@ public interface ContactUsConfig {
 
     /**
      * Whether or not contact us is enabled for the brand specified.
+     * @param brandId the brand id
      * @return true to enable contact us, false to disable it
      */
     boolean isContactUsEnabled(int brandId);
@@ -52,6 +58,7 @@ public interface ContactUsConfig {
 
     /**
      * This will be the case's subject when creating a case for the brand specified.
+     * @param brandId the brand id
      * @return the subject
      */
     String getSubject(int brandId);
@@ -64,6 +71,7 @@ public interface ContactUsConfig {
 
     /**
      * Whether or not to display the subject field on the contact us form for the brand specified
+     * @param brandId the brand id
      * @return true to display, false to hide
      */
     boolean isSubjectEnabled(int brandId);
@@ -76,6 +84,7 @@ public interface ContactUsConfig {
 
     /**
      * Whether or not to display the name field on the contact us form for the brand specified.
+     * @param brandId the brand id
      * @return true to display, false to hide
      */
     boolean isUserNameEnabled(int brandId);
@@ -101,6 +110,7 @@ public interface ContactUsConfig {
 
     /**
      * The email address that will be used in the 'to' field when creating a case for the brand specified.
+     * @param brandId the brand id
      * @return the email address
      */
     String getEmailAddress(int brandId);
@@ -115,6 +125,7 @@ public interface ContactUsConfig {
     /**
      * Whether or not to display the call us option for the brand provided. NOTE: if this is enabled
      * you MUST also return a legit phone number in {@link #getCallUsPhoneNumber()}.
+     * @param brandId the brand id
      * @return true to enable the option, false to disable it
      */
     boolean isCallUsEnabled(int brandId);
@@ -127,7 +138,35 @@ public interface ContactUsConfig {
 
     /**
      * The phone number to be dialed when the call us option is selected for the brand specified.
+     * @param brandId the brand id
      * @return the phone number
      */
     String getCallUsPhoneNumber(int brandId);
+
+    /**
+     * The custom field keys supported when creating a case
+     * @return the keys
+     */
+    List<String> getCustomFieldKeys();
+
+    /**
+     * The custom field keys supported when creating a case for the brand specified
+     * @param brandId the brand id
+     * @return the keys
+     */
+    List<String> getCustomFieldKeys(int brandId);
+
+    /**
+     * The custom field properties for the custom fields defined in {@link #getCustomFieldKeys()}
+     * @return the custom fields
+     */
+    HashMap<String, CustomFieldProperties> getCustomFieldProperties();
+
+    /**
+     * The custom field properties for the custom fields defined in {@link #getCustomFieldKeys(int)} for
+     * the brand specified
+     * @param brandId the brand id
+     * @return the custom fields
+     */
+    HashMap<String, CustomFieldProperties> getCustomFieldProperties(int brandId);
 }
