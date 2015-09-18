@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.desk:sdk:1.0.1'
+  compile 'com.desk:sdk:1.1.0'
 }
 ```
 
