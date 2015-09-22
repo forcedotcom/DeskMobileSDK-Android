@@ -1,8 +1,6 @@
 package com.desk.android.sdk.activity;
 
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
@@ -17,8 +15,6 @@ import com.desk.android.sdk.util.DeskDefaultsRule;
 import com.desk.java.apiclient.model.ApiResponse;
 import com.desk.java.apiclient.model.Topic;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -42,7 +38,6 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtras;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 import static android.view.KeyEvent.KEYCODE_ENTER;
 import static com.desk.android.sdk.activity.ArticleListActivity.EXTRA_MODE;
 import static com.desk.android.sdk.activity.ArticleListActivity.EXTRA_QUERY;
@@ -51,7 +46,6 @@ import static com.desk.android.sdk.activity.ArticleListActivity.MODE_SEARCH;
 import static com.desk.android.sdk.activity.ArticleListActivity.MODE_TOPIC;
 import static com.desk.android.sdk.helper.DeskThemeHelper.EXTRA_THEME_RES_ID;
 import static com.desk.android.sdk.helper.DeskThemeHelper.NO_THEME_RES_ID;
-import static com.desk.android.sdk.util.InstrumentationTestUtils.createIdleResourceAndWait;
 import static com.desk.android.sdk.util.InstrumentationTestUtils.getContactUsComponentName;
 import static com.desk.android.sdk.util.InstrumentationTestUtils.getMockedTopicResponse;
 import static com.desk.android.sdk.util.InstrumentationTestUtils.matchToolbarTitle;
@@ -72,16 +66,12 @@ import static org.mockito.Mockito.mock;
 @LargeTest
 public class TopicListActivityTest {
 
-    private  static final long WAITING_TIME = SECOND_IN_MILLIS * 5;
-
     @Mock static TopicProvider mockTopicProvider = mock(TopicProvider.class);
 
     @ClassRule
     public static DeskDefaultsRule resetRule = new DeskDefaultsRule();
 
     private static ApiResponse<Topic> mockedTopicResponse;
-
-    private IdlingResource mIdlingResource;
 
     @Rule public IntentsTestRule<TopicListActivity> activityRule = new IntentsTestRule<>(TopicListActivity.class);
 
@@ -105,16 +95,6 @@ public class TopicListActivityTest {
                 return null;
             }
         }).when(mockTopicProvider).getTopics(anyInt(), Matchers.<TopicCallbacks>any());
-    }
-
-    @Before
-    public void setUp() {
-        mIdlingResource = createIdleResourceAndWait(WAITING_TIME);
-    }
-
-    @After
-    public void tearDown() {
-        Espresso.unregisterIdlingResources(mIdlingResource);
     }
 
     @SuppressWarnings("unchecked")
