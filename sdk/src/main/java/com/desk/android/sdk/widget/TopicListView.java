@@ -115,6 +115,11 @@ public class TopicListView extends FrameLayout implements AdapterView.OnItemClic
     private void init(Context context) {
         mDesk = Desk.with(context);
         LayoutInflater.from(context).inflate(R.layout.list_view_with_progress_empty, this, true);
+        mList = (ListView) findViewById(android.R.id.list);
+        mProgress = (ProgressBar) findViewById(android.R.id.progress);
+        mEmpty = (TextView) findViewById(android.R.id.empty);
+        mList.setAdapter(mAdapter);
+        mList.setOnItemClickListener(this);
         if (getContext() instanceof BrandProvider) {
             BrandProvider provider = (BrandProvider) getContext();
             mIsBranded = provider.isBranded();
@@ -122,16 +127,6 @@ public class TopicListView extends FrameLayout implements AdapterView.OnItemClic
         }
         mTopics = new ArrayList<>();
         mAdapter = new TopicListAdapter(context, mTopics);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        mList = (ListView) findViewById(android.R.id.list);
-        mProgress = (ProgressBar) findViewById(android.R.id.progress);
-        mEmpty = (TextView) findViewById(android.R.id.empty);
-        mList.setAdapter(mAdapter);
-        mList.setOnItemClickListener(this);
     }
 
     @VisibleForTesting
@@ -149,6 +144,8 @@ public class TopicListView extends FrameLayout implements AdapterView.OnItemClic
      */
     public void loadTopics() {
         hideList();
+        mAdapter.clear();
+        hideEmptyView();
         showProgress();
 
         mDesk.getTopicProvider()
@@ -198,6 +195,10 @@ public class TopicListView extends FrameLayout implements AdapterView.OnItemClic
     private void showEmptyView(String text) {
         mEmpty.setText(text);
         mEmpty.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmptyView() {
+        mEmpty.setVisibility(View.GONE);
     }
 
     private void showProgress() {

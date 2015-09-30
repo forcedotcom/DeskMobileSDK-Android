@@ -130,6 +130,9 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
     private void init(Context context) {
         mDesk = Desk.with(context);
         LayoutInflater.from(context).inflate(R.layout.list_view_with_progress_empty, this, true);
+        mList = (ListView) findViewById(android.R.id.list);
+        mProgress = (ProgressBar) findViewById(android.R.id.progress);
+        mEmpty = (TextView) findViewById(android.R.id.empty);
         if (getContext() instanceof BrandProvider) {
             BrandProvider provider = (BrandProvider) getContext();
             mIsBranded = provider.isBranded();
@@ -137,14 +140,6 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
         }
         mArticles = new ArrayList<>();
         mAdapter = new ArticleListAdapter(getContext(), mArticles);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        mList = (ListView) findViewById(android.R.id.list);
-        mProgress = (ProgressBar) findViewById(android.R.id.progress);
-        mEmpty = (TextView) findViewById(android.R.id.empty);
     }
 
     private void initializeList() {
@@ -182,6 +177,8 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
         mQuery = null;
         mCurrentPage = 0;
         hideList();
+        mAdapter.clear();
+        hideEmptyView();
         showProgress();
         loadPage(1);
     }
@@ -207,6 +204,8 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
         mQuery = query;
         mCurrentPage = 0;
         hideList();
+        mAdapter.clear();
+        hideEmptyView();
         showProgress();
         loadPage(1);
     }
@@ -260,6 +259,10 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
     private void showEmptyView(String text) {
         mEmpty.setText(text);
         mEmpty.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmptyView() {
+        mEmpty.setVisibility(View.GONE);
     }
 
     private void showProgress() {
