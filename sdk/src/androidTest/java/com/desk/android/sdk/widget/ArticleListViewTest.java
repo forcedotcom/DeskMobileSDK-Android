@@ -133,7 +133,6 @@ public class ArticleListViewTest {
         mockArticles = getMockArticles();
         listener = mock(ArticleListView.ArticleSelectedListener.class);
         articleListView = new ArticleListView(InstrumentationRegistry.getTargetContext());
-        articleListView.onFinishInflate();
         articleListView.setArticleSelectedListener(listener);
     }
 
