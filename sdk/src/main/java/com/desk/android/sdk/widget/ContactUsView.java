@@ -111,18 +111,28 @@ public class ContactUsView extends LinearLayout {
 
     public ContactUsView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ContactUsView, defStyleAttr, R.style.ContactUsViewStyle);
         mNameHint = ta.getString(R.styleable.ContactUsView_dk_nameHint);
         mEmailHint = ta.getString(R.styleable.ContactUsView_dk_emailHint);
         mSubjectHint = ta.getString(R.styleable.ContactUsView_dk_subjectHint);
         mFeedbackHint = ta.getString(R.styleable.ContactUsView_dk_feedbackHint);
         ta.recycle();
+        init();
     }
 
     private void init() {
         setOrientation(VERTICAL);
         LayoutInflater.from(getContext()).inflate(R.layout.contact_us_view, this, true);
+        mUserName = (EditText) findViewById(R.id.user_name);
+        mUserEmail = (EditText) findViewById(R.id.user_email);
+        mUserSubject = (EditText) findViewById(R.id.user_subject);
+        mUserFeedback = (EditText) findViewById(R.id.user_feedback);
+        mUserName.setHint(mNameHint);
+        mUserName.setText(mName);
+        mUserEmail.setHint(mEmailHint);
+        mUserSubject.setText(mSubject);
+        mUserSubject.setHint(mSubjectHint);
+        mUserFeedback.setHint(mFeedbackHint);
         if (getContext() instanceof BrandProvider) {
             BrandProvider provider = (BrandProvider) getContext();
             mIsBranded = provider.isBranded();
@@ -131,21 +141,6 @@ public class ContactUsView extends LinearLayout {
         Desk desk = Desk.with(getContext());
         checkConfig(desk.getContactUsConfig());
         checkIdentity(desk.getIdentity());
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        mUserName = (EditText) findViewById(R.id.user_name);
-        mUserName.setHint(mNameHint);
-        mUserName.setText(mName);
-        mUserEmail = (EditText) findViewById(R.id.user_email);
-        mUserEmail.setHint(mEmailHint);
-        mUserSubject = (EditText) findViewById(R.id.user_subject);
-        mUserSubject.setText(mSubject);
-        mUserSubject.setHint(mSubjectHint);
-        mUserFeedback = (EditText) findViewById(R.id.user_feedback);
-        mUserFeedback.setHint(mFeedbackHint);
         setupListeners();
     }
 
