@@ -228,7 +228,7 @@ public class ContactUsViewTest {
     }
     //endregion
 
-    // region View Visibility Tests
+    // region Configuration tests
 
     @Test
     public void userNameIsVisibleWhenEnabled() throws Exception {
@@ -260,6 +260,15 @@ public class ContactUsViewTest {
 
         ContactUsView view = getNewContactUsView();
         assertThat(getName(view)).isGone();
+    }
+
+    @Test
+    public void userNameIsSetFromIdentity() throws Exception {
+        final String userName = "User Name";
+        Desk.with(InstrumentationRegistry.getTargetContext())
+                .setIdentity(new UserIdentity.Builder("email@email.com").name(userName).create());
+        ContactUsView contactUsView = getNewContactUsView();
+        assertThat(getName(contactUsView)).hasTextString(userName);
     }
 
     @Test
@@ -303,6 +312,19 @@ public class ContactUsViewTest {
 
         ContactUsView view = getNewContactUsView();
         assertThat(getSubject(view)).isGone();
+    }
+
+    @Test
+    public void subjectIsSetFromContactUsConfiguration() throws Exception {
+        final String subject = "This is our subject";
+        Desk.with(InstrumentationRegistry.getTargetContext())
+                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+                    @Override public String getSubject() {
+                        return subject;
+                    }
+                });
+        ContactUsView contactUsView = getNewContactUsView();
+        assertThat(getSubject(contactUsView)).hasTextString(subject);
     }
 
     // endregion
