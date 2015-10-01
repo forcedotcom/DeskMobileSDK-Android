@@ -127,20 +127,24 @@ public class ContactUsView extends LinearLayout {
         mUserEmail = (EditText) findViewById(R.id.user_email);
         mUserSubject = (EditText) findViewById(R.id.user_subject);
         mUserFeedback = (EditText) findViewById(R.id.user_feedback);
+
+        if (getContext() instanceof BrandProvider) {
+            BrandProvider provider = (BrandProvider) getContext();
+            mIsBranded = provider.isBranded();
+            mBrandId = provider.getBrandId();
+        }
+
+        Desk desk = Desk.with(getContext());
+        checkConfig(desk.getContactUsConfig());
+        checkIdentity(desk.getIdentity());
+
         mUserName.setHint(mNameHint);
         mUserName.setText(mName);
         mUserEmail.setHint(mEmailHint);
         mUserSubject.setText(mSubject);
         mUserSubject.setHint(mSubjectHint);
         mUserFeedback.setHint(mFeedbackHint);
-        if (getContext() instanceof BrandProvider) {
-            BrandProvider provider = (BrandProvider) getContext();
-            mIsBranded = provider.isBranded();
-            mBrandId = provider.getBrandId();
-        }
-        Desk desk = Desk.with(getContext());
-        checkConfig(desk.getContactUsConfig());
-        checkIdentity(desk.getIdentity());
+
         setupListeners();
     }
 
