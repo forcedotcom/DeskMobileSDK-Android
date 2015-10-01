@@ -464,8 +464,6 @@ public class ContactUsViewTest {
     }
 
     private ContactUsView getNewContactUsView() {
-        ContactUsView contactUsView = new ContactUsView(InstrumentationRegistry.getTargetContext());
-        contactUsView.onFinishInflate();
-        return contactUsView;
+        return new ContactUsView(InstrumentationRegistry.getTargetContext());
     }
 }

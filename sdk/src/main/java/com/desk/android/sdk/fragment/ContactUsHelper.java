@@ -75,6 +75,17 @@ public class ContactUsHelper extends Fragment {
         attach(activity.getFragmentManager());
     }
 
+    /**
+     * Removes the fragment from the activity
+     * @param activity the activity to detach from
+     */
+    public static void detach(Activity activity) {
+        Fragment fragment = activity.getFragmentManager().findFragmentByTag(FRAG_TAG);
+        if (fragment != null) {
+            activity.getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

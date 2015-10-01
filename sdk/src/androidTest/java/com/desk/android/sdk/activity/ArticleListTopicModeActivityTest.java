@@ -2,7 +2,6 @@ package com.desk.android.sdk.activity;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
@@ -18,8 +17,6 @@ import com.desk.java.apiclient.model.ApiResponse;
 import com.desk.java.apiclient.model.Article;
 import com.desk.java.apiclient.model.Topic;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -33,7 +30,6 @@ import org.mockito.stubbing.Answer;
 import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.unregisterIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -44,7 +40,6 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtras;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 import static android.view.KeyEvent.KEYCODE_ENTER;
 import static com.desk.android.sdk.activity.ArticleActivity.EXTRA_ARTICLE;
 import static com.desk.android.sdk.activity.ArticleListActivity.EXTRA_MODE;
@@ -53,7 +48,6 @@ import static com.desk.android.sdk.activity.ArticleListActivity.EXTRA_TOPIC;
 import static com.desk.android.sdk.activity.ArticleListActivity.MODE_SEARCH;
 import static com.desk.android.sdk.helper.DeskThemeHelper.EXTRA_THEME_RES_ID;
 import static com.desk.android.sdk.helper.DeskThemeHelper.NO_THEME_RES_ID;
-import static com.desk.android.sdk.util.InstrumentationTestUtils.createIdleResourceAndWait;
 import static com.desk.android.sdk.util.InstrumentationTestUtils.getContactUsComponentName;
 import static com.desk.android.sdk.util.InstrumentationTestUtils.getMockedArticleResponse;
 import static com.desk.android.sdk.util.InstrumentationTestUtils.getMockedTopicResponse;
@@ -75,16 +69,12 @@ import static org.mockito.Mockito.mock;
 @LargeTest
 public class ArticleListTopicModeActivityTest {
 
-    private  static final long WAITING_TIME = SECOND_IN_MILLIS * 5;
-
     @Mock static ArticleProvider mockArticleProvider = mock(ArticleProvider.class);
 
     @ClassRule
     public static DeskDefaultsRule resetRule = new DeskDefaultsRule();
 
     private static ApiResponse<Article> mockedArticleResponse;
-
-    private IdlingResource mIdlingResource;
 
     @Rule
     public IntentsTestRule<ArticleListActivity> activityRule = new IntentsTestRule<ArticleListActivity>(ArticleListActivity.class) {
@@ -118,16 +108,6 @@ public class ArticleListTopicModeActivityTest {
                 return null;
             }
         }).when(mockArticleProvider).getArticles(anyInt(), anyInt(), anyInt(), Matchers.<ArticleCallbacks>any());
-    }
-
-    @Before
-    public void setUp() {
-        mIdlingResource = createIdleResourceAndWait(WAITING_TIME);
-    }
-
-    @After
-    public void tearDown() {
-        unregisterIdlingResources(mIdlingResource);
     }
 
     @Test

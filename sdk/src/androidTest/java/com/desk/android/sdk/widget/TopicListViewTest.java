@@ -114,7 +114,6 @@ public class TopicListViewTest {
         listener = mock(TopicListView.TopicSelectedListener.class);
         mockTopics = getMockTopics();
         topicListView = new TopicListView(InstrumentationRegistry.getTargetContext());
-        topicListView.onFinishInflate();
         topicListView.setTopicSelectedListener(listener);
     }
 
