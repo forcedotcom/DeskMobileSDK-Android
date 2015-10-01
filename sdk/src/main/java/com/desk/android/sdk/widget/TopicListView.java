@@ -118,8 +118,6 @@ public class TopicListView extends FrameLayout implements AdapterView.OnItemClic
         mList = (ListView) findViewById(android.R.id.list);
         mProgress = (ProgressBar) findViewById(android.R.id.progress);
         mEmpty = (TextView) findViewById(android.R.id.empty);
-        mList.setAdapter(mAdapter);
-        mList.setOnItemClickListener(this);
         if (getContext() instanceof BrandProvider) {
             BrandProvider provider = (BrandProvider) getContext();
             mIsBranded = provider.isBranded();
@@ -127,6 +125,8 @@ public class TopicListView extends FrameLayout implements AdapterView.OnItemClic
         }
         mTopics = new ArrayList<>();
         mAdapter = new TopicListAdapter(context, mTopics);
+        mList.setAdapter(mAdapter);
+        mList.setOnItemClickListener(this);
     }
 
     @VisibleForTesting
