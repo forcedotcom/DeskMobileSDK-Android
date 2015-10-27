@@ -59,6 +59,9 @@
     <!-- Text displayed when an error occurs while trying to load list items -->
     <attr name="dk_errorText" format="string"/>
 
+    <!-- ProgressBar style to apply to all progress bars used in the SDK -->
+    <attr name="dk_progressBarStyle" format="reference"/>
+
     <!-- Attributes for a TopicListView -->
     <declare-styleable name="TopicListView">
         <!-- Text to display when there are no topics -->
