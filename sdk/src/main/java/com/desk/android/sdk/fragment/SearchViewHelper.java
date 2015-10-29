@@ -94,7 +94,7 @@ public class SearchViewHelper extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (getParent() != null) {
-                    getParent().onPerformSearch(query);
+                    getParent().onPerformSearch(query.trim());
                 }
                 closeSearchView();
                 return true;
