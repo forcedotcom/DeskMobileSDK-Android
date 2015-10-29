@@ -26,8 +26,7 @@
 
 package com.desk.android.sdk.error;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import java.io.IOException;
 
 /**
  * Represents an error response from the desk api.
@@ -40,13 +39,10 @@ public class ErrorResponse {
 
     private ErrorResponse() {}
 
-    public ErrorResponse(RetrofitError error) {
-        isNetworkError = RetrofitError.Kind.NETWORK == error.getKind();
-        Response response = error.getResponse();
-        if (response != null) {
-            reason = response.getReason();
-            status = response.getStatus();
-        }
+    public ErrorResponse(Throwable throwable) {
+        isNetworkError = throwable instanceof IOException;
+        reason = throwable.getMessage();
+        status = 500;
     }
 
     /**

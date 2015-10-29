@@ -194,7 +194,6 @@ public final class Desk {
         if (client == null) {
             client = new DeskClient
                     .Builder(getConfig().getHostname(), getConfig().getApiToken())
-                    .isDebug(DEBUG)
                     .responseCache(getResponseCache(context))
                     .create();
         }
