@@ -12,7 +12,6 @@ import com.desk.android.sdk.config.ContactUsPropertyConfig;
 import com.desk.android.sdk.provider.TopicProvider;
 import com.desk.android.sdk.provider.TopicProvider.TopicCallbacks;
 import com.desk.android.sdk.util.DeskDefaultsRule;
-import com.desk.android.sdk.util.ViewActions;
 import com.desk.java.apiclient.model.ApiResponse;
 import com.desk.java.apiclient.model.Topic;
 
@@ -122,31 +121,31 @@ public class TopicListActivityTest {
                         hasEntry(equalTo(EXTRA_THEME_RES_ID), equalTo(NO_THEME_RES_ID))))));
     }
 
-//    @SuppressWarnings("unchecked")
-//    @Test
-//    public void searchOpensArticleListActivity() {
-//        // click the search button and type "test"
-//        onView(withId(R.id.search)).perform(click());
-//        String query = "test";
-//        onView(withId(R.id.search_src_text)).perform(typeText(query), pressKey(KEYCODE_ENTER));
-//
-//        // verify that the ArticleListActivity was launched
-//        intended(hasComponent(ArticleListActivity.class.getName()));
-//
-//        // verify that the ArticleListActivity is launched with the correct Intent extras
-//        intended(allOf(
-//                hasExtras(allOf(
-//                        hasEntry(equalTo(EXTRA_MODE), equalTo(MODE_SEARCH)),
-//                        hasEntry(equalTo(EXTRA_QUERY), equalTo(query)),
-//                        hasEntry(equalTo(EXTRA_THEME_RES_ID), equalTo(NO_THEME_RES_ID))))));
-//    }
-//
-//    @Test
-//    public void clickContactUsMenuLaunchesContactUsActivity() {
-//        // click the contact us button
-//        onView(withId(R.id.contact_us)).perform(click());
-//
-//        // verify that the ContactUsWebActivity was launched
-//        intended(hasComponent(getContactUsComponentName()));
-//    }
+    @SuppressWarnings("unchecked")
+    @Test
+    public void searchOpensArticleListActivity() {
+        // click the search button and type "test"
+        onView(withId(R.id.search)).perform(click());
+        String query = "test";
+        onView(withId(R.id.search_src_text)).perform(typeText(query), pressKey(KEYCODE_ENTER));
+
+        // verify that the ArticleListActivity was launched
+        intended(hasComponent(ArticleListActivity.class.getName()));
+
+        // verify that the ArticleListActivity is launched with the correct Intent extras
+        intended(allOf(
+                hasExtras(allOf(
+                        hasEntry(equalTo(EXTRA_MODE), equalTo(MODE_SEARCH)),
+                        hasEntry(equalTo(EXTRA_QUERY), equalTo(query)),
+                        hasEntry(equalTo(EXTRA_THEME_RES_ID), equalTo(NO_THEME_RES_ID))))));
+    }
+
+    @Test
+    public void clickContactUsMenuLaunchesContactUsActivity() {
+        // click the contact us button
+        onView(withId(R.id.contact_us)).perform(click());
+
+        // verify that the ContactUsWebActivity was launched
+        intended(hasComponent(getContactUsComponentName()));
+    }
 }
