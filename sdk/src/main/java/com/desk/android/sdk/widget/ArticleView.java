@@ -27,27 +27,58 @@
 package com.desk.android.sdk.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
+import com.desk.android.sdk.R;
 import com.desk.java.apiclient.model.Article;
 
 /**
- * <p>Web view which displays an article's content</p>
+ * <p>FrameLayout containing a WebView and ProgressBar which can load an article's url.</p>
  *
  * Created by Matt Kranzler on 6/30/15.
  */
-public class ArticleView extends BaseWebView {
+public class ArticleView extends FrameLayout {
+
+    private BaseWebView webView;
+    private ProgressBar progressBar;
 
     public ArticleView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public ArticleView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public ArticleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+        LayoutInflater.from(getContext()).inflate(R.layout.article_view, this, true);
+        webView = (BaseWebView) findViewById(R.id.web_view);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+        // set a WebViewClient to show the progress bar when a page is loading
+        webView.setWebViewClient(new WebViewClient() {
+            @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     /**
@@ -55,7 +86,14 @@ public class ArticleView extends BaseWebView {
      * @param article the article to load
      */
     public void loadArticle(Article article) {
-        loadUrl(article.getPublicUrl());
+        webView.loadUrl(article.getPublicUrl());
+    }
+
+    /**
+     * @see BaseWebView#wentBack()
+     */
+    public boolean wentBack() {
+        return webView.wentBack();
     }
 
 }
