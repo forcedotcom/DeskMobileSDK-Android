@@ -28,13 +28,20 @@ package com.desk.android.sdk.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.R;
+import com.desk.android.sdk.config.ContactUsConfig;
 import com.desk.android.sdk.helper.DeskThemeHelper;
+import com.desk.android.sdk.helper.MenuHelper;
 import com.desk.android.sdk.widget.ContactUsWebView;
+import com.desk.java.apiclient.util.StringUtils;
 
 import static com.desk.android.sdk.helper.DeskThemeHelper.EXTRA_THEME_RES_ID;
 import static com.desk.android.sdk.helper.DeskThemeHelper.NO_THEME_RES_ID;
@@ -67,12 +74,66 @@ public class ContactUsWebActivity extends AppCompatActivity {
         activity.startActivity(intent);
     }
 
+    private DeskThemeHelper mThemeHelper;
+    private ContactUsConfig mConfig;
+    private boolean mCallUsEnabled;
+    private String mPhoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        new DeskThemeHelper(this);
+        mThemeHelper = new DeskThemeHelper(this);
+        mConfig = Desk.with(this).getContactUsConfig();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_us_web_activity);
         mContactUsWebView = (ContactUsWebView) findViewById(R.id.contact_us_form);
+        initializeVariables();
+    }
+
+    private void initializeVariables() {
+        if (mThemeHelper.hasBrandId()) {
+            int brandId = mThemeHelper.getBrandId();
+            mPhoneNumber = mConfig.getCallUsPhoneNumber(brandId);
+            mCallUsEnabled = mConfig.isCallUsEnabled(brandId);
+        } else {
+            mPhoneNumber = mConfig.getCallUsPhoneNumber();
+            mCallUsEnabled = mConfig.isCallUsEnabled();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.contact_us_web_activity_menu, menu);
+        MenuHelper.tintIcons(menu, mThemeHelper.getColorControlNormal(), R.id.submit, R.id.call_us);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem callUs = menu.findItem(R.id.call_us);
+        if (callUs != null) {
+            callUs.setVisible(mCallUsEnabled);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int id = item.getItemId();
+        if (R.id.call_us == id) {
+            handleCallUs();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void handleCallUs() {
+        if (StringUtils.isEmpty(mPhoneNumber)) {
+            throw new IllegalStateException("You must specify a phone number to call in your ContactUsConfig.");
+        }
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + mPhoneNumber));
+        startActivity(intent);
     }
 
     @Override
