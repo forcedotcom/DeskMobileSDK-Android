@@ -137,15 +137,18 @@ public class ContactUsView extends LinearLayout {
         Desk desk = Desk.with(getContext());
         checkConfig(desk.getContactUsConfig());
         checkIdentity(desk.getIdentity());
+        setInitialFieldValues();
+        setupListeners();
+        setInitialFocus();
+    }
 
+    private void setInitialFieldValues() {
         mUserName.setHint(mNameHint);
         mUserName.setText(mName);
         mUserEmail.setHint(mEmailHint);
         mUserSubject.setText(mSubject);
         mUserSubject.setHint(mSubjectHint);
         mUserFeedback.setHint(mFeedbackHint);
-
-        setupListeners();
     }
 
     private void setupListeners() {
@@ -195,6 +198,27 @@ public class ContactUsView extends LinearLayout {
                 checkForm();
             }
         });
+    }
+
+    private void setInitialFocus() {
+        final EditText focusField;
+
+        // get the first visible empty field
+        if (View.VISIBLE == mUserName.getVisibility()
+                && TextUtils.isEmpty(mUserName.getText())) {
+            focusField = mUserName;
+        } else if (View.VISIBLE == mUserEmail.getVisibility()
+                && TextUtils.isEmpty(mUserEmail.getText())) {
+            focusField = mUserEmail;
+        } else if (View.VISIBLE == mUserSubject.getVisibility()
+                && TextUtils.isEmpty(mUserSubject.getText())) {
+            focusField = mUserSubject;
+        } else {
+            focusField = mUserFeedback;
+        }
+
+        // request focus
+        focusField.requestFocus();
     }
 
     /**
