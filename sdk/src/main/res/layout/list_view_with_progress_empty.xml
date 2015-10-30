@@ -32,6 +32,7 @@
         android:layout_height="match_parent"/>
 
     <ProgressBar
+        style="?dk_progressBarStyle"
         android:id="@android:id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
