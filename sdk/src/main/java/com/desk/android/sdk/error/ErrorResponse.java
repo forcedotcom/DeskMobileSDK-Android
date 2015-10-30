@@ -39,6 +39,12 @@ public class ErrorResponse {
 
     private ErrorResponse() {}
 
+    public ErrorResponse(boolean isNetworkError, String reason, int status) {
+        this.isNetworkError = isNetworkError;
+        this.reason = reason;
+        this.status = status;
+    }
+
     public ErrorResponse(Throwable throwable) {
         isNetworkError = throwable instanceof IOException;
         reason = throwable.getMessage();
