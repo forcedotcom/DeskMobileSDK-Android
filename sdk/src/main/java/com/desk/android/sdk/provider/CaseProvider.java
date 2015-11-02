@@ -36,8 +36,8 @@ import com.desk.java.apiclient.model.MessageDirection;
 import com.desk.java.apiclient.service.CaseService;
 
 import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Wraps a {@link CaseService} to provide a higher level of abstraction.
@@ -94,18 +94,19 @@ public class CaseProvider {
         caseService.createCase(
                 newCase,
                 null,
-                null,
-                new Callback<Case>() {
-                    @Override
-                    public void success(Case aCase, Response response) {
-                        callback.onCaseCreated(aCase);
-                    }
+                null)
+                .enqueue(
+                        new Callback<Case>() {
+                            @Override
+                            public void onResponse(Response<Case> response, Retrofit retrofit) {
+                                callback.onCaseCreated(response.body());
+                            }
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        callback.onCreateCaseError(new ErrorResponse(retrofitError));
-                    }
-                }
-        );
+                            @Override
+                            public void onFailure(Throwable throwable) {
+                                callback.onCreateCaseError(new ErrorResponse(throwable));
+                            }
+                        }
+                );
     }
 }

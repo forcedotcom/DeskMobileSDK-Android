@@ -42,6 +42,7 @@ import com.desk.android.sdk.provider.CaseProvider;
 import com.desk.android.sdk.provider.InboundMailboxProvider;
 import com.desk.android.sdk.provider.TopicProvider;
 import com.desk.java.apiclient.DeskClient;
+import com.desk.java.apiclient.DeskClientBuilder;
 import com.squareup.okhttp.Cache;
 
 import java.util.Locale;
@@ -192,11 +193,7 @@ public final class Desk {
     @NonNull
     public DeskClient getClient() {
         if (client == null) {
-            client = new DeskClient
-                    .Builder(getConfig().getHostname(), getConfig().getApiToken())
-                    .isDebug(DEBUG)
-                    .responseCache(getResponseCache(context))
-                    .create();
+            client = DeskClient.create(new DeskClientBuilder(getConfig().getHostname(), getConfig().getApiToken()).responseCache(getResponseCache(context)));
         }
         return client;
     }

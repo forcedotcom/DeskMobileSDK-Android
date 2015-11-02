@@ -31,10 +31,6 @@ import android.test.suitebuilder.annotation.SmallTest;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Collections;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -54,25 +50,25 @@ public class ErrorResponseTest {
 
     @Test
     public void isNetworkErrorReturnsTrue() throws Exception {
-        ErrorResponse errorResponse = new ErrorResponse(RetrofitError.networkError(TEST_URL, new IOException()));
+        ErrorResponse errorResponse = new ErrorResponse(new IOException());
         assertTrue(errorResponse.isNetworkError());
     }
 
     @Test
     public void isNetworkErrorReturnsFalse() throws Exception {
-        ErrorResponse errorResponse = new ErrorResponse(RetrofitError.unexpectedError(TEST_URL, new IOException()));
+        ErrorResponse errorResponse = new ErrorResponse(new Exception());
         assertFalse(errorResponse.isNetworkError());
     }
 
     @Test
     public void getReason() throws Exception {
-        ErrorResponse errorResponse = new ErrorResponse(RetrofitError.httpError(TEST_URL, new Response(TEST_URL, TEST_STATUS, TEST_REASON, Collections.EMPTY_LIST, null), null, null));
+        ErrorResponse errorResponse = new ErrorResponse(false, TEST_REASON, TEST_STATUS);
         assertEquals(TEST_REASON, errorResponse.getReason());
     }
 
     @Test
     public void getStatus() throws Exception {
-        ErrorResponse errorResponse = new ErrorResponse(RetrofitError.httpError(TEST_URL, new Response(TEST_URL, TEST_STATUS, TEST_REASON, Collections.EMPTY_LIST, null), null, null));
+        ErrorResponse errorResponse = new ErrorResponse(false, TEST_REASON, TEST_STATUS);
         assertEquals(TEST_STATUS, errorResponse.getStatus());
     }
 }

@@ -90,6 +90,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void viewHasVerticalOrientation() throws Exception {
         assertThat(contactUsView).isVertical();
     }
@@ -97,6 +98,7 @@ public class ContactUsViewTest {
     // region FormListener Tests
 
     @Test
+    @UiThreadTest
     public void onFormValidCalledWhenFormValid() throws Exception {
 
         // this sets up ContactUsView to have textChangedListeners on email and subject
@@ -128,6 +130,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onFormValidCalledWhenFormInvalid() throws Exception {
 
         // this sets up ContactUsView to have textChangedListeners on email and subject
@@ -159,6 +162,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void clearFormListenerClearsListener() throws Exception {
         ContactUsView contactUsView = getNewContactUsView();
         contactUsView.setFormListener(mockFormListener);
@@ -171,68 +175,80 @@ public class ContactUsViewTest {
 
     //region Hint Tests
     @Test
+    @UiThreadTest
     public void nameHintMatchesDefault() throws Exception {
         assertThat(getName(contactUsView)).hasHint(getString(R.string.def_user_name_hint));
     }
 
     @Test
+    @UiThreadTest
     public void emailHintMatchesDefault() throws Exception {
         assertThat(getEmail(contactUsView)).hasHint(getString(R.string.def_user_email_hint));
     }
 
     @Test
+    @UiThreadTest
     public void subjectHintMatchesDefault() throws Exception {
         assertThat(getSubject(contactUsView)).hasHint(getString(R.string.def_subject_hint));
     }
 
     @Test
+    @UiThreadTest
     public void feedbackHintMatchesDefault() throws Exception {
         assertThat(getFeedback(contactUsView)).hasHint(getString(R.string.def_user_feedback_hint));
     }
 
     @Test
+    @UiThreadTest
     public void nameHintMatchesValueFromLayoutAttrs() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
         assertThat(getName(contactUsView)).hasHint(getString(R.string.test_attr_name_hint));
     }
 
     @Test
+    @UiThreadTest
     public void emailHintMatchesValueFromLayoutAttrs() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
         assertThat(getEmail(contactUsView)).hasHint(getString(R.string.test_attr_email_hint));
     }
 
     @Test
+    @UiThreadTest
     public void subjectHintMatchesValueFromLayoutAttrs() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
         assertThat(getSubject(contactUsView)).hasHint(getString(R.string.test_attr_subject_hint));
     }
 
     @Test
+    @UiThreadTest
     public void feedbackHintMatchesValueFromLayoutAttrs() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
         assertThat(getFeedback(contactUsView)).hasHint(getString(R.string.test_attr_feedback_hint));
     }
 
     @Test
+    @UiThreadTest
     public void nameHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getName(contactUsView)).hasHint(getString(R.string.test_style_name_hint));
     }
 
     @Test
+    @UiThreadTest
     public void emailHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getEmail(contactUsView)).hasHint(getString(R.string.test_style_email_hint));
     }
 
     @Test
+    @UiThreadTest
     public void subjectHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getSubject(contactUsView)).hasHint(getString(R.string.test_style_subject_hint));
     }
 
     @Test
+    @UiThreadTest
     public void feedbackHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getFeedback(contactUsView)).hasHint(getString(R.string.test_style_feedback_hint));
@@ -242,6 +258,7 @@ public class ContactUsViewTest {
     // region Configuration tests
 
     @Test
+    @UiThreadTest
     public void userNameIsVisibleWhenEnabled() throws Exception {
 
         // enable user name
@@ -258,6 +275,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void userNameIsGoneWhenDisabled() throws Exception {
 
         // disable user name
@@ -274,6 +292,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void userNameIsSetFromIdentity() throws Exception {
         final String userName = "User Name";
         Desk.with(context)
@@ -283,6 +302,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void emailIsGoneWhenPopulated() throws Exception {
 
         // populate email
@@ -294,6 +314,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void subjectIsVisibleWhenEnabled() throws Exception {
 
         // enable subject
@@ -310,6 +331,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void subjectIsGoneWhenDisabled() throws Exception {
 
         // disable subject
@@ -326,6 +348,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void subjectIsSetFromContactUsConfiguration() throws Exception {
         final String subject = "This is our subject";
         Desk.with(context)
@@ -436,6 +459,7 @@ public class ContactUsViewTest {
     // region Validation Tests
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsFalseWhenEmailEmpty() throws Exception {
 
         // need to clear the identity
@@ -449,6 +473,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsFalseWhenEmailInvalid() throws Exception {
 
         // need to clear the identity
@@ -462,6 +487,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsFalseWhenSubjectEmpty() throws Exception {
         Desk.with(context)
                 .setContactUsConfig(new BaseContactUsConfig(context) {
@@ -478,6 +504,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsFalseWhenFeedbackEmpty() throws Exception {
         Desk.with(context)
                 .setContactUsConfig(new BaseContactUsConfig(context) {
@@ -495,6 +522,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsTrueWhenValid() throws Exception {
 
         // need to clear the identity
@@ -520,6 +548,7 @@ public class ContactUsViewTest {
     // region getRequest Tests
 
     @Test
+    @UiThreadTest
     public void getRequestReturnsValidRequest() throws Exception {
         final String subject = "Valid Subject";
         final String name = "Valid Name";
@@ -562,6 +591,7 @@ public class ContactUsViewTest {
     }
 
     @Test(expected = IncompleteFormException.class)
+    @UiThreadTest
     public void getRequestThrowsIncompleteFormException() {
         ContactUsView contactUsView = getNewContactUsView();
         contactUsView.getRequest("to@email.com");

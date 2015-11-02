@@ -41,9 +41,14 @@ import com.google.gson.reflect.TypeToken;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
+import retrofit.Call;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
 
 import static com.desk.android.sdk.provider.ArticleProvider.ALL_BRANDS;
 import static com.desk.android.sdk.provider.ArticleProvider.ALL_TOPICS;
@@ -55,12 +60,13 @@ import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyListOf;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.isNotNull;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link ArticleProvider}
@@ -69,15 +75,37 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("unchecked")
 public class ArticleProviderTest {
 
+    @Mock ArticleService mockArticleService;
+
     private ArticleCallbacks callback;
-    private MockArticleService mockArticleService;
     private ArticleProvider articleProvider;
 
     @Before
     public void setUp() throws Exception {
-        mockArticleService = spy(new MockArticleService());
+        MockitoAnnotations.initMocks(this);
         articleProvider = new ArticleProvider(mockArticleService);
         callback = mock(ArticleCallbacks.class);
+
+        when(mockArticleService.searchArticles(
+                anyString(),
+                anyInt(),
+                anyInt(),
+                any(TopicIds.class), // testing that this is null
+                any(BrandIds.class),
+                anyBoolean(),
+                anyString(),
+                any(SortDirection.class),
+                anyString())).thenReturn(mock(Call.class));
+
+        when(mockArticleService.getArticles(
+                anyString(),
+                anyInt(),
+                anyInt(),
+                eq(true), // testing that this is true
+                any(TopicIds.class),
+                any(BrandIds.class),
+                anyString(),
+                any(SortDirection.class))).thenReturn(mock(Call.class));
     }
 
     // region getArticles() Tests
@@ -93,9 +121,7 @@ public class ArticleProviderTest {
                 isNull(TopicIds.class), // testing that this is null
                 any(BrandIds.class),
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -109,9 +135,7 @@ public class ArticleProviderTest {
                 isNotNull(TopicIds.class), // testing that this is not null
                 any(BrandIds.class),
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -125,9 +149,7 @@ public class ArticleProviderTest {
                 any(TopicIds.class),
                 isNull(BrandIds.class), // testing that this is null
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -141,9 +163,7 @@ public class ArticleProviderTest {
                 any(TopicIds.class),
                 isNotNull(BrandIds.class), // testing that this is null
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -157,9 +177,7 @@ public class ArticleProviderTest {
                 any(TopicIds.class),
                 any(BrandIds.class),
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -174,9 +192,7 @@ public class ArticleProviderTest {
                 any(TopicIds.class),
                 any(BrandIds.class),
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -190,9 +206,7 @@ public class ArticleProviderTest {
                 any(TopicIds.class),
                 any(BrandIds.class),
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -206,9 +220,7 @@ public class ArticleProviderTest {
                 any(TopicIds.class),
                 any(BrandIds.class),
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -222,9 +234,7 @@ public class ArticleProviderTest {
                 any(TopicIds.class),
                 any(BrandIds.class),
                 eq(ArticleService.FIELD_POSITION),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -238,21 +248,57 @@ public class ArticleProviderTest {
                 any(TopicIds.class),
                 any(BrandIds.class),
                 anyString(),
-                eq(SortDirection.ASC), // testing that this is ascending
-                any(RetrofitCallback.class)
-        );
+                eq(SortDirection.ASC)); // testing that this is ascending
     }
 
     @Test
     public void getArticlesNotifiesCallbackOnSuccess() throws Exception {
-        mockArticleService.setError(false);
+        Call mockCall = mock(Call.class);
+
+        when(mockArticleService.getArticles(
+                anyString(),
+                anyInt(),
+                anyInt(),
+                eq(true), // testing that this is true
+                any(TopicIds.class),
+                any(BrandIds.class),
+                anyString(),
+                any(SortDirection.class))).thenReturn(mockCall);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Article>()), null);
+                return null;
+            }
+        }).when(mockCall).enqueue(any(Callback.class));
+
         articleProvider.getArticles(ALL_TOPICS, ALL_BRANDS, 1, callback);
         verify(callback).onArticlesLoaded(anyInt(), anyListOf(Article.class), anyBoolean());
     }
 
     @Test
     public void getArticlesNotifiesCallbackOnError() throws Exception {
-        mockArticleService.setError(true);
+        Call mockCall = mock(Call.class);
+
+        when(mockArticleService.getArticles(
+                anyString(),
+                anyInt(),
+                anyInt(),
+                eq(true), // testing that this is true
+                any(TopicIds.class),
+                any(BrandIds.class),
+                anyString(),
+                any(SortDirection.class))).thenReturn(mockCall);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                return null;
+            }
+        }).when(mockCall).enqueue(any(Callback.class));
+
         articleProvider.getArticles(ALL_TOPICS, ALL_BRANDS, 1, callback);
         verify(callback).onArticlesLoadError(any(ErrorResponse.class));
     }
@@ -273,9 +319,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -290,9 +334,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -307,9 +349,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -324,9 +364,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -341,9 +379,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -359,9 +395,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -376,9 +410,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -393,9 +425,7 @@ public class ArticleProviderTest {
                 eq(true), // testing that this is true
                 anyString(),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -410,9 +440,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 eq(ArticleService.FIELD_POSITION),
                 any(SortDirection.class),
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -427,9 +455,7 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 eq(SortDirection.ASC), // testing that this is ascending
-                anyString(),
-                any(RetrofitCallback.class)
-        );
+                anyString());
     }
 
     @Test
@@ -445,21 +471,60 @@ public class ArticleProviderTest {
                 anyBoolean(),
                 anyString(),
                 any(SortDirection.class),
-                eq(query), // testing that this is the correct value
-                any(RetrofitCallback.class)
-        );
+                eq(query)); // testing that this is the correct value
     }
 
     @Test
     public void findArticlesNotifiesCallbackOnSuccess() throws Exception {
-        mockArticleService.setError(false);
+        Call mockCall = mock(Call.class);
+
+        when(mockArticleService.searchArticles(
+                anyString(),
+                anyInt(),
+                anyInt(),
+                isNull(TopicIds.class), // testing that this is null
+                any(BrandIds.class),
+                anyBoolean(),
+                anyString(),
+                any(SortDirection.class),
+                anyString())).thenReturn(mockCall);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Article>()), null);
+                return null;
+            }
+        }).when(mockCall).enqueue(any(Callback.class));
+
+
         articleProvider.findArticles(ALL_TOPICS, ALL_BRANDS, "query", 1, callback);
         verify(callback).onArticlesLoaded(anyInt(), anyListOf(Article.class), anyBoolean());
     }
 
     @Test
     public void findArticlesNotifiesCallbackOnError() throws Exception {
-        mockArticleService.setError(true);
+        Call mockCall = mock(Call.class);
+
+        when(mockArticleService.searchArticles(
+                anyString(),
+                anyInt(),
+                anyInt(),
+                isNull(TopicIds.class), // testing that this is null
+                any(BrandIds.class),
+                anyBoolean(),
+                anyString(),
+                any(SortDirection.class),
+                anyString())).thenReturn(mockCall);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                return null;
+            }
+        }).when(mockCall).enqueue(any(Callback.class));
+
         articleProvider.findArticles(ALL_TOPICS, ALL_BRANDS, "query", 1, callback);
         verify(callback).onArticlesLoadError(any(ErrorResponse.class));
     }
@@ -472,7 +537,7 @@ public class ArticleProviderTest {
     public void retrofitCallbackPassesCorrectPage() throws Exception {
         ApiResponse<Article> response = getMockApiResponse("/mock_article_response_page_2.json");
         RetrofitCallback articleCallback = new RetrofitCallback(callback);
-        articleCallback.success(response, null);
+        articleCallback.onResponse(Response.success(response), null);
         verify(callback).onArticlesLoaded(
                 eq(response.getPage()),
                 anyListOf(Article.class),
@@ -484,7 +549,7 @@ public class ArticleProviderTest {
     public void retrofitCallbackPassesHasNextPage() throws Exception {
         ApiResponse<Article> response = getMockApiResponse("/mock_article_response_with_next.json");
         RetrofitCallback articleCallback = new RetrofitCallback(callback);
-        articleCallback.success(response, null);
+        articleCallback.onResponse(Response.success(response), null);
         verify(callback).onArticlesLoaded(
                 anyInt(),
                 anyListOf(Article.class),
@@ -493,64 +558,6 @@ public class ArticleProviderTest {
     }
 
     // endregion
-
-    /**
-     * Mock ArticleService for unit testing purposes
-     */
-    private class MockArticleService implements ArticleService {
-
-        private boolean error = false;
-
-        public void setError(boolean error) {
-            this.error = error;
-        }
-
-        @Override
-        public void getArticles(String s, int i, int i1, Boolean aBoolean, Callback<ApiResponse<Article>> callback) {
-
-        }
-
-        @Override
-        public ApiResponse<Article> getArticles(String s, int i, int i1, Boolean aBoolean) {
-            return null;
-        }
-
-        @Override
-        public void getArticles(String s, int i, int i1, Boolean aBoolean, TopicIds topicIds, BrandIds brandIds, String s1, SortDirection sortDirection, Callback<ApiResponse<Article>> callback) {
-            if (error) {
-                error(callback);
-            } else {
-                success(callback);
-            }
-        }
-
-        @Override
-        public ApiResponse<Article> getArticles(String s, int i, int i1, Boolean aBoolean, TopicIds topicIds, BrandIds brandIds, String s1, SortDirection sortDirection) {
-            return null;
-        }
-
-        @Override
-        public void searchArticles(String s, int i, int i1, TopicIds topicIds, BrandIds brandIds, Boolean aBoolean, String s1, SortDirection sortDirection, String s2, Callback<ApiResponse<Article>> callback) {
-            if (error) {
-                error(callback);
-            } else {
-                success(callback);
-            }
-        }
-
-        @Override
-        public ApiResponse<Article> searchArticles(String s, int i, int i1, TopicIds topicIds, BrandIds brandIds, Boolean aBoolean, String s1, SortDirection sortDirection, String s2) {
-            return null;
-        }
-
-        private void success(Callback<ApiResponse<Article>> callback) {
-            callback.success(getMockApiResponse("/mock_article_response.json"), null);
-        }
-
-        private void error(Callback<ApiResponse<Article>> callback) {
-            callback.failure(RetrofitError.unexpectedError("", new RuntimeException()));
-        }
-    }
 
     private ApiResponse<Article> getMockApiResponse(String jsonFile) {
         return TestUtils.readMockJsonFile(

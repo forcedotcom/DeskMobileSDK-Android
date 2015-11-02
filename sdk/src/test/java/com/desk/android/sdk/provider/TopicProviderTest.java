@@ -28,33 +28,35 @@ package com.desk.android.sdk.provider;
 
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.error.ErrorResponse;
-import com.desk.android.sdk.util.TestUtils;
 import com.desk.java.apiclient.model.ApiResponse;
-import com.desk.java.apiclient.model.Article;
 import com.desk.java.apiclient.model.SortDirection;
 import com.desk.java.apiclient.model.Topic;
 import com.desk.java.apiclient.service.TopicService;
-import com.google.gson.reflect.TypeToken;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
+import retrofit.Call;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
 
 import static com.desk.android.sdk.provider.TopicProvider.ALL_BRANDS;
-import static com.desk.android.sdk.provider.TopicProvider.RetrofitCallback;
 import static com.desk.android.sdk.provider.TopicProvider.TopicCallbacks;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyListOf;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link TopicProvider}
@@ -62,15 +64,23 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("unchecked")
 public class TopicProviderTest {
 
+    @Mock TopicService mockTopicService;
+
     private TopicCallbacks callbacks;
-    private MockTopicService mockTopicService;
     private TopicProvider topicProvider;
 
     @Before
     public void setUp() throws Exception {
-        mockTopicService = spy(new MockTopicService());
+        MockitoAnnotations.initMocks(this);
         topicProvider = new TopicProvider(mockTopicService);
         callbacks = mock(TopicCallbacks.class);
+
+        when(mockTopicService.getTopics(
+                anyString(),
+                anyBoolean(),
+                anyInt(), // testing that the brand id is null
+                anyString(),
+                any(SortDirection.class))).thenReturn(mock(Call.class));
     }
 
     @Test
@@ -81,9 +91,7 @@ public class TopicProviderTest {
                 anyBoolean(),
                 isNull(Integer.class), // testing that the brand id is null
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -95,9 +103,7 @@ public class TopicProviderTest {
                 anyBoolean(),
                 eq(brandId), // testing that this brand id is the same
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -108,9 +114,7 @@ public class TopicProviderTest {
                 anyBoolean(),
                 anyInt(),
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -121,9 +125,7 @@ public class TopicProviderTest {
                 eq(true), // testing that this is true
                 anyInt(),
                 anyString(),
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -134,9 +136,7 @@ public class TopicProviderTest {
                 anyBoolean(),
                 anyInt(),
                 eq(TopicService.FIELD_POSITION), // testing that this is the position field
-                any(SortDirection.class),
-                any(RetrofitCallback.class)
-        );
+                any(SortDirection.class));
     }
 
     @Test
@@ -147,56 +147,52 @@ public class TopicProviderTest {
                 anyBoolean(),
                 anyInt(),
                 anyString(),
-                eq(SortDirection.ASC), // testing that this is ascending
-                any(RetrofitCallback.class)
-        );
+                eq(SortDirection.ASC)); // testing that this is ascending
     }
 
     @Test
     public void getArticlesNotifiesCallbackOnSuccess() throws Exception {
-        mockTopicService.setError(false);
+        Call mockCall = mock(Call.class);
+
+        when(mockTopicService.getTopics(
+                anyString(),
+                anyBoolean(),
+                anyInt(),
+                anyString(),
+                any(SortDirection.class))).thenReturn(mockCall);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Topic>()), null);
+                return null;
+            }
+        }).when(mockCall).enqueue(any(Callback.class));
+
         topicProvider.getTopics(ALL_BRANDS, callbacks);
         verify(callbacks).onTopicsLoaded(anyListOf(Topic.class));
     }
 
     @Test
     public void getArticlesNotifiesCallbackOnError() throws Exception {
-        mockTopicService.setError(true);
+        Call mockCall = mock(Call.class);
+
+        when(mockTopicService.getTopics(
+                anyString(),
+                anyBoolean(),
+                anyInt(),
+                anyString(),
+                any(SortDirection.class))).thenReturn(mockCall);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                return null;
+            }
+        }).when(mockCall).enqueue(any(Callback.class));
+
         topicProvider.getTopics(ALL_BRANDS, callbacks);
         verify(callbacks).onTopicsLoadError(any(ErrorResponse.class));
-    }
-
-    private class MockTopicService implements TopicService {
-
-        private boolean error = false;
-
-        public void setError(boolean error) {
-            this.error = error;
-        }
-
-        @Override
-        public void getTopics(String s, Boolean aBoolean, Integer integer, String s1, SortDirection sortDirection, Callback<ApiResponse<Topic>> callback) {
-            if (error) {
-                callback.failure(RetrofitError.unexpectedError("", new RuntimeException()));
-            } else {
-                ApiResponse<Topic> response = TestUtils.readMockJsonFile(new TypeToken<ApiResponse<Topic>>() {}.getType(), "/mock_topic_response.json");
-                callback.success(response, null);
-            }
-        }
-
-        @Override
-        public ApiResponse<Topic> getTopics(String s, Boolean aBoolean, Integer integer, String s1, SortDirection sortDirection) {
-            return null;
-        }
-
-        @Override
-        public void getArticlesOfTopic(String s, int i, Boolean aBoolean, Callback<ApiResponse<Article>> callback) {
-
-        }
-
-        @Override
-        public ApiResponse<Article> getArticlesOfTopic(String s, int i, Boolean aBoolean) {
-            return null;
-        }
     }
 }

@@ -46,9 +46,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-annotations:23.0.0'
-    compile 'com.android.support:appcompat-v7:23.0.0'
-    compile 'com.desk:api-client:1.1.0'
+    compile 'com.android.support:support-annotations:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.0'
+//    compile 'com.desk:api-client:1.1.0'
 
     // instrumentation test dependencies
     androidTestCompile 'com.android.support.test:runner:0.3'
