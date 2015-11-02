@@ -37,6 +37,7 @@ import com.desk.java.apiclient.model.BrandIds;
 import com.desk.java.apiclient.model.TopicIds;
 import com.desk.java.apiclient.service.ArticleService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -147,6 +148,10 @@ public class ArticleProvider {
         @Override
         public void onResponse(Response<ApiResponse<Article>> response, Retrofit retrofit) {
             ApiResponse<Article> apiResponse = response.body();
+            if (apiResponse == null) {
+                callbacks.onArticlesLoaded(0, new ArrayList<Article>(), false);
+                return;
+            }
             callbacks.onArticlesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList(), apiResponse.hasNextPage());
         }
 
