@@ -27,6 +27,8 @@
 package com.desk.android.sdk.widget;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.ListView;
@@ -44,6 +46,7 @@ import com.google.gson.reflect.TypeToken;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -82,6 +85,9 @@ public class TopicListViewTest {
     @ClassRule
     public static DeskDefaultsRule resetRule = new DeskDefaultsRule();
 
+    @Rule
+    public final UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
+
     private TopicListView.TopicSelectedListener listener;
     private List<Topic> mockTopics;
     private TopicListView topicListView;
@@ -118,40 +124,47 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void emptyTextMatchesDefault() throws Exception {
         assertEquals(getString(R.string.def_topics_empty_text), topicListView.getEmptyText());
     }
 
     @Test
+    @UiThreadTest
     public void errorTextMatchesDefault() throws Exception {
         assertEquals(getString(R.string.def_topics_error_text), topicListView.getErrorText());
     }
 
     @Test
+    @UiThreadTest
     public void emptyTextMatchesValueFromLayoutAttrs() throws Exception {
         TopicListView topicListView = inflateView(R.layout.topic_list_view_with_attributes);
         assertEquals(topicListView.getEmptyText(), getString(R.string.test_attr_empty_text));
     }
 
     @Test
+    @UiThreadTest
     public void errorTextMatchesValueFromLayoutAttrs() throws Exception {
         TopicListView topicListView = inflateView(R.layout.topic_list_view_with_attributes);
         assertEquals(topicListView.getErrorText(), getString(R.string.test_attr_error_text));
     }
 
     @Test
+    @UiThreadTest
     public void emptyTextMatchesValueFromStyle() throws Exception {
         TopicListView topicListView = inflateView(R.layout.topic_list_view_with_style);
         assertEquals(topicListView.getEmptyText(), getString(R.string.test_style_empty_text));
     }
 
     @Test
+    @UiThreadTest
     public void errorTextMatchesValueFromStyle() throws Exception {
         TopicListView topicListView = inflateView(R.layout.topic_list_view_with_style);
         assertEquals(topicListView.getErrorText(), getString(R.string.test_style_error_text));
     }
 
     @Test
+    @UiThreadTest
     public void loadTopicsHidesList() throws Exception {
         ListView list = getList();
         assertThat(list).isVisible();
@@ -160,6 +173,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void loadTopicsShowsProgress() throws Exception {
         ProgressBar progress = getProgress();
         assertThat(progress).isGone();
@@ -168,6 +182,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onTopicsLoadedHidesProgress() throws Exception {
         ProgressBar progress = getProgress();
         topicListView.onLoaded(Collections.<Topic>emptyList());
@@ -175,6 +190,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onTopicsLoadedShowsList() throws Exception {
         ListView list = getList();
         topicListView.onLoaded(Collections.singletonList(new Topic()));
@@ -182,6 +198,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onTopicsLoadedShowsEmptyWithEmptyText() throws Exception {
         TextView empty = getEmpty();
         topicListView.onLoaded(Collections.<Topic>emptyList());
@@ -190,6 +207,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onTopicsLoadErrorHidesProgress() throws Exception {
         ProgressBar progress = getProgress();
         topicListView.onLoadError();
@@ -197,6 +215,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onTopicsLoadErrorShowsEmptyWithErrorText() throws Exception {
         TextView empty = getEmpty();
         topicListView.onLoadError();
@@ -205,6 +224,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onSaveInstanceStateSavesTopics() throws Exception {
         topicListView.onLoaded(mockTopics);
         TopicListView.SavedState savedState = (TopicListView.SavedState) topicListView.onSaveInstanceState();
@@ -213,6 +233,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onSaveInstanceStateSavesError() throws Exception {
         topicListView.onLoadError();
         TopicListView.SavedState savedState = (TopicListView.SavedState) topicListView.onSaveInstanceState();
@@ -220,6 +241,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onItemClickCallsListenerWithCorrectTopic() throws Exception {
         topicListView.onLoaded(mockTopics);
         ListView list = getList();
@@ -230,6 +252,7 @@ public class TopicListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void listenerClearedInOnDetachedFromWindow() throws Exception {
         assertNotNull(topicListView.getTopicSelectedListener());
         topicListView.onDetachedFromWindow();

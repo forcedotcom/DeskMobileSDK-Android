@@ -27,6 +27,8 @@
 package com.desk.android.sdk.widget;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.ListView;
@@ -44,6 +46,7 @@ import com.google.gson.reflect.TypeToken;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -76,6 +79,9 @@ import static org.mockito.Mockito.verify;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ArticleListViewTest {
+
+    @Rule
+    public final UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
 
     @Mock
     static ArticleProvider mockArticleProvider = mock(ArticleProvider.class);
@@ -137,40 +143,47 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void emptyTextMatchesDefault() throws Exception {
         assertEquals(getString(R.string.def_articles_empty_text), articleListView.getEmptyText());
     }
 
     @Test
+    @UiThreadTest
     public void errorTextMatchesDefault() throws Exception {
         assertEquals(getString(R.string.def_articles_error_text), articleListView.getErrorText());
     }
 
     @Test
+    @UiThreadTest
     public void emptyTextMatchesValueFromLayoutAttrs() throws Exception {
         ArticleListView articleListView = inflateView(R.layout.article_list_view_with_attributes);
         assertEquals(getString(R.string.test_attr_empty_text), articleListView.getEmptyText());
     }
 
     @Test
+    @UiThreadTest
     public void errorTextMatchesValueFromLayoutAttrs() throws Exception {
         ArticleListView articleListView = inflateView(R.layout.article_list_view_with_attributes);
         assertEquals(getString(R.string.test_attr_error_text), articleListView.getErrorText());
     }
 
     @Test
+    @UiThreadTest
     public void emptyTextMatchesValueFromStyle() throws Exception {
         ArticleListView articleListView = inflateView(R.layout.article_list_view_with_style);
         assertEquals(getString(R.string.test_style_empty_text), articleListView.getEmptyText());
     }
 
     @Test
+    @UiThreadTest
     public void errorTextMatchesValueFromStyle() throws Exception {
         ArticleListView articleListView = inflateView(R.layout.article_list_view_with_style);
         assertEquals(getString(R.string.test_style_error_text), articleListView.getErrorText());
     }
 
     @Test
+    @UiThreadTest
     public void loadArticlesHidesList() throws Exception {
         ListView list = getList();
         assertThat(list).isVisible();
@@ -179,6 +192,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void loadArticlesShowsProgress() throws Exception {
         ProgressBar progress = getProgress();
         assertThat(progress).isGone();
@@ -187,6 +201,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void searchArticlesHidesList() throws Exception {
         ListView list = getList();
         assertThat(list).isVisible();
@@ -195,6 +210,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void searchArticlesShowsProgress() throws Exception {
         ProgressBar progress = getProgress();
         assertThat(progress).isGone();
@@ -203,6 +219,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onPageLoadedHidesProgress() throws Exception {
         ProgressBar progress = getProgress();
         articleListView.onPageLoaded(mockArticles, 1, false);
@@ -210,6 +227,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onPageLoadedShowsList() throws Exception {
         ListView list = getList();
         articleListView.onPageLoaded(mockArticles, 1, false);
@@ -217,6 +235,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onPageLoadedShowsEmptyWithEmptyText() throws Exception {
         TextView empty = getEmpty();
         articleListView.onPageLoaded(Collections.<Article>emptyList(), 1, false);
@@ -225,6 +244,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onPageLoadedDoesNotShowEmpty() throws Exception {
         TextView empty = getEmpty();
         articleListView.onPageLoaded(Collections.<Article>emptyList(), 2, false);
@@ -232,6 +252,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onArticleLoadErrorHidesProgress() throws Exception {
         ProgressBar progress = getProgress();
         articleListView.onArticleLoadError();
@@ -239,6 +260,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onArticleLoadErrorShowsEmptyWithErrorText() throws Exception {
         TextView empty = getEmpty();
         articleListView.onArticleLoadError();
@@ -247,6 +269,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onItemClickCallsListenerWithCorrectArticle() throws Exception {
         articleListView.onPageLoaded(mockArticles, 1, false);
         ListView list = getList();
@@ -257,6 +280,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void listenerClearedInOnDetachedFromWindow() throws Exception {
         assertNotNull(articleListView.getArticleSelectedListener());
         articleListView.onDetachedFromWindow();
@@ -264,6 +288,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onSaveInstanceStateSavesStateWithoutError() throws Exception {
         final int topicId = 1;
         articleListView.loadArticles(topicId);
@@ -279,6 +304,7 @@ public class ArticleListViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onSaveInstanceStateSavesStateWithError() throws Exception {
         final int topicId = 1;
         articleListView.loadArticles(topicId);
