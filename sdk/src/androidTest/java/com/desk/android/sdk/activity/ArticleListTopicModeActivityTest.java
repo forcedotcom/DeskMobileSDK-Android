@@ -56,6 +56,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
@@ -108,6 +109,15 @@ public class ArticleListTopicModeActivityTest {
                 return null;
             }
         }).when(mockArticleProvider).getArticles(anyInt(), anyInt(), anyInt(), Matchers.<ArticleCallbacks>any());
+
+        doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                mockedArticleResponse = getMockedArticleResponse();
+                ((ArticleCallbacks) invocation.getArguments()[4]).onArticlesLoaded(0, mockedArticleResponse.getEntriesAsList(), false);
+                return null;
+            }
+        }).when(mockArticleProvider).findArticles(anyInt(), anyInt(), anyString(), anyInt(), Matchers.<ArticleCallbacks>any());
     }
 
     @Test

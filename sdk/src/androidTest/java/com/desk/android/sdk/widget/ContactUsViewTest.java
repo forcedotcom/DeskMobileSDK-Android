@@ -26,9 +26,13 @@
 
 package com.desk.android.sdk.widget;
 
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.desk.android.sdk.Desk;
@@ -42,6 +46,7 @@ import com.desk.android.sdk.util.DeskDefaultsRule;
 
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -72,13 +77,20 @@ public class ContactUsViewTest {
     @ClassRule
     public static DeskDefaultsRule resetRule = new DeskDefaultsRule();
 
+    @Rule
+    public final UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
+
+    private Context context;
+
     @Before
     public void setUp() throws Exception {
+        context = InstrumentationRegistry.getTargetContext();
         mockFormListener = mock(ContactUsView.FormListener.class);
         contactUsView = getNewContactUsView();
     }
 
     @Test
+    @UiThreadTest
     public void viewHasVerticalOrientation() throws Exception {
         assertThat(contactUsView).isVertical();
     }
@@ -86,11 +98,12 @@ public class ContactUsViewTest {
     // region FormListener Tests
 
     @Test
+    @UiThreadTest
     public void onFormValidCalledWhenFormValid() throws Exception {
 
         // this sets up ContactUsView to have textChangedListeners on email and subject
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public String getSubject() {
                         // don't want a subject so the text changed listener works
@@ -117,11 +130,12 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void onFormValidCalledWhenFormInvalid() throws Exception {
 
         // this sets up ContactUsView to have textChangedListeners on email and subject
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public String getSubject() {
                         // don't want a subject so the text changed listener works
@@ -148,6 +162,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void clearFormListenerClearsListener() throws Exception {
         ContactUsView contactUsView = getNewContactUsView();
         contactUsView.setFormListener(mockFormListener);
@@ -160,68 +175,80 @@ public class ContactUsViewTest {
 
     //region Hint Tests
     @Test
+    @UiThreadTest
     public void nameHintMatchesDefault() throws Exception {
         assertThat(getName(contactUsView)).hasHint(getString(R.string.def_user_name_hint));
     }
 
     @Test
+    @UiThreadTest
     public void emailHintMatchesDefault() throws Exception {
         assertThat(getEmail(contactUsView)).hasHint(getString(R.string.def_user_email_hint));
     }
 
     @Test
+    @UiThreadTest
     public void subjectHintMatchesDefault() throws Exception {
         assertThat(getSubject(contactUsView)).hasHint(getString(R.string.def_subject_hint));
     }
 
     @Test
+    @UiThreadTest
     public void feedbackHintMatchesDefault() throws Exception {
         assertThat(getFeedback(contactUsView)).hasHint(getString(R.string.def_user_feedback_hint));
     }
 
     @Test
+    @UiThreadTest
     public void nameHintMatchesValueFromLayoutAttrs() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
         assertThat(getName(contactUsView)).hasHint(getString(R.string.test_attr_name_hint));
     }
 
     @Test
+    @UiThreadTest
     public void emailHintMatchesValueFromLayoutAttrs() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
         assertThat(getEmail(contactUsView)).hasHint(getString(R.string.test_attr_email_hint));
     }
 
     @Test
+    @UiThreadTest
     public void subjectHintMatchesValueFromLayoutAttrs() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
         assertThat(getSubject(contactUsView)).hasHint(getString(R.string.test_attr_subject_hint));
     }
 
     @Test
+    @UiThreadTest
     public void feedbackHintMatchesValueFromLayoutAttrs() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
         assertThat(getFeedback(contactUsView)).hasHint(getString(R.string.test_attr_feedback_hint));
     }
 
     @Test
+    @UiThreadTest
     public void nameHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getName(contactUsView)).hasHint(getString(R.string.test_style_name_hint));
     }
 
     @Test
+    @UiThreadTest
     public void emailHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getEmail(contactUsView)).hasHint(getString(R.string.test_style_email_hint));
     }
 
     @Test
+    @UiThreadTest
     public void subjectHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getSubject(contactUsView)).hasHint(getString(R.string.test_style_subject_hint));
     }
 
     @Test
+    @UiThreadTest
     public void feedbackHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getFeedback(contactUsView)).hasHint(getString(R.string.test_style_feedback_hint));
@@ -231,11 +258,12 @@ public class ContactUsViewTest {
     // region Configuration tests
 
     @Test
+    @UiThreadTest
     public void userNameIsVisibleWhenEnabled() throws Exception {
 
         // enable user name
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public boolean isUserNameEnabled() {
                         return true;
@@ -247,11 +275,12 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void userNameIsGoneWhenDisabled() throws Exception {
 
         // disable user name
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public boolean isUserNameEnabled() {
                         return false;
@@ -263,19 +292,21 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void userNameIsSetFromIdentity() throws Exception {
         final String userName = "User Name";
-        Desk.with(InstrumentationRegistry.getTargetContext())
+        Desk.with(context)
                 .setIdentity(new UserIdentity.Builder("email@email.com").name(userName).create());
         ContactUsView contactUsView = getNewContactUsView();
         assertThat(getName(contactUsView)).hasTextString(userName);
     }
 
     @Test
+    @UiThreadTest
     public void emailIsGoneWhenPopulated() throws Exception {
 
         // populate email
-        Desk.with(InstrumentationRegistry.getTargetContext())
+        Desk.with(context)
                 .setIdentity(new UserIdentity.Builder("test@test.com").create());
 
         ContactUsView view = getNewContactUsView();
@@ -283,11 +314,12 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void subjectIsVisibleWhenEnabled() throws Exception {
 
         // enable subject
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public boolean isSubjectEnabled() {
                         return true;
@@ -299,11 +331,12 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void subjectIsGoneWhenDisabled() throws Exception {
 
         // disable subject
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public boolean isSubjectEnabled() {
                         return false;
@@ -315,10 +348,11 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void subjectIsSetFromContactUsConfiguration() throws Exception {
         final String subject = "This is our subject";
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override public String getSubject() {
                         return subject;
                     }
@@ -329,9 +363,103 @@ public class ContactUsViewTest {
 
     // endregion
 
+    // region Focus Tests
+
+    @Test
+    @UiThreadTest
+    public void userNameHasFocusWhenEmptyAndEnabled() throws Exception {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
+                    @Override public boolean isUserNameEnabled() {
+                        return true;
+                    }
+                });
+        EditText userName = (EditText) getName(getNewContactUsView());
+        assertThat(userName).isVisible();
+        assertThat(userName).isEmpty();
+        assertThat(userName).hasFocus();
+    }
+
+    @Test
+    @UiThreadTest
+    public void userEmailHasFocusWhenEmptyAndEnabled() throws Exception {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
+
+                    // disable user name so email is first visible field
+                    @Override public boolean isUserNameEnabled() {
+                        return false;
+                    }
+                });
+        EditText userEmail = (EditText) getEmail(getNewContactUsView());
+        assertThat(userEmail).isVisible();
+        assertThat(userEmail).isEmpty();
+        assertThat(userEmail).hasFocus();
+    }
+
+    @Test
+    @UiThreadTest
+    public void userSubjectHasFocusWhenEmptyAndEnabled() throws Exception {
+        Desk.with(context)
+
+                // set identity so email is populated
+                .setIdentity(new UserIdentity.Builder("email@email.com").create())
+                .setContactUsConfig(new BaseContactUsConfig(context) {
+
+                    // disable user name so subject is first visible field
+                    @Override public boolean isUserNameEnabled() {
+                        return false;
+                    }
+
+                    @Override public String getSubject() {
+                        return null;
+                    }
+
+                    @Override public boolean isSubjectEnabled() {
+                        return true;
+                    }
+                });
+        EditText userSubject = (EditText) getSubject(getNewContactUsView());
+        assertThat(userSubject).isVisible();
+        assertThat(userSubject).isEmpty();
+        assertThat(userSubject).hasFocus();
+    }
+
+    @Test
+    @UiThreadTest
+    public void userFeedbackHasFocusWhenEmptyAndEnabled() throws Exception {
+        Desk.with(context)
+
+                // set identity so email is populated
+                .setIdentity(new UserIdentity.Builder("email@email.com").create())
+                .setContactUsConfig(new BaseContactUsConfig(context) {
+
+                    // disable user name so feedback is first visible field
+                    @Override public boolean isUserNameEnabled() {
+                        return false;
+                    }
+
+                    @Override public String getSubject() {
+                        return "Populated";
+                    }
+
+                    // disable subject so feedback is first visible field
+                    @Override public boolean isSubjectEnabled() {
+                        return false;
+                    }
+                });
+        EditText userFeedback = (EditText) getFeedback(getNewContactUsView());
+        assertThat(userFeedback).isVisible();
+        assertThat(userFeedback).isEmpty();
+        assertThat(userFeedback).hasFocus();
+    }
+
+    // endregion
+
     // region Validation Tests
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsFalseWhenEmailEmpty() throws Exception {
 
         // need to clear the identity
@@ -345,6 +473,7 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsFalseWhenEmailInvalid() throws Exception {
 
         // need to clear the identity
@@ -358,9 +487,10 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsFalseWhenSubjectEmpty() throws Exception {
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public String getSubject() {
                         return null;
@@ -374,9 +504,10 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsFalseWhenFeedbackEmpty() throws Exception {
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public boolean isSubjectEnabled() {
                         return true;
@@ -391,13 +522,14 @@ public class ContactUsViewTest {
     }
 
     @Test
+    @UiThreadTest
     public void isFormValidReturnsTrueWhenValid() throws Exception {
 
         // need to clear the identity
         clearIdentity();
 
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public boolean isSubjectEnabled() {
                         return true;
@@ -416,6 +548,7 @@ public class ContactUsViewTest {
     // region getRequest Tests
 
     @Test
+    @UiThreadTest
     public void getRequestReturnsValidRequest() throws Exception {
         final String subject = "Valid Subject";
         final String name = "Valid Name";
@@ -426,8 +559,8 @@ public class ContactUsViewTest {
         final String value1 = "value1";
         final String key2 = "key2";
         final String value2 = "value2";
-        Desk.with(InstrumentationRegistry.getTargetContext())
-                .setContactUsConfig(new BaseContactUsConfig(InstrumentationRegistry.getTargetContext()) {
+        Desk.with(context)
+                .setContactUsConfig(new BaseContactUsConfig(context) {
                     @Override
                     public String getSubject() {
                         return subject;
@@ -458,6 +591,7 @@ public class ContactUsViewTest {
     }
 
     @Test(expected = IncompleteFormException.class)
+    @UiThreadTest
     public void getRequestThrowsIncompleteFormException() {
         ContactUsView contactUsView = getNewContactUsView();
         contactUsView.getRequest("to@email.com");
@@ -482,10 +616,10 @@ public class ContactUsViewTest {
     }
 
     private void clearIdentity() {
-        Desk.with(InstrumentationRegistry.getTargetContext()).setIdentity(null);
+        Desk.with(context).setIdentity(null);
     }
 
     private ContactUsView getNewContactUsView() {
-        return new ContactUsView(InstrumentationRegistry.getTargetContext());
+        return new ContactUsView(context);
     }
 }

@@ -86,6 +86,17 @@ public class ContactUsHelper extends Fragment {
         }
     }
 
+    /**
+     * Launches the {@link ContactUsWebActivity} or {@link ContactUsActivity} depending on the configuration.
+     * @param activity the activity used to find the {@link ContactUsHelper}
+     */
+    public static void launch(Activity activity) {
+        Fragment fragment = activity.getFragmentManager().findFragmentByTag(FRAG_TAG);
+        if (fragment != null && fragment instanceof ContactUsHelper) {
+            ((ContactUsHelper) fragment).handleContactUs();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

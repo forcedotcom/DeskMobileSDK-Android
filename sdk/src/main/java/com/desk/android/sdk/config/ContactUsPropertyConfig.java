@@ -124,7 +124,7 @@ public class ContactUsPropertyConfig extends BaseContactUsConfig implements Prop
      */
     @Override
     public boolean isContactUsEnabled(int brandId) {
-        return PropertyHelper.getBooleanWithArgs(buildBrandKey(KEY_CONTACT_US_ENABLED), isCallUsEnabled(), properties, brandId);
+        return PropertyHelper.getBooleanWithArgs(buildBrandKey(KEY_CONTACT_US_ENABLED), isContactUsEnabled(), properties, brandId);
     }
 
     /**

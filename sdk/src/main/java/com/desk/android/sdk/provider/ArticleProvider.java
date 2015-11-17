@@ -37,11 +37,12 @@ import com.desk.java.apiclient.model.BrandIds;
 import com.desk.java.apiclient.model.TopicIds;
 import com.desk.java.apiclient.service.ArticleService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import static com.desk.java.apiclient.model.SortDirection.ASC;
 import static com.desk.java.apiclient.service.ArticleService.FIELD_POSITION;
@@ -106,9 +107,8 @@ public class ArticleProvider {
                 topicIds,
                 brandIds,
                 FIELD_POSITION,
-                ASC,
-                new RetrofitCallback(callback)
-        );
+                ASC)
+                .enqueue(new RetrofitCallback(callback));
     }
 
     /**
@@ -133,9 +133,8 @@ public class ArticleProvider {
                 true,
                 FIELD_POSITION,
                 ASC,
-                query,
-                new RetrofitCallback(callback)
-        );
+                query)
+                .enqueue(new RetrofitCallback(callback));
     }
 
     static class RetrofitCallback implements Callback<ApiResponse<Article>> {
@@ -147,13 +146,18 @@ public class ArticleProvider {
         }
 
         @Override
-        public void success(ApiResponse<Article> articleApiResponse, Response response) {
-            callbacks.onArticlesLoaded(articleApiResponse.getPage(), articleApiResponse.getEntriesAsList(), articleApiResponse.hasNextPage());
+        public void onResponse(Response<ApiResponse<Article>> response, Retrofit retrofit) {
+            ApiResponse<Article> apiResponse = response.body();
+            if (apiResponse == null) {
+                callbacks.onArticlesLoaded(0, new ArrayList<Article>(), false);
+                return;
+            }
+            callbacks.onArticlesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList(), apiResponse.hasNextPage());
         }
 
         @Override
-        public void failure(RetrofitError retrofitError) {
-            callbacks.onArticlesLoadError(new ErrorResponse(retrofitError));
+        public void onFailure(Throwable throwable) {
+            callbacks.onArticlesLoadError(new ErrorResponse(throwable));
         }
     }
 }

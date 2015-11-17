@@ -27,41 +27,46 @@
 package com.desk.android.sdk.provider;
 
 import com.desk.android.sdk.error.ErrorResponse;
-import com.desk.android.sdk.util.TestUtils;
+import com.desk.android.sdk.provider.InboundMailboxProvider.RetrofitCallback;
 import com.desk.java.apiclient.model.ApiResponse;
 import com.desk.java.apiclient.model.InboundMailbox;
 import com.desk.java.apiclient.service.InboundMailboxService;
-import com.google.gson.reflect.TypeToken;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
+import retrofit.Call;
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Response;
 
 import static com.desk.android.sdk.provider.InboundMailboxProvider.InboundMailboxCallbacks;
 import static com.desk.android.sdk.provider.InboundMailboxProvider.PER_PAGE;
-import static com.desk.android.sdk.provider.InboundMailboxProvider.RetrofitCallback;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyListOf;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link InboundMailboxProvider}
  */
 public class InboundMailboxProviderTest {
 
+    @Mock InboundMailboxService mockInboundMailboxService;
+
     private InboundMailboxCallbacks callbacks;
-    private MockInboundMailboxService mockInboundMailboxService;
     private InboundMailboxProvider inboundMailboxProvider;
 
     @Before
     public void setUp() throws Exception {
-        mockInboundMailboxService = spy(new MockInboundMailboxService());
+        MockitoAnnotations.initMocks(this);
         inboundMailboxProvider = new InboundMailboxProvider(mockInboundMailboxService);
         callbacks = mock(InboundMailboxCallbacks.class);
     }
@@ -69,62 +74,66 @@ public class InboundMailboxProviderTest {
     @Test
     public void getMailboxesUsesCorrectPage() throws Exception {
         final int page = 2;
+
+        when(mockInboundMailboxService.getInboundMailboxes(
+                anyInt(),
+                eq(page))).thenReturn(mock(Call.class));
+
         inboundMailboxProvider.getMailboxes(page, callbacks);
         verify(mockInboundMailboxService).getInboundMailboxes(
                 anyInt(),
-                eq(page), // testing that this is the correct page
-                any(RetrofitCallback.class)
-        );
+                eq(page)); // testing that this is the correct page
     }
 
     @Test
     public void getMailboxesUsesCorrectAmountPerPage() throws Exception {
+        when(mockInboundMailboxService.getInboundMailboxes(
+                anyInt(),
+                anyInt())).thenReturn(mock(Call.class));
+
         inboundMailboxProvider.getMailboxes(1, callbacks);
         verify(mockInboundMailboxService).getInboundMailboxes(
                 eq(PER_PAGE), // testing that this is the correct amount
-                anyInt(),
-                any(RetrofitCallback.class)
-        );
+                anyInt());
     }
 
     @Test
     public void getMailboxesNotifiesCallbacksOnSuccess() throws Exception {
-        mockInboundMailboxService.setError(false);
+        Call mockCall = mock(Call.class);
+
+        when(mockInboundMailboxService.getInboundMailboxes(
+                anyInt(),
+                anyInt())).thenReturn(mockCall);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<InboundMailbox>()), null);
+                return null;
+            }
+        }).when(mockCall).enqueue(any(Callback.class));
+
         inboundMailboxProvider.getMailboxes(1, callbacks);
         verify(callbacks).onInboundMailboxesLoaded(anyInt(), anyListOf(InboundMailbox.class));
     }
 
     @Test
     public void getMailboxesNotifiesCallbacksOnError() throws Exception {
-        mockInboundMailboxService.setError(true);
+        Call mockCall = mock(Call.class);
+
+        when(mockInboundMailboxService.getInboundMailboxes(
+                anyInt(),
+                anyInt())).thenReturn(mockCall);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                return null;
+            }
+        }).when(mockCall).enqueue(any(Callback.class));
+
         inboundMailboxProvider.getMailboxes(1, callbacks);
         verify(callbacks).onInboundMailboxLoadError(any(ErrorResponse.class));
-    }
-
-    private class MockInboundMailboxService implements InboundMailboxService {
-
-        private boolean error;
-
-        public void setError(boolean error) {
-            this.error = error;
-        }
-
-        @Override
-        public void getInboundMailboxes(int i, int i1, Callback<ApiResponse<InboundMailbox>> callback) {
-            if (error) {
-                callback.failure(RetrofitError.unexpectedError("", new RuntimeException()));
-            } else {
-                ApiResponse<InboundMailbox> response = TestUtils.readMockJsonFile(
-                        new TypeToken<ApiResponse<InboundMailbox>>(){}.getType(),
-                        "/mock_inbound_mailbox_response.json"
-                );
-                callback.success(response, null);
-            }
-        }
-
-        @Override
-        public ApiResponse<InboundMailbox> getInboundMailboxes(int i, int i1) {
-            return null;
-        }
     }
 }

@@ -36,8 +36,8 @@ import com.desk.java.apiclient.service.InboundMailboxService;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * <p>Wraps an {@link InboundMailboxService} to provide a higher level of abstraction.</p>
@@ -84,9 +84,8 @@ public class InboundMailboxProvider {
     public void getMailboxes(int page, InboundMailboxCallbacks cb) {
         mInboundMailboxService.getInboundMailboxes(
                 PER_PAGE,
-                page,
-                new RetrofitCallback(cb)
-        );
+                page)
+                .enqueue(new RetrofitCallback(cb));
     }
 
     static class RetrofitCallback implements Callback<ApiResponse<InboundMailbox>> {
@@ -98,13 +97,14 @@ public class InboundMailboxProvider {
         }
 
         @Override
-        public void success(ApiResponse<InboundMailbox> inboundMailboxApiResponse, Response response) {
-            callbacks.onInboundMailboxesLoaded(inboundMailboxApiResponse.getPage(), inboundMailboxApiResponse.getEntriesAsList());
+        public void onResponse(Response<ApiResponse<InboundMailbox>> response, Retrofit retrofit) {
+            ApiResponse<InboundMailbox> apiResponse = response.body();
+            callbacks.onInboundMailboxesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList());
         }
 
         @Override
-        public void failure(RetrofitError retrofitError) {
-            callbacks.onInboundMailboxLoadError(new ErrorResponse(retrofitError));
+        public void onFailure(Throwable throwable) {
+            callbacks.onInboundMailboxLoadError(new ErrorResponse(throwable));
         }
     }
 }
