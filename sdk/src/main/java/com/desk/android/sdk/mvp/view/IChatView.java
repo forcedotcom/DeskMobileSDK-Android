@@ -24,61 +24,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.desk.android.sdk.widget;
-
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-
-import com.desk.android.sdk.R;
-import com.desk.android.sdk.mvp.presenter.IChatPresenter;
-import com.desk.android.sdk.mvp.presenter.provider.PresenterProvider;
-import com.desk.android.sdk.mvp.view.IChatView;
+package com.desk.android.sdk.mvp.view;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public class ChatView extends LinearLayout implements IChatView {
+public interface IChatView {
 
-    private IChatPresenter presenter;
-
-    private EditText chatInput;
-    private ImageButton sendButton;
-    private RecyclerView recycler;
-
-    public ChatView(Context context) {
-        this(context, null);
-    }
-
-    public ChatView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public ChatView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
-        setOrientation(VERTICAL);
-        LayoutInflater.from(getContext()).inflate(R.layout.chat_view, this, true);
-        chatInput = (EditText) findViewById(R.id.chat_input);
-        sendButton = (ImageButton) findViewById(R.id.btn_send);
-        recycler = (RecyclerView) findViewById(R.id.recycler);
-        presenter = PresenterProvider.getChatPresenter();
-    }
-
-    @Override protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        presenter.attach(this);
-    }
-
-    @Override public void destroy() {
-        presenter.destroy();
-    }
+    void destroy();
 }

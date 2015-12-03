@@ -31,6 +31,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.desk.android.sdk.R;
+import com.desk.android.sdk.widget.ChatView;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
@@ -38,8 +39,16 @@ import com.desk.android.sdk.R;
  */
 public class ChatActivity extends AppCompatActivity {
 
+    private ChatView chatView;
+
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        chatView = (ChatView) findViewById(R.id.chat_view);
+    }
+
+    @Override public void onBackPressed() {
+        super.onBackPressed();
+        chatView.destroy();
     }
 }
