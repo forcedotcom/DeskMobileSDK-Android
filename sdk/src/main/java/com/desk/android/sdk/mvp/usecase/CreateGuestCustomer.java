@@ -4,6 +4,7 @@ import com.desk.java.apiclient.model.chat.CustomerInfo;
 import com.desk.java.apiclient.service.RxChatService;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**

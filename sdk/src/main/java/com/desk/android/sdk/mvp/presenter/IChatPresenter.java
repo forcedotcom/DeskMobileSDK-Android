@@ -37,4 +37,7 @@ public interface IChatPresenter {
     void attach(IChatView view);
     void detach(IChatView view);
     void destroy();
+    void userStartedTyping();
+    void userStoppedTyping();
+    void handleNewMessage(String message);
 }

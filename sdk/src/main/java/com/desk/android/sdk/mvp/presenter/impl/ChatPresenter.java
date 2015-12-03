@@ -26,8 +26,20 @@
 
 package com.desk.android.sdk.mvp.presenter.impl;
 
+import com.desk.android.sdk.mvp.model.ChatMessage;
 import com.desk.android.sdk.mvp.presenter.IChatPresenter;
 import com.desk.android.sdk.mvp.view.IChatView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
@@ -49,6 +61,44 @@ public class ChatPresenter implements IChatPresenter {
     @Override public void attach(IChatView view) {
         this.view = view;
         // TODO start session
+        final List<ChatMessage> messages = new ArrayList<>();
+        boolean incoming = false;
+        for (int i = 0; i < 10; i++) {
+            messages.add(new ChatMessage("Message " + i, null, incoming));
+            incoming = !incoming;
+        }
+
+        Observable.interval(3, TimeUnit.SECONDS)
+                .take(messages.size())
+                .map(new Func1<Long, ChatMessage>() {
+                    @Override public ChatMessage call(Long aLong) {
+                        return messages.get(aLong.intValue());
+                    }
+                })
+                .map(new Func1<ChatMessage, ChatMessage>() {
+                    @Override public ChatMessage call(ChatMessage chatMessage) {
+                        chatMessage.setTime(new Date());
+                        return chatMessage;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ChatMessage>() {
+                    @Override public void call(ChatMessage chatMessage) {
+                        ChatPresenter.this.view.onNewMessages(Collections.singletonList(chatMessage));
+                    }
+                });
+    }
+
+    @Override public void userStartedTyping() {
+        // TODO notify api
+    }
+
+    @Override public void userStoppedTyping() {
+        // TODO notify api
+    }
+
+    @Override public void handleNewMessage(String message) {
+        // TODO notify api
     }
 
     @Override public void detach(IChatView view) {

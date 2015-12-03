@@ -52,6 +52,10 @@ public class ChatMessage {
         return time;
     }
 
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
     public boolean isIncoming() {
         return incoming;
     }

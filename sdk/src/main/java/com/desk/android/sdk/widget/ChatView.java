@@ -31,6 +31,7 @@ import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.util.SortedListAdapterCallback;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,7 @@ public class ChatView extends LinearLayout implements IChatView {
     private EditText chatInput;
     private ImageButton sendButton;
     private RecyclerView recycler;
+    private ChatMessageAdapter adapter;
 
     public ChatView(Context context) {
         this(context, null);
@@ -83,7 +85,7 @@ public class ChatView extends LinearLayout implements IChatView {
     }
 
     @Override public void onNewMessages(List<ChatMessage> messages) {
-
+        adapter.addAll(messages);
     }
 
     private void init() {
@@ -99,6 +101,8 @@ public class ChatView extends LinearLayout implements IChatView {
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
         recycler.setLayoutManager(layoutManager);
+        adapter = new ChatMessageAdapter(getContext());
+        recycler.setAdapter(adapter);
     }
 
     private class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.ViewHolder> {
@@ -113,7 +117,7 @@ public class ChatView extends LinearLayout implements IChatView {
             inflater = LayoutInflater.from(context);
             items = new SortedList<>(ChatMessage.class, new SortedListAdapterCallback<ChatMessage>(this) {
                 @Override public int compare(ChatMessage o1, ChatMessage o2) {
-                    return o1.getTime().compareTo(o2.getTime());
+                    return o2.getTime().compareTo(o1.getTime());
                 }
 
                 @Override
@@ -142,7 +146,16 @@ public class ChatView extends LinearLayout implements IChatView {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            // TODO
+            ChatMessage message = getItem(holder.getAdapterPosition());
+            holder.chatMessage.setText(message.getMessage());
+            holder.chatTimestamp.setText(
+                DateUtils.getRelativeTimeSpanString(
+                    message.getTime().getTime(),
+                    System.currentTimeMillis(),
+                    DateUtils.SECOND_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_ALL
+                )
+            );
         }
 
         @Override public int getItemCount() {
