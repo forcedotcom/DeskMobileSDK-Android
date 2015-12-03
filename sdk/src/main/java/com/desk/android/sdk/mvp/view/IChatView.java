@@ -26,6 +26,8 @@
 
 package com.desk.android.sdk.mvp.view;
 
+import android.content.Context;
+
 import com.desk.android.sdk.mvp.model.ChatMessage;
 
 import java.util.List;
@@ -40,4 +42,5 @@ public interface IChatView {
     void onNewMessages(List<ChatMessage> messages);
     void onPendingMessage(ChatMessage message);
     void onMessageSent(ChatMessage message);
+    Context getContext();
 }

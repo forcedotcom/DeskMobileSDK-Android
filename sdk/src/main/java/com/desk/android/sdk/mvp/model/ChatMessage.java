@@ -37,11 +37,18 @@ public class ChatMessage {
     private String message;
     private Date time;
     private boolean incoming;
+    private boolean pending;
 
-    public ChatMessage(String message, Date time, boolean incoming) {
+    public ChatMessage(String message) {
+        this.message = message;
+        this.pending = true;
+    }
+
+    public ChatMessage(String message, Date time, boolean incoming, boolean pending) {
         this.message = message;
         this.time = time;
         this.incoming = incoming;
+        this.pending = pending;
     }
 
     public String getMessage() {

@@ -27,12 +27,20 @@
 package com.desk.android.sdk.jobqueue;
 
 import com.desk.android.sdk.bus.BusProvider;
+import com.desk.android.sdk.mvp.model.ChatMessage;
+import com.desk.android.sdk.mvp.usecase.SendChatMessage;
+import com.desk.java.apiclient.model.chat.CustomerInfo;
+import com.desk.java.apiclient.model.chat.SessionInfo;
+import com.desk.java.apiclient.service.RxChatService;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
+import rx.functions.Action1;
+
 import static com.desk.android.sdk.jobqueue.JobEvent.Action.ADDED;
 import static com.desk.android.sdk.jobqueue.JobEvent.Action.CANCELED;
-import static com.desk.android.sdk.jobqueue.JobEvent.Action.RUNNING;
+import static com.desk.android.sdk.jobqueue.JobEvent.Action.PROCESSED;
+import static com.desk.android.sdk.jobqueue.JobEvent.Action.PROCESSING;
 
 /**
  * <p>
@@ -46,11 +54,17 @@ public class PostChatMessage extends Job {
 
     public static final int PRIORITY = 1;
 
-    private String message;
+    private ChatMessage chatMessage;
+    private RxChatService chatService;
+    private String chatToken;
+    private CustomerInfo customerInfo;
 
-    public PostChatMessage(String message) {
+    public PostChatMessage(ChatMessage chatMessage, RxChatService chatService, CustomerInfo customerInfo, String chatToken) {
         super(new Params(PRIORITY).requireNetwork().persist());
-        this.message = message;
+        this.chatMessage = chatMessage;
+        this.chatService = chatService;
+        this.chatToken = chatToken;
+        this.customerInfo = customerInfo;
     }
 
     @Override
@@ -60,8 +74,22 @@ public class PostChatMessage extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        BusProvider.get().post(new JobEvent(RUNNING));
-        // TODO make api call to post message
+        BusProvider.get().post(new JobEvent(PROCESSING));
+        SendChatMessage sendChatMessage = new SendChatMessage(chatService, chatMessage.getMessage(), customerInfo.guestCustomerId, chatToken, customerInfo.customerToken);
+        sendChatMessage.execute()
+                .subscribe(
+                        new Action1<SessionInfo>() {
+                            @Override
+                            public void call(SessionInfo sessionInfo) {
+                                BusProvider.get().post(new JobEvent(PROCESSED, chatMessage));
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                // TODO handle
+                            }
+                        });
     }
 
     @Override

@@ -38,7 +38,7 @@ public class PollChat {
 
     public Observable<PollInfo> execute() {
         return Observable
-                .interval(30, TimeUnit.SECONDS, Schedulers.io())
+                .interval(5, TimeUnit.SECONDS, Schedulers.io())
                 .flatMap(new Func1<Long, Observable<PollInfo>>() {
                     @Override
                     public Observable<PollInfo> call(Long aLong) {
