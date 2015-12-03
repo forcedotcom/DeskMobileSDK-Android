@@ -27,17 +27,26 @@
 package com.desk.android.sdk.widget;
 
 import android.content.Context;
+import android.support.v7.util.SortedList;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.desk.android.sdk.R;
+import com.desk.android.sdk.mvp.model.ChatMessage;
 import com.desk.android.sdk.mvp.presenter.IChatPresenter;
 import com.desk.android.sdk.mvp.presenter.provider.PresenterProvider;
 import com.desk.android.sdk.mvp.view.IChatView;
+
+import java.util.List;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
@@ -64,15 +73,6 @@ public class ChatView extends LinearLayout implements IChatView {
         init();
     }
 
-    private void init() {
-        setOrientation(VERTICAL);
-        LayoutInflater.from(getContext()).inflate(R.layout.chat_view, this, true);
-        chatInput = (EditText) findViewById(R.id.chat_input);
-        sendButton = (ImageButton) findViewById(R.id.btn_send);
-        recycler = (RecyclerView) findViewById(R.id.recycler);
-        presenter = PresenterProvider.getChatPresenter();
-    }
-
     @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         presenter.attach(this);
@@ -80,5 +80,99 @@ public class ChatView extends LinearLayout implements IChatView {
 
     @Override public void destroy() {
         presenter.destroy();
+    }
+
+    @Override public void onNewMessages(List<ChatMessage> messages) {
+
+    }
+
+    private void init() {
+        setOrientation(VERTICAL);
+        LayoutInflater.from(getContext()).inflate(R.layout.chat_view, this, true);
+        chatInput = (EditText) findViewById(R.id.chat_input);
+        sendButton = (ImageButton) findViewById(R.id.btn_send);
+        recycler = (RecyclerView) findViewById(R.id.recycler);
+        presenter = PresenterProvider.getChatPresenter();
+        setupRecyclerView();
+    }
+
+    private void setupRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        recycler.setLayoutManager(layoutManager);
+    }
+
+    private class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.ViewHolder> {
+
+        static final int TYPE_INCOMING_MESSAGE = 0;
+        static final int TYPE_OUTGOING_MESSAGE = 1;
+
+        private LayoutInflater inflater;
+        private SortedList<ChatMessage> items;
+
+        public ChatMessageAdapter(Context context) {
+            inflater = LayoutInflater.from(context);
+            items = new SortedList<>(ChatMessage.class, new SortedListAdapterCallback<ChatMessage>(this) {
+                @Override public int compare(ChatMessage o1, ChatMessage o2) {
+                    return o1.getTime().compareTo(o2.getTime());
+                }
+
+                @Override
+                public boolean areContentsTheSame(ChatMessage oldItem, ChatMessage newItem) {
+                    return oldItem.equals(newItem);
+                }
+
+                @Override public boolean areItemsTheSame(ChatMessage item1, ChatMessage item2) {
+                    return item1.equals(item2);
+                }
+            });
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            int chatMessageLayoutResId;
+            if (TYPE_INCOMING_MESSAGE == viewType) {
+                chatMessageLayoutResId = R.layout.chat_message_incoming;
+            } else if (TYPE_OUTGOING_MESSAGE == viewType) {
+                chatMessageLayoutResId = R.layout.chat_message_outgoing;
+            } else {
+                throw new IllegalStateException("viewType " + viewType + " is invalid.");
+            }
+            return new ViewHolder(inflater.inflate(chatMessageLayoutResId, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            // TODO
+        }
+
+        @Override public int getItemCount() {
+            return items.size();
+        }
+
+        @Override public int getItemViewType(int position) {
+            ChatMessage message = getItem(position);
+            return message.isIncoming() ? TYPE_INCOMING_MESSAGE : TYPE_OUTGOING_MESSAGE;
+        }
+
+        public void addAll(List<ChatMessage> messages) {
+            items.addAll(messages);
+        }
+
+        public ChatMessage getItem(int position) {
+            return items.get(position);
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            TextView chatMessage;
+            TextView chatTimestamp;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                chatMessage = (TextView) itemView.findViewById(R.id.chat_message);
+                chatTimestamp = (TextView) itemView.findViewById(R.id.chat_timestamp);
+            }
+        }
+
     }
 }

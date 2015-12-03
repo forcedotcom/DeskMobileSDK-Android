@@ -24,41 +24,54 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.desk.android.sdk.mvp.presenter.impl;
+package com.desk.android.sdk.mvp.model;
 
-import com.desk.android.sdk.mvp.presenter.IChatPresenter;
-import com.desk.android.sdk.mvp.view.IChatView;
+import java.util.Date;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public class ChatPresenter implements IChatPresenter {
+public class ChatMessage {
 
-    public interface DestroyCallback {
-        void onDestroyed();
+    private String message;
+    private Date time;
+    private boolean incoming;
+
+    public ChatMessage(String message, Date time, boolean incoming) {
+        this.message = message;
+        this.time = time;
+        this.incoming = incoming;
     }
 
-    public ChatPresenter(DestroyCallback destroyCallback) {
-        this.destroyCallback = destroyCallback;
+    public String getMessage() {
+        return message;
     }
 
-    private DestroyCallback destroyCallback;
-    private IChatView view;
-
-    @Override public void attach(IChatView view) {
-        this.view = view;
-        // TODO start session
+    public Date getTime() {
+        return time;
     }
 
-    @Override public void detach(IChatView view) {
-        view = null;
+    public boolean isIncoming() {
+        return incoming;
     }
 
-    @Override public void destroy() {
-        // TODO end session
-        if (destroyCallback != null) {
-            destroyCallback.onDestroyed();
-        }
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ChatMessage that = (ChatMessage) o;
+
+        if (incoming != that.incoming) return false;
+        if (!message.equals(that.message)) return false;
+        return time.equals(that.time);
+
+    }
+
+    @Override public int hashCode() {
+        int result = message.hashCode();
+        result = 31 * result + time.hashCode();
+        result = 31 * result + (incoming ? 1 : 0);
+        return result;
     }
 }
