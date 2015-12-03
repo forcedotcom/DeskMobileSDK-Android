@@ -48,7 +48,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.desk:api-client:1.2.0'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.birbit:android-priority-jobqueue:1.3.5'
 
     // instrumentation test dependencies
     androidTestCompile 'com.android.support.test:runner:0.3'
