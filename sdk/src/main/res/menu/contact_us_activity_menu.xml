@@ -27,6 +27,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/chat"
+          android:title="@string/def_action_chat"
+          android:icon="@drawable/ic_chat"
+          app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/submit"
           android:title="@string/def_action_submit"
           android:icon="@drawable/ic_action_send"

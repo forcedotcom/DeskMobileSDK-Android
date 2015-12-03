@@ -144,7 +144,7 @@ public class ContactUsActivity extends AppCompatActivity implements ContactUsVie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.contact_us_activity_menu, menu);
-        MenuHelper.tintIcons(menu, mThemeHelper.getColorControlNormal(), R.id.submit, R.id.call_us);
+        MenuHelper.tintIcons(menu, mThemeHelper.getColorControlNormal(), R.id.submit, R.id.call_us, R.id.chat);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -179,6 +179,9 @@ public class ContactUsActivity extends AppCompatActivity implements ContactUsVie
         } else if (R.id.call_us == id) {
             handleCallUs();
             return true;
+        } else if (R.id.chat == id) {
+            handleChat();
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -191,6 +194,10 @@ public class ContactUsActivity extends AppCompatActivity implements ContactUsVie
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + mPhoneNumber));
         startActivity(intent);
+    }
+
+    private void handleChat() {
+        startActivity(new Intent(this, ChatActivity.class));
     }
 
     private boolean canSubmit() {

@@ -28,6 +28,7 @@
 
     <string name="topics_activity_title">Topics</string>
     <string name="contact_us_form_activity_title">Contact Us</string>
+    <string name="chat_activity_title">Chat</string>
 
     <string name="def_topics_empty_text">There are no topics available.</string>
     <string name="def_topics_error_text">There was an issue loading topics. Please try again later.</string>
@@ -42,6 +43,7 @@
     <string name="def_action_contact_us">Contact Us</string>
     <string name="def_action_call_us">Call Us</string>
     <string name="def_action_submit">Submit</string>
+    <string name="def_action_chat">Chat</string>
 
     <string name="def_subject">Feedback via Android App</string>
 
