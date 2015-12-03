@@ -46,8 +46,12 @@ import com.desk.android.sdk.mvp.model.ChatMessage;
 import com.desk.android.sdk.mvp.presenter.IChatPresenter;
 import com.desk.android.sdk.mvp.presenter.provider.PresenterProvider;
 import com.desk.android.sdk.mvp.view.IChatView;
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
@@ -88,6 +92,14 @@ public class ChatView extends LinearLayout implements IChatView {
         adapter.addAll(messages);
     }
 
+    @Override public void onPendingMessage(ChatMessage message) {
+
+    }
+
+    @Override public void onMessageSent(ChatMessage message) {
+
+    }
+
     private void init() {
         setOrientation(VERTICAL);
         LayoutInflater.from(getContext()).inflate(R.layout.chat_view, this, true);
@@ -95,7 +107,28 @@ public class ChatView extends LinearLayout implements IChatView {
         sendButton = (ImageButton) findViewById(R.id.btn_send);
         recycler = (RecyclerView) findViewById(R.id.recycler);
         presenter = PresenterProvider.getChatPresenter();
+        disableSendButton();
         setupRecyclerView();
+        setupSubscriptions();
+    }
+
+    private void setupSubscriptions() {
+        RxTextView.textChanges(chatInput)
+                .subscribe(new Action1<CharSequence>() {
+                    @Override public void call(CharSequence charSequence) {
+                        if (charSequence.length() >= 3) {
+                            enableSendButton();
+                        } else {
+                            disableSendButton();
+                        }
+                    }
+                });
+        RxView.clicks(sendButton)
+                .subscribe(new Action1<Object>() {
+                    @Override public void call(Object o) {
+                        sendMessage();
+                    }
+                });
     }
 
     private void setupRecyclerView() {
@@ -103,6 +136,21 @@ public class ChatView extends LinearLayout implements IChatView {
         recycler.setLayoutManager(layoutManager);
         adapter = new ChatMessageAdapter(getContext());
         recycler.setAdapter(adapter);
+    }
+
+    private void enableSendButton() {
+        sendButton.setEnabled(true);
+        sendButton.setAlpha(1.0f);
+    }
+
+    private void disableSendButton() {
+        sendButton.setEnabled(false);
+        sendButton.setAlpha(.3f);
+    }
+
+    private void sendMessage() {
+        presenter.handleNewMessage(chatInput.getText().toString());
+        chatInput.getText().clear();
     }
 
     private class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.ViewHolder> {

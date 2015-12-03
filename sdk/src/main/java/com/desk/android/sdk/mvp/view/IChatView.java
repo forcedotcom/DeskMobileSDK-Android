@@ -38,4 +38,6 @@ public interface IChatView {
 
     void destroy();
     void onNewMessages(List<ChatMessage> messages);
+    void onPendingMessage(ChatMessage message);
+    void onMessageSent(ChatMessage message);
 }

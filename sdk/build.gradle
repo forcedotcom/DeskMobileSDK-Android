@@ -59,6 +59,9 @@ dependencies {
         exclude module: 'rxjava'
     }
     compile 'io.reactivex:rxjava:1.0.17'
+    compile ('com.jakewharton.rxbinding:rxbinding:0.2.0') {
+        exclude module: 'rxjava'
+    }
 
     // instrumentation test dependencies
     androidTestCompile 'com.android.support.test:runner:0.3'
