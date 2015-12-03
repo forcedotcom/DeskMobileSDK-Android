@@ -24,33 +24,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-apply plugin: 'com.android.application'
+package com.desk.android.sdk.bus;
 
-android {
-    compileSdkVersion projectCompileSdkVersion
-    buildToolsVersion '23.0.2'
+import com.squareup.otto.Bus;
 
-    defaultConfig {
-        applicationId "com.desk.android.sdk.basic"
-        minSdkVersion projectMinSdkVersion
-        targetSdkVersion projectTargetSdkVersion
-        versionCode 1
-        versionName "1.0"
+/**
+ * <p>
+ *     Provides singleton instance for obtaining the bus.
+ * </p>
+ *
+ * Created by Jerrell Mardis
+ * Copyright (c) 2015 Desk.com. All rights reserved.
+ */
+public final class BusProvider {
+
+    private static final Bus BUS = new Bus();
+
+    public static Bus getInstance() {
+        return BUS;
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    private BusProvider() {
+        // prevents instantiation
     }
-
-    lintOptions {
-        abortOnError false
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':sdk')
 }

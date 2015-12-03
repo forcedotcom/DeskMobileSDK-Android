@@ -28,7 +28,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion projectCompileSdkVersion
-    buildToolsVersion projectBuildToolsVersion
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId "com.desk.android.sdk.multi"

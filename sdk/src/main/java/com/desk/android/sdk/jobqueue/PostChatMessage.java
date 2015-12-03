@@ -24,33 +24,48 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-apply plugin: 'com.android.application'
+package com.desk.android.sdk.jobqueue;
 
-android {
-    compileSdkVersion projectCompileSdkVersion
-    buildToolsVersion '23.0.2'
+import com.desk.android.sdk.bus.BusProvider;
+import com.path.android.jobqueue.Job;
+import com.path.android.jobqueue.Params;
 
-    defaultConfig {
-        applicationId "com.desk.android.sdk.basic"
-        minSdkVersion projectMinSdkVersion
-        targetSdkVersion projectTargetSdkVersion
-        versionCode 1
-        versionName "1.0"
+import static com.desk.android.sdk.jobqueue.JobEvent.Action.ADDED;
+import static com.desk.android.sdk.jobqueue.JobEvent.Action.CANCELED;
+import static com.desk.android.sdk.jobqueue.JobEvent.Action.RUNNING;
+
+/**
+ * <p>
+ *     A {@link Job} that post chat messages to the backend.
+ * </p>
+ *
+ * Created by Jerrell Mardis
+ * Copyright (c) 2015 Desk.com. All rights reserved.
+ */
+public class PostChatMessage extends Job {
+
+    public static final int PRIORITY = 1;
+
+    private String message;
+
+    public PostChatMessage(String message) {
+        super(new Params(PRIORITY).requireNetwork().persist());
+        this.message = message;
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    @Override
+    public void onAdded() {
+        BusProvider.getInstance().post(new JobEvent(ADDED));
     }
 
-    lintOptions {
-        abortOnError false
+    @Override
+    public void onRun() throws Throwable {
+        BusProvider.getInstance().post(new JobEvent(RUNNING));
+        // TODO make api call to post message
     }
-}
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':sdk')
+    @Override
+    protected void onCancel() {
+        BusProvider.getInstance().post(new JobEvent(CANCELED));
+    }
 }

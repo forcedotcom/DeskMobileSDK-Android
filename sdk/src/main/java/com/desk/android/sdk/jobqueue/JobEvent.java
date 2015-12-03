@@ -24,33 +24,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-apply plugin: 'com.android.application'
+package com.desk.android.sdk.jobqueue;
 
-android {
-    compileSdkVersion projectCompileSdkVersion
-    buildToolsVersion '23.0.2'
+/**
+ * <p>
+ *     Represent various job-queue related events.
+ * </p>
+ *
+ * Created by Jerrell Mardis
+ * Copyright (c) 2015 Desk.com. All rights reserved.
+ */
+public class JobEvent {
 
-    defaultConfig {
-        applicationId "com.desk.android.sdk.basic"
-        minSdkVersion projectMinSdkVersion
-        targetSdkVersion projectTargetSdkVersion
-        versionCode 1
-        versionName "1.0"
+    public enum Action {
+        ADDED, RETRYING, CANCELED, RUNNING
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+    public Action action;
 
-    lintOptions {
-        abortOnError false
+    public JobEvent(Action action) {
+        this.action = action;
     }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':sdk')
 }
