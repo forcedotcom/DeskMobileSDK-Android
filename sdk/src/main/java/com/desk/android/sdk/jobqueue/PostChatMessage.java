@@ -55,17 +55,17 @@ public class PostChatMessage extends Job {
 
     @Override
     public void onAdded() {
-        BusProvider.getInstance().post(new JobEvent(ADDED));
+        BusProvider.get().post(new JobEvent(ADDED));
     }
 
     @Override
     public void onRun() throws Throwable {
-        BusProvider.getInstance().post(new JobEvent(RUNNING));
+        BusProvider.get().post(new JobEvent(RUNNING));
         // TODO make api call to post message
     }
 
     @Override
     protected void onCancel() {
-        BusProvider.getInstance().post(new JobEvent(CANCELED));
+        BusProvider.get().post(new JobEvent(CANCELED));
     }
 }

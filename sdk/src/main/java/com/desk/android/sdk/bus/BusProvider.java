@@ -30,7 +30,7 @@ import com.squareup.otto.Bus;
 
 /**
  * <p>
- *     Provides singleton instance for obtaining the bus.
+ *     Provides a singleton instance for obtaining the bus.
  * </p>
  *
  * Created by Jerrell Mardis
@@ -40,7 +40,7 @@ public final class BusProvider {
 
     private static final Bus BUS = new Bus();
 
-    public static Bus getInstance() {
+    public static Bus get() {
         return BUS;
     }
 
