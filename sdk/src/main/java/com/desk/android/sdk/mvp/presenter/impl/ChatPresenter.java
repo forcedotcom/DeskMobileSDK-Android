@@ -53,6 +53,7 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.subscriptions.CompositeSubscription;
 
 import static com.desk.java.apiclient.model.MessageDirection.IN;
 
@@ -67,6 +68,7 @@ public class ChatPresenter implements IChatPresenter {
     private GuestCustomer guestCustomer;
     private ChatSession chatSession;
     private ChatSessionPoll chatSessionPoll;
+    private CompositeSubscription subscriptions;
 
     public interface DestroyCallback {
         void onDestroyed();
@@ -83,6 +85,9 @@ public class ChatPresenter implements IChatPresenter {
     @Override public void attach(IChatView view) {
         this.view = view;
         init(view);
+        if (subscriptions == null) {
+            subscriptions = new CompositeSubscription();
+        }
     }
 
     @Override public void userStartedTyping() {
@@ -135,7 +140,7 @@ public class ChatPresenter implements IChatPresenter {
 
     @Override public void startSession(String userName) {
         if (chatSession == null) {
-            new CreateGuestCustomer(chatService, userName, chatToken).execute()
+            subscriptions.add(new CreateGuestCustomer(chatService, userName, chatToken).execute()
                     .flatMap(new Func1<GuestCustomer, Observable<ChatSession>>() {
                         @Override
                         public Observable<ChatSession> call(GuestCustomer info) {
@@ -173,7 +178,8 @@ public class ChatPresenter implements IChatPresenter {
                                     // TODO handle
                                 }
                             }
-                    );
+                    )
+            );
         }
     }
 
@@ -195,6 +201,10 @@ public class ChatPresenter implements IChatPresenter {
 
                                 }
                             });
+        }
+
+        if (subscriptions != null && !subscriptions.isUnsubscribed()) {
+            subscriptions.unsubscribe();
         }
 
         if (destroyCallback != null) {
