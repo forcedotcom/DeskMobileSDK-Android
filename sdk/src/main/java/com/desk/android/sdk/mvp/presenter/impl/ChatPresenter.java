@@ -49,11 +49,10 @@ import rx.functions.Func1;
  */
 public class ChatPresenter implements IChatPresenter {
 
-    private Desk desk;
     private RxChatService chatService;
     private String chatToken;
-    private GuestCustomer customerInfo;
-    private ChatSession sessionInfo;
+    private GuestCustomer guestCustomer;
+    private ChatSession chatSession;
 
     public interface DestroyCallback {
         void onDestroyed();
@@ -75,20 +74,21 @@ public class ChatPresenter implements IChatPresenter {
                 .flatMap(new Func1<GuestCustomer, Observable<ChatSession>>() {
                     @Override
                     public Observable<ChatSession> call(GuestCustomer info) {
-                        customerInfo = info;
-                        return new StartChatSession(chatService, customerInfo.id, chatToken, customerInfo.token).execute();
+                        guestCustomer = info;
+                        return new StartChatSession(chatService, guestCustomer.id, chatToken, guestCustomer.token).execute();
                     }
                 })
                 .subscribe(
                         new Action1<ChatSession>() {
                             @Override
                             public void call(ChatSession info) {
-                                sessionInfo = info;
+                                chatSession = info;
                             }
                         },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                throwable.printStackTrace();
                                 // TODO handle
                             }
                         }
@@ -105,7 +105,8 @@ public class ChatPresenter implements IChatPresenter {
 
     @Override public void handleNewMessage(String message) {
         ChatMessageModel chatMessage = new ChatMessageModel(message);
-        JobManagerProvider.get(view.getContext()).addJob(new PostChatMessage(chatMessage, chatService, customerInfo, chatToken));
+        JobManagerProvider.get(view.getContext()).addJobInBackground(new PostChatMessage(chatMessage, chatService,
+                guestCustomer, chatToken, chatSession._links.caseLink.getLinkId()));
     }
 
     @Override public void detach(IChatView view) {
@@ -113,7 +114,7 @@ public class ChatPresenter implements IChatPresenter {
     }
 
     @Override public void destroy() {
-        new EndChatSession(chatService, customerInfo.id, sessionInfo.id, chatToken, customerInfo.token)
+        new EndChatSession(chatService, guestCustomer.id, chatSession.id, chatToken, guestCustomer.token)
                 .execute()
                 .subscribe(new Action1<Void>() {
                                @Override
@@ -134,7 +135,7 @@ public class ChatPresenter implements IChatPresenter {
     }
 
     private void init(IChatView view) {
-        desk = Desk.with(view.getContext());
+        Desk desk = Desk.with(view.getContext());
         chatService = desk.getRxClient().chatRx();
         chatToken = desk.getConfig().getChatToken();
     }

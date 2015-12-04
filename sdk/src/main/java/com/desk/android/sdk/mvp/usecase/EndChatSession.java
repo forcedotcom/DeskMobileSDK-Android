@@ -1,5 +1,6 @@
 package com.desk.android.sdk.mvp.usecase;
 
+import com.desk.java.apiclient.model.chat.Requestor;
 import com.desk.java.apiclient.service.RxChatService;
 
 import rx.Observable;
@@ -15,8 +16,6 @@ import rx.schedulers.Schedulers;
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
 public class EndChatSession {
-
-    private static final String REQUESTOR = "customer";
 
     private RxChatService chatService;
     private long guestCustomerId;
@@ -34,7 +33,7 @@ public class EndChatSession {
 
     public Observable<Void> execute() {
         return chatService
-                .endSession(guestCustomerId, chatSessionId, chatToken, customerToken, REQUESTOR)
+                .endSession(guestCustomerId, chatSessionId, chatToken, customerToken, Requestor.CUSTOMER)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

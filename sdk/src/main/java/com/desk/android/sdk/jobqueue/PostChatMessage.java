@@ -26,6 +26,9 @@
 
 package com.desk.android.sdk.jobqueue;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.desk.android.sdk.bus.BusProvider;
 import com.desk.android.sdk.mvp.model.ChatMessageModel;
 import com.desk.android.sdk.mvp.usecase.SendChatMessage;
@@ -58,24 +61,35 @@ public class PostChatMessage extends Job {
     private RxChatService chatService;
     private String chatToken;
     private GuestCustomer guestCustomer;
+    private long caseId;
 
-    public PostChatMessage(ChatMessageModel chatMessageModel, RxChatService chatService, GuestCustomer guestCustomer, String chatToken) {
-        super(new Params(PRIORITY).requireNetwork().persist());
+    public PostChatMessage(ChatMessageModel chatMessageModel, RxChatService chatService, GuestCustomer guestCustomer, String chatToken, long caseId) {
+        super(new Params(PRIORITY));
         this.chatMessageModel = chatMessageModel;
         this.chatService = chatService;
         this.chatToken = chatToken;
         this.guestCustomer = guestCustomer;
+        this.caseId = caseId;
     }
 
     @Override
     public void onAdded() {
-        BusProvider.get().post(new JobEvent(ADDED));
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                BusProvider.get().post(new JobEvent(ADDED));
+            }
+        });
     }
 
     @Override
     public void onRun() throws Throwable {
-        BusProvider.get().post(new JobEvent(PROCESSING));
-        SendChatMessage sendChatMessage = new SendChatMessage(chatService, chatMessageModel.getMessage(), guestCustomer.id, chatToken, guestCustomer.token);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                BusProvider.get().post(new JobEvent(PROCESSING));
+            }
+        });
+
+        SendChatMessage sendChatMessage = new SendChatMessage(chatService, chatMessageModel.getMessage(), caseId, chatToken, guestCustomer.token);
         sendChatMessage.execute()
                 .subscribe(
                         new Action1<ChatMessage>() {
@@ -87,6 +101,7 @@ public class PostChatMessage extends Job {
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
+                                throwable.printStackTrace();
                                 // TODO handle
                             }
                         });
@@ -94,6 +109,10 @@ public class PostChatMessage extends Job {
 
     @Override
     protected void onCancel() {
-        BusProvider.get().post(new JobEvent(CANCELED));
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                BusProvider.get().post(new JobEvent(CANCELED));
+            }
+        });
     }
 }
