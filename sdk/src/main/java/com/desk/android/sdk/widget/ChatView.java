@@ -27,6 +27,8 @@
 package com.desk.android.sdk.widget;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +42,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -47,6 +50,7 @@ import android.widget.TextView;
 
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.R;
+import com.desk.android.sdk.activity.ChatActivity;
 import com.desk.android.sdk.identity.Identity;
 import com.desk.android.sdk.identity.UserIdentity;
 import com.desk.android.sdk.mvp.model.ChatMessageModel;
@@ -168,7 +172,31 @@ public class ChatView extends LinearLayout implements IChatView {
     }
 
     private void showUserNameDialog() {
-
+        final EditText name = (EditText) LayoutInflater.from(getContext()).inflate(R.layout.dialog_chat_name, null);
+        int padding = getResources().getDimensionPixelSize(R.dimen.chat_name_padding);
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.chat_name_dialog_title)
+                .setView(name, padding, padding, padding, padding)
+                .setPositiveButton(R.string.btn_lets_go, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        presenter.startSession(name.getText().toString());
+                        chatInput.requestFocusFromTouch();
+                    }
+                })
+                .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        ((ChatActivity)getContext()).finish();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override public void onShow(DialogInterface dialog) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(name, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+        dialog.show();
     }
 
     private void init() {

@@ -36,6 +36,9 @@
     <string name="chat_input_hint">Type your message…</string>
     <string name="chat_waiting_for_agent">waiting for agent…</string>
     <string name="chat_connected_with_agent">connected with %s!</string>
+    <string name="chat_name_dialog_title">Type your name</string>
+    <string name="btn_lets_go">Let\'s go!</string>
+    <string name="btn_cancel">Cancel</string>
 
     <string name="def_topics_empty_text">There are no topics available.</string>
     <string name="def_topics_error_text">There was an issue loading topics. Please try again later.</string>
