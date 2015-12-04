@@ -24,21 +24,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.desk.android.sdk.mvp.presenter;
+package com.desk.android.sdk.basic;
 
-import com.desk.android.sdk.mvp.view.IChatView;
+import android.app.Application;
+
+import com.desk.android.sdk.Desk;
+import com.desk.android.sdk.identity.UserIdentity;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public interface IChatPresenter {
+public class BasicApplication extends Application {
 
-    void attach(IChatView view);
-    void detach(IChatView view);
-    void startSession(String userName);
-    void destroy();
-    void userStartedTyping();
-    void userStoppedTyping();
-    void handleNewMessage(String message);
+    @Override public void onCreate() {
+        super.onCreate();
+        Desk.with(this).setIdentity(new UserIdentity.Builder("test@test.com").name("Testy").create());
+    }
 }

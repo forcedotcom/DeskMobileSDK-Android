@@ -24,21 +24,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.desk.android.sdk.mvp.presenter;
+package com.desk.android.sdk.mvp.usecase;
 
-import com.desk.android.sdk.mvp.view.IChatView;
+import com.desk.java.apiclient.model.chat.Requestor;
+import com.desk.java.apiclient.model.chat.TypeStatus;
+import com.desk.java.apiclient.service.RxChatService;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public interface IChatPresenter {
+public class SetUserStartedTyping {
 
-    void attach(IChatView view);
-    void detach(IChatView view);
-    void startSession(String userName);
-    void destroy();
-    void userStartedTyping();
-    void userStoppedTyping();
-    void handleNewMessage(String message);
+    private RxChatService chatService;
+
+    public SetUserStartedTyping(RxChatService chatService) {
+        this.chatService = chatService;
+    }
+
+    public Observable<Void> execute(long customerId, long chatSessionId,
+                                    String chatToken, String customerToken) {
+        return chatService
+                .updateTypingStatus(
+                        customerId,
+                        chatSessionId,
+                        chatToken,
+                        customerToken,
+                        Requestor.CUSTOMER,
+                        TypeStatus.START
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

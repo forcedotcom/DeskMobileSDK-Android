@@ -43,7 +43,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.R;
+import com.desk.android.sdk.identity.Identity;
+import com.desk.android.sdk.identity.UserIdentity;
 import com.desk.android.sdk.mvp.model.ChatMessageModel;
 import com.desk.android.sdk.mvp.presenter.IChatPresenter;
 import com.desk.android.sdk.mvp.presenter.provider.PresenterProvider;
@@ -70,6 +73,7 @@ public class ChatView extends LinearLayout implements IChatView {
     private RecyclerView recycler;
     private ChatMessageAdapter adapter;
     private boolean typing;
+    private String userName;
 
     public ChatView(Context context) {
         this(context, null);
@@ -87,6 +91,17 @@ public class ChatView extends LinearLayout implements IChatView {
     @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         presenter.attach(this);
+        if (TextUtils.isEmpty(userName)) {
+            Identity identity = Desk.with(getContext()).getIdentity();
+            if (identity != null && identity instanceof UserIdentity) {
+                userName = ((UserIdentity) identity).getName();
+            }
+            if (TextUtils.isEmpty(userName)) {
+                showUserNameDialog();
+            } else {
+                presenter.startSession(userName);
+            }
+        }
     }
 
     @Override protected void onDetachedFromWindow() {
@@ -107,6 +122,10 @@ public class ChatView extends LinearLayout implements IChatView {
     }
 
     @Override public void onMessageSent(ChatMessageModel message) {
+
+    }
+
+    private void showUserNameDialog() {
 
     }
 

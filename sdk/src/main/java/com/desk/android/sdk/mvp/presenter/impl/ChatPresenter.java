@@ -33,6 +33,8 @@ import com.desk.android.sdk.mvp.model.ChatMessageModel;
 import com.desk.android.sdk.mvp.presenter.IChatPresenter;
 import com.desk.android.sdk.mvp.usecase.CreateGuestCustomer;
 import com.desk.android.sdk.mvp.usecase.EndChatSession;
+import com.desk.android.sdk.mvp.usecase.SetUserStartedTyping;
+import com.desk.android.sdk.mvp.usecase.SetUserStoppedTyping;
 import com.desk.android.sdk.mvp.usecase.StartChatSession;
 import com.desk.android.sdk.mvp.view.IChatView;
 import com.desk.java.apiclient.model.chat.ChatSession;
@@ -67,40 +69,31 @@ public class ChatPresenter implements IChatPresenter {
 
     @Override public void attach(IChatView view) {
         this.view = view;
-
         init(view);
-
-        new CreateGuestCustomer(chatService, "TimmyTester", chatToken).execute()
-                .flatMap(new Func1<GuestCustomer, Observable<ChatSession>>() {
-                    @Override
-                    public Observable<ChatSession> call(GuestCustomer info) {
-                        guestCustomer = info;
-                        return new StartChatSession(chatService, guestCustomer.id, chatToken, guestCustomer.token).execute();
-                    }
-                })
-                .subscribe(
-                        new Action1<ChatSession>() {
-                            @Override
-                            public void call(ChatSession info) {
-                                chatSession = info;
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                throwable.printStackTrace();
-                                // TODO handle
-                            }
-                        }
-                );
     }
 
     @Override public void userStartedTyping() {
-        // TODO notify api
+        if (chatSession != null) {
+            new SetUserStartedTyping(chatService)
+                    .execute(guestCustomer.id, chatSession.id, chatToken, guestCustomer.token)
+                    .subscribe(new Action1<Void>() {
+                        @Override public void call(Void aVoid) {
+
+                        }
+                    });
+        }
     }
 
     @Override public void userStoppedTyping() {
-        // TODO notify api
+        if (chatSession != null) {
+            new SetUserStoppedTyping(chatService)
+                    .execute(guestCustomer.id, chatSession.id, chatToken, guestCustomer.token)
+                    .subscribe(new Action1<Void>() {
+                        @Override public void call(Void aVoid) {
+
+                        }
+                    });
+        }
     }
 
     @Override public void handleNewMessage(String message) {
@@ -113,21 +106,50 @@ public class ChatPresenter implements IChatPresenter {
         view = null;
     }
 
-    @Override public void destroy() {
-        new EndChatSession(chatService, guestCustomer.id, chatSession.id, chatToken, guestCustomer.token)
-                .execute()
-                .subscribe(new Action1<Void>() {
-                               @Override
-                               public void call(Void aVoid) {
-
-                               }
-                           },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-
+    @Override public void startSession(String userName) {
+        if (chatSession == null) {
+            new CreateGuestCustomer(chatService, userName, chatToken).execute()
+                    .flatMap(new Func1<GuestCustomer, Observable<ChatSession>>() {
+                        @Override
+                        public Observable<ChatSession> call(GuestCustomer info) {
+                            guestCustomer = info;
+                            return new StartChatSession(chatService, guestCustomer.id, chatToken, guestCustomer.token).execute();
+                        }
+                    })
+                    .subscribe(
+                            new Action1<ChatSession>() {
+                                @Override
+                                public void call(ChatSession info) {
+                                    chatSession = info;
+                                }
+                            },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    // TODO handle
+                                }
                             }
-                        });
+                    );
+        }
+    }
+
+    @Override public void destroy() {
+        if (chatSession != null) {
+            new EndChatSession(chatService, guestCustomer.id, chatSession.id, chatToken, guestCustomer.token)
+                    .execute()
+                    .subscribe(new Action1<Void>() {
+                                   @Override
+                                   public void call(Void aVoid) {
+
+                                   }
+                               },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+
+                                }
+                            });
+        }
 
         if (destroyCallback != null) {
             destroyCallback.onDestroyed();
