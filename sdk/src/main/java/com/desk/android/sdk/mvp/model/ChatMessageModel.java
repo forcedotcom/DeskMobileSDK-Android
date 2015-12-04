@@ -44,11 +44,11 @@ public class ChatMessageModel {
         this.pending = true;
     }
 
-    public ChatMessageModel(String message, Date time, boolean incoming, boolean pending) {
+    public ChatMessageModel(String message, Date time, boolean incoming) {
         this.message = message;
         this.time = time;
         this.incoming = incoming;
-        this.pending = pending;
+        this.pending = false;
     }
 
     public String getMessage() {

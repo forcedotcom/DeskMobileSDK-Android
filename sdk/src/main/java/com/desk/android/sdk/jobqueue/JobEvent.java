@@ -39,11 +39,11 @@ import com.desk.android.sdk.mvp.model.ChatMessageModel;
 public class JobEvent {
 
     public enum Action {
-        ADDED, RETRYING, CANCELED, PROCESSING, PROCESSED
+        ADDED, PROCESSED, CANCELED
     }
 
     public Action action;
-    private ChatMessageModel chatMessageModel;
+    public ChatMessageModel chatMessageModel;
 
     public JobEvent(Action action) {
         this.action = action;

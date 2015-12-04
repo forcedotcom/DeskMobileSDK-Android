@@ -43,7 +43,6 @@ import rx.functions.Action1;
 import static com.desk.android.sdk.jobqueue.JobEvent.Action.ADDED;
 import static com.desk.android.sdk.jobqueue.JobEvent.Action.CANCELED;
 import static com.desk.android.sdk.jobqueue.JobEvent.Action.PROCESSED;
-import static com.desk.android.sdk.jobqueue.JobEvent.Action.PROCESSING;
 
 /**
  * <p>
@@ -76,19 +75,13 @@ public class PostChatMessage extends Job {
     public void onAdded() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
-                BusProvider.get().post(new JobEvent(ADDED));
+                BusProvider.get().post(new JobEvent(ADDED, chatMessageModel));
             }
         });
     }
 
     @Override
     public void onRun() throws Throwable {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            public void run() {
-                BusProvider.get().post(new JobEvent(PROCESSING));
-            }
-        });
-
         SendChatMessage sendChatMessage = new SendChatMessage(chatService, chatMessageModel.getMessage(), caseId, chatToken, guestCustomer.token);
         sendChatMessage.execute()
                 .subscribe(
@@ -111,7 +104,7 @@ public class PostChatMessage extends Job {
     protected void onCancel() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
-                BusProvider.get().post(new JobEvent(CANCELED));
+                BusProvider.get().post(new JobEvent(CANCELED, chatMessageModel));
             }
         });
     }

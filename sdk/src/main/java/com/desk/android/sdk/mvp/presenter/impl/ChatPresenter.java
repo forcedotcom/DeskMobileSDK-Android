@@ -27,23 +27,34 @@
 package com.desk.android.sdk.mvp.presenter.impl;
 
 import com.desk.android.sdk.Desk;
+import com.desk.android.sdk.bus.BusProvider;
+import com.desk.android.sdk.jobqueue.JobEvent;
 import com.desk.android.sdk.jobqueue.JobManagerProvider;
 import com.desk.android.sdk.jobqueue.PostChatMessage;
 import com.desk.android.sdk.mvp.model.ChatMessageModel;
 import com.desk.android.sdk.mvp.presenter.IChatPresenter;
 import com.desk.android.sdk.mvp.usecase.CreateGuestCustomer;
 import com.desk.android.sdk.mvp.usecase.EndChatSession;
+import com.desk.android.sdk.mvp.usecase.PollChat;
 import com.desk.android.sdk.mvp.usecase.SetUserStartedTyping;
 import com.desk.android.sdk.mvp.usecase.SetUserStoppedTyping;
 import com.desk.android.sdk.mvp.usecase.StartChatSession;
 import com.desk.android.sdk.mvp.view.IChatView;
+import com.desk.java.apiclient.model.chat.ChatMessage;
 import com.desk.java.apiclient.model.chat.ChatSession;
+import com.desk.java.apiclient.model.chat.ChatSessionPoll;
 import com.desk.java.apiclient.model.chat.GuestCustomer;
 import com.desk.java.apiclient.service.RxChatService;
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+
+import static com.desk.java.apiclient.model.MessageDirection.IN;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
@@ -55,6 +66,7 @@ public class ChatPresenter implements IChatPresenter {
     private String chatToken;
     private GuestCustomer guestCustomer;
     private ChatSession chatSession;
+    private ChatSessionPoll chatSessionPoll;
 
     public interface DestroyCallback {
         void onDestroyed();
@@ -65,6 +77,7 @@ public class ChatPresenter implements IChatPresenter {
 
     public ChatPresenter(DestroyCallback destroyCallback) {
         this.destroyCallback = destroyCallback;
+        BusProvider.get().register(this);
     }
 
     @Override public void attach(IChatView view) {
@@ -77,10 +90,17 @@ public class ChatPresenter implements IChatPresenter {
             new SetUserStartedTyping(chatService)
                     .execute(guestCustomer.id, chatSession.id, chatToken, guestCustomer.token)
                     .subscribe(new Action1<Void>() {
-                        @Override public void call(Void aVoid) {
+                                   @Override
+                                   public void call(Void aVoid) {
 
-                        }
-                    });
+                                   }
+                               },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+
+                                }
+                            });
         }
     }
 
@@ -89,10 +109,17 @@ public class ChatPresenter implements IChatPresenter {
             new SetUserStoppedTyping(chatService)
                     .execute(guestCustomer.id, chatSession.id, chatToken, guestCustomer.token)
                     .subscribe(new Action1<Void>() {
-                        @Override public void call(Void aVoid) {
+                                   @Override
+                                   public void call(Void aVoid) {
 
-                        }
-                    });
+                                   }
+                               },
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+
+                                }
+                            });
         }
     }
 
@@ -116,16 +143,31 @@ public class ChatPresenter implements IChatPresenter {
                             return new StartChatSession(chatService, guestCustomer.id, chatToken, guestCustomer.token).execute();
                         }
                     })
+                    .flatMap(new Func1<ChatSession, Observable<ChatSessionPoll>>() {
+                        @Override
+                        public Observable<ChatSessionPoll> call(ChatSession session) {
+                            chatSession = session;
+                            return new PollChat(chatService, guestCustomer.id, chatSession.id, chatToken, guestCustomer.token).execute();
+                        }
+                    })
                     .subscribe(
-                            new Action1<ChatSession>() {
+                            new Action1<ChatSessionPoll>() {
                                 @Override
-                                public void call(ChatSession info) {
-                                    chatSession = info;
+                                public void call(ChatSessionPoll chatSessionPoll) {
+                                    ChatPresenter.this.chatSessionPoll = chatSessionPoll;
+                                    if (chatSessionPoll._embedded.messages != null) {
+                                        List<ChatMessageModel> models = new ArrayList<>();
+                                        for (ChatMessage message : chatSessionPoll._embedded.messages) {
+                                            models.add(new ChatMessageModel(message.body, message.createdAt, message.direction == IN));
+                                        }
+                                        ChatPresenter.this.view.onNewMessages(models);
+                                    }
                                 }
                             },
                             new Action1<Throwable>() {
                                 @Override
                                 public void call(Throwable throwable) {
+                                    throwable.printStackTrace();
                                     // TODO handle
                                 }
                             }
@@ -134,6 +176,8 @@ public class ChatPresenter implements IChatPresenter {
     }
 
     @Override public void destroy() {
+        BusProvider.get().unregister(this);
+
         if (chatSession != null) {
             new EndChatSession(chatService, guestCustomer.id, chatSession.id, chatToken, guestCustomer.token)
                     .execute()
@@ -153,6 +197,19 @@ public class ChatPresenter implements IChatPresenter {
 
         if (destroyCallback != null) {
             destroyCallback.onDestroyed();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onJobEvent(JobEvent jobEvent) {
+        switch (jobEvent.action) {
+            case ADDED:
+                view.onPendingMessage(jobEvent.chatMessageModel);
+                break;
+            case PROCESSED:
+                view.onMessageSent(jobEvent.chatMessageModel);
+                break;
         }
     }
 
