@@ -40,7 +40,7 @@ public interface IChatView {
 
     void destroy();
     void onNewMessages(List<ChatMessageModel> messages);
-    void onPendingMessage();
-    void onMessageSent();
+    void onPendingMessage(ChatMessageModel pendingMessage);
+    void onMessageSent(ChatMessageModel pendingMessage, ChatMessageModel sentMessage);
     Context getContext();
 }

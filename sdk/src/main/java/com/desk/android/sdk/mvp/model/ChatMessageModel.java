@@ -26,7 +26,13 @@
 
 package com.desk.android.sdk.mvp.model;
 
+import android.text.format.DateUtils;
+
+import com.desk.java.apiclient.model.MessageDirection;
+import com.desk.java.apiclient.model.chat.ChatMessage;
+
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
@@ -34,21 +40,31 @@ import java.util.Date;
  */
 public class ChatMessageModel {
 
+    private long id;
     private String message;
     private Date time;
     private boolean incoming;
     private boolean pending;
 
-    public ChatMessageModel(String message) {
-        this.message = message;
-        this.pending = true;
+    public ChatMessageModel(ChatMessage message) {
+        this.id = message.id;
+        this.message = message.body;
+        this.time = message.createdAt;
+        this.incoming = message.direction == MessageDirection.IN;
     }
 
-    public ChatMessageModel(String message, Date time, boolean incoming) {
+    public ChatMessageModel(String message, boolean pending) {
         this.message = message;
-        this.time = time;
-        this.incoming = incoming;
-        this.pending = false;
+        this.pending = pending;
+        this.incoming = true;
+        if (pending) {
+            this.time = new Date(System.currentTimeMillis() + DateUtils.YEAR_IN_MILLIS);
+        }
+        this.id = new Random().nextLong();
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getMessage() {
@@ -71,22 +87,21 @@ public class ChatMessageModel {
         return pending;
     }
 
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         ChatMessageModel that = (ChatMessageModel) o;
 
-        if (incoming != that.incoming) return false;
-        if (!message.equals(that.message)) return false;
-        return time.equals(that.time);
+        return id == that.id;
 
     }
 
     @Override public int hashCode() {
-        int result = message.hashCode();
-        result = 31 * result + time.hashCode();
-        result = 31 * result + (incoming ? 1 : 0);
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 }

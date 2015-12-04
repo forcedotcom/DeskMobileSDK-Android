@@ -40,8 +40,9 @@ import com.path.android.jobqueue.Params;
 
 import rx.functions.Action1;
 
-import static com.desk.android.sdk.jobqueue.JobEvent.Action.ADDED;
-import static com.desk.android.sdk.jobqueue.JobEvent.Action.CANCELED;
+import static com.desk.android.sdk.jobqueue.ChatMessageJobEvent.Action.ADDED;
+import static com.desk.android.sdk.jobqueue.ChatMessageJobEvent.Action.CANCELED;
+import static com.desk.android.sdk.jobqueue.ChatMessageJobEvent.Action.PROCESSED;
 
 /**
  * <p>
@@ -74,7 +75,7 @@ public class PostChatMessage extends Job {
     public void onAdded() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
-                BusProvider.get().post(new JobEvent(ADDED));
+                BusProvider.get().post(new ChatMessageJobEvent(ADDED, chatMessageModel));
             }
         });
     }
@@ -86,8 +87,8 @@ public class PostChatMessage extends Job {
                 .subscribe(
                         new Action1<ChatMessage>() {
                             @Override
-                            public void call(ChatMessage sessionInfo) {
-                                // TODO handle
+                            public void call(ChatMessage chatMessage) {
+                                BusProvider.get().post(new ChatMessageJobEvent(PROCESSED, chatMessageModel, new ChatMessageModel(chatMessage)));
                             }
                         },
                         new Action1<Throwable>() {
@@ -103,7 +104,7 @@ public class PostChatMessage extends Job {
     protected void onCancel() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
-                BusProvider.get().post(new JobEvent(CANCELED));
+                BusProvider.get().post(new ChatMessageJobEvent(CANCELED, chatMessageModel));
             }
         });
     }

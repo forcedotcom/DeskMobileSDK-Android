@@ -26,6 +26,8 @@
 
 package com.desk.android.sdk.jobqueue;
 
+import com.desk.android.sdk.mvp.model.ChatMessageModel;
+
 /**
  * <p>
  *     Represent various job-queue related events.
@@ -34,15 +36,23 @@ package com.desk.android.sdk.jobqueue;
  * Created by Jerrell Mardis
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public class JobEvent {
+public class ChatMessageJobEvent {
 
     public enum Action {
         ADDED, PROCESSED, CANCELED
     }
 
     public Action action;
+    public ChatMessageModel pendingMessage;
+    public ChatMessageModel processedMessage;
 
-    public JobEvent(Action action) {
+    public ChatMessageJobEvent(Action action, ChatMessageModel pendingMessage) {
+        this(action, pendingMessage, null);
+    }
+
+    public ChatMessageJobEvent(Action action, ChatMessageModel pendingMessage, ChatMessageModel processedMessage) {
         this.action = action;
+        this.pendingMessage = pendingMessage;
+        this.processedMessage = processedMessage;
     }
 }

@@ -28,7 +28,7 @@ package com.desk.android.sdk.mvp.presenter.impl;
 
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.bus.BusProvider;
-import com.desk.android.sdk.jobqueue.JobEvent;
+import com.desk.android.sdk.jobqueue.ChatMessageJobEvent;
 import com.desk.android.sdk.jobqueue.JobManagerProvider;
 import com.desk.android.sdk.jobqueue.PostChatMessage;
 import com.desk.android.sdk.mvp.model.ChatMessageModel;
@@ -54,9 +54,6 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
-
-import static com.desk.android.sdk.jobqueue.JobEvent.Action.PROCESSED;
-import static com.desk.java.apiclient.model.MessageDirection.IN;
 
 /**
  * Created by Matt Kranzler on 12/3/15.
@@ -130,7 +127,7 @@ public class ChatPresenter implements IChatPresenter {
     }
 
     @Override public void handleNewMessage(String message) {
-        ChatMessageModel chatMessage = new ChatMessageModel(message);
+        ChatMessageModel chatMessage = new ChatMessageModel(message, true);
         JobManagerProvider.get(view.getContext()).addJobInBackground(new PostChatMessage(chatMessage, chatService,
                 guestCustomer, chatToken, chatSession._links.caseLink.getLinkId()));
     }
@@ -161,15 +158,12 @@ public class ChatPresenter implements IChatPresenter {
                                 @Override
                                 public void call(ChatSessionPoll chatSessionPoll) {
                                     ChatPresenter.this.chatSessionPoll = chatSessionPoll;
-                                    if (chatSessionPoll._embedded.messages != null) {
+                                    if (chatSessionPoll._embedded.messages != null && !chatSessionPoll._embedded.messages.isEmpty()) {
                                         List<ChatMessageModel> models = new ArrayList<>();
                                         for (ChatMessage message : chatSessionPoll._embedded.messages) {
-                                            models.add(new ChatMessageModel(message.body, message.createdAt, message.direction == IN));
+                                            models.add(new ChatMessageModel(message));
                                         }
-                                        if (!models.isEmpty()) {
-                                            ChatPresenter.this.view.onNewMessages(models);
-                                            BusProvider.get().post(new JobEvent(PROCESSED));
-                                        }
+                                        ChatPresenter.this.view.onNewMessages(models);
                                     }
                                 }
                             },
@@ -216,13 +210,13 @@ public class ChatPresenter implements IChatPresenter {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void onJobEvent(JobEvent jobEvent) {
+    public void onJobEvent(ChatMessageJobEvent jobEvent) {
         switch (jobEvent.action) {
             case ADDED:
-                view.onPendingMessage();
+                view.onPendingMessage(jobEvent.pendingMessage);
                 break;
             case PROCESSED:
-                view.onMessageSent();
+                view.onMessageSent(jobEvent.pendingMessage, jobEvent.processedMessage);
                 break;
         }
     }

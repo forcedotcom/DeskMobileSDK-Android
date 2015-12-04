@@ -75,7 +75,6 @@ public class ChatView extends LinearLayout implements IChatView {
     private ChatMessageAdapter adapter;
     private boolean typing;
     private String userName;
-    private ProgressBar sendProgressBar;
 
     public ChatView(Context context) {
         this(context, null);
@@ -117,23 +116,21 @@ public class ChatView extends LinearLayout implements IChatView {
 
     @Override public void onNewMessages(List<ChatMessageModel> messages) {
         adapter.addAll(messages);
+        scrollRecycler();
+    }
+
+    @Override public void onPendingMessage(ChatMessageModel pendingMessage) {
+        adapter.add(pendingMessage);
+        scrollRecycler();
+    }
+
+    @Override public void onMessageSent(ChatMessageModel pendingMessage, ChatMessageModel sentMessage) {
+        adapter.swap(pendingMessage, sentMessage);
+        scrollRecycler();
+    }
+
+    private void scrollRecycler() {
         recycler.getLayoutManager().scrollToPosition(0);
-    }
-
-    @Override public void onPendingMessage() {
-        sendButton.setVisibility(View.GONE);
-        sendProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override public void onMessageSent() {
-        sendButton.setVisibility(View.VISIBLE);
-        sendButton.post(new Runnable() {
-            @Override
-            public void run() {
-                disableSendButton();
-            }
-        });
-        sendProgressBar.setVisibility(View.GONE);
     }
 
     private void showUserNameDialog() {
@@ -146,7 +143,6 @@ public class ChatView extends LinearLayout implements IChatView {
         chatInput = (EditText) findViewById(R.id.chat_input);
         sendButton = (ImageButton) findViewById(R.id.btn_send);
         recycler = (RecyclerView) findViewById(R.id.recycler);
-        sendProgressBar = (ProgressBar) findViewById(R.id.btn_send_progress_bar);
         presenter = PresenterProvider.getChatPresenter();
         disableSendButton();
         setupRecyclerView();
@@ -268,7 +264,12 @@ public class ChatView extends LinearLayout implements IChatView {
         public void onBindViewHolder(ViewHolder holder, int position) {
             ChatMessageModel message = getItem(holder.getAdapterPosition());
             holder.chatMessage.setText(message.getMessage());
-            holder.chatTimestamp.setText(getTimestampString(message.getTime()));
+            holder.chatTimestamp.setText(getTimestampString(message));
+            if (message.isPending()) {
+                holder.chatMessage.setAlpha(.3f);
+            } else {
+                holder.chatMessage.setAlpha(1.0f);
+            }
         }
 
         @Override public int getItemCount() {
@@ -284,11 +285,24 @@ public class ChatView extends LinearLayout implements IChatView {
             items.addAll(messages);
         }
 
+        public void add(ChatMessageModel message) {
+            items.add(message);
+        }
+
+        public void swap(ChatMessageModel messageOne, ChatMessageModel messageTwo) {
+            int index = items.indexOf(messageOne);
+            items.updateItemAt(index, messageTwo);
+        }
+
         public ChatMessageModel getItem(int position) {
             return items.get(position);
         }
 
-        private String getTimestampString(Date date) {
+        private String getTimestampString(ChatMessageModel message) {
+            if (message.isPending()) {
+                return getContext().getString(R.string.sending);
+            }
+            Date date = message.getTime();
             long now = System.currentTimeMillis();
 
             if (now - date.getTime() < 1000) {
@@ -305,11 +319,13 @@ public class ChatView extends LinearLayout implements IChatView {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
+            View itemView;
             TextView chatMessage;
             TextView chatTimestamp;
 
             public ViewHolder(View itemView) {
                 super(itemView);
+                this.itemView = itemView;
                 chatMessage = (TextView) itemView.findViewById(R.id.chat_message);
                 chatTimestamp = (TextView) itemView.findViewById(R.id.chat_timestamp);
             }
