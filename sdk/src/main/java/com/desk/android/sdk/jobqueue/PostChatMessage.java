@@ -62,7 +62,9 @@ public class PostChatMessage extends Job {
     private GuestCustomer guestCustomer;
     private long caseId;
 
-    public PostChatMessage(ChatMessageModel chatMessageModel, RxChatService chatService, GuestCustomer guestCustomer, String chatToken, long caseId) {
+    public PostChatMessage(ChatMessageModel chatMessageModel, RxChatService chatService, GuestCustomer guestCustomer,
+                           String chatToken, long caseId) {
+
         super(new Params(PRIORITY));
         this.chatMessageModel = chatMessageModel;
         this.chatService = chatService;

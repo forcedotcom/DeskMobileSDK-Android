@@ -55,12 +55,8 @@ import com.desk.android.sdk.mvp.view.IChatView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import rx.functions.Action1;
 
@@ -71,7 +67,6 @@ import rx.functions.Action1;
 public class ChatView extends LinearLayout implements IChatView {
 
     private static final String TAG = ChatView.class.getCanonicalName();
-    private static final Pattern CONNECTED_WITH_PATTERN = Pattern.compile("^You are now connected with Agent\\s(.*)$");
 
     private IChatPresenter presenter;
     private EditText chatInput;
@@ -140,9 +135,10 @@ public class ChatView extends LinearLayout implements IChatView {
         recycler.getLayoutManager().scrollToPosition(0);
     }
 
-    @Override public void onAgentStartedTyping() {
+    @Override public void onAgentStartedTyping(String name) {
         if (agentTypingMessage == null) {
             agentTypingMessage = new ChatMessageModel("...", true, false);
+            agentTypingMessage.setName(name);
             adapter.add(agentTypingMessage);
             scrollRecycler();
         }
@@ -160,11 +156,9 @@ public class ChatView extends LinearLayout implements IChatView {
         setSubtitle(getContext().getString(R.string.chat_waiting_for_agent));
     }
 
-    @Override public void onAgentConnected(String message) {
-        Matcher matcher = CONNECTED_WITH_PATTERN.matcher(message);
-        if (matcher.find()) {
-            String agent = matcher.group(1);
-            setSubtitle(getContext().getString(R.string.chat_connected_with_agent, agent));
+    @Override public void onAgentConnected(String name) {
+        if (!TextUtils.isEmpty(name)) {
+            setSubtitle(getContext().getString(R.string.chat_connected_with_agent, name));
         }
     }
 
@@ -305,6 +299,8 @@ public class ChatView extends LinearLayout implements IChatView {
             ChatMessageModel message = getItem(holder.getAdapterPosition());
             holder.chatMessage.setText(message.getMessage());
             holder.chatTimestamp.setText(getTimestampString(message));
+            holder.avatarView.setAvatarName(message.getName());
+
             if (message.isPending()) {
                 holder.chatMessage.setAlpha(.3f);
             } else {
@@ -366,12 +362,14 @@ public class ChatView extends LinearLayout implements IChatView {
             View itemView;
             TextView chatMessage;
             TextView chatTimestamp;
+            AvatarView avatarView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 this.itemView = itemView;
                 chatMessage = (TextView) itemView.findViewById(R.id.chat_message);
                 chatTimestamp = (TextView) itemView.findViewById(R.id.chat_timestamp);
+                avatarView = (AvatarView) itemView.findViewById(R.id.avatar);
             }
         }
 

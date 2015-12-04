@@ -90,4 +90,12 @@
         <attr name="dk_feedbackHint" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="AvatarView">
+        <attr name="avatarName" format="string"/>
+        <attr name="avatarColor" format="color"/>
+        <attr name="textSizeSingle" format="dimension"/>
+        <attr name="textSizeDouble" format="dimension"/>
+        <attr name="enableBorder" format="boolean"/>
+    </declare-styleable>
+
 </resources>

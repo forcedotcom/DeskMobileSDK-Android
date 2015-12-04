@@ -45,6 +45,7 @@ public class ChatMessageModel {
     private Date time;
     private boolean incoming;
     private boolean pending;
+    private String name;
 
     public ChatMessageModel(ChatMessage message) {
         this.id = message.id;
@@ -93,6 +94,14 @@ public class ChatMessageModel {
 
     public void setPending(boolean pending) {
         this.pending = pending;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override public boolean equals(Object o) {

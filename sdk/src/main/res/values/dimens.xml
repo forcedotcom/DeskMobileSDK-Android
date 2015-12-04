@@ -1,0 +1,7 @@
+<resources>
+
+    <dimen name="border_width">1dp</dimen>
+    <dimen name="avatar_text_size_single">17sp</dimen>
+    <dimen name="avatar_text_size_double">13sp</dimen>
+
+</resources>

@@ -43,8 +43,8 @@ public interface IChatView {
     void onPendingMessage(ChatMessageModel pendingMessage);
     void onMessageSent(ChatMessageModel pendingMessage, ChatMessageModel sentMessage);
     void onWaitingForAgent();
-    void onAgentConnected(String message);
-    void onAgentStartedTyping();
+    void onAgentConnected(String name);
+    void onAgentStartedTyping(String name);
     void onAgentStoppedTyping();
     Context getContext();
 }

@@ -26,8 +26,6 @@
 
 package com.desk.android.sdk.mvp.presenter.impl;
 
-import android.text.TextUtils;
-
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.bus.BusProvider;
 import com.desk.android.sdk.jobqueue.ChatMessageJobEvent;
@@ -42,6 +40,7 @@ import com.desk.android.sdk.mvp.usecase.SetUserStartedTyping;
 import com.desk.android.sdk.mvp.usecase.SetUserStoppedTyping;
 import com.desk.android.sdk.mvp.usecase.StartChatSession;
 import com.desk.android.sdk.mvp.view.IChatView;
+import com.desk.java.apiclient.model.MessageDirection;
 import com.desk.java.apiclient.model.User;
 import com.desk.java.apiclient.model.chat.ChatMessage;
 import com.desk.java.apiclient.model.chat.ChatSession;
@@ -52,6 +51,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -64,12 +65,15 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class ChatPresenter implements IChatPresenter {
 
+    private static final Pattern CONNECTED_WITH_PATTERN = Pattern.compile("^You are now connected with Agent\\s(.*)$");
+
     private RxChatService chatService;
     private String chatToken;
     private GuestCustomer guestCustomer;
     private ChatSession chatSession;
-    private ChatSessionPoll chatSessionPoll;
     private CompositeSubscription subscriptions;
+    private String agentName;
+    private String userName;
 
     public interface DestroyCallback {
         void onDestroyed();
@@ -131,6 +135,7 @@ public class ChatPresenter implements IChatPresenter {
 
     @Override public void handleNewMessage(String message) {
         ChatMessageModel chatMessage = new ChatMessageModel(message, true);
+        chatMessage.setName(userName);
         JobManagerProvider.get(view.getContext()).addJobInBackground(new PostChatMessage(chatMessage, chatService,
                 guestCustomer, chatToken, chatSession._links.caseLink.getLinkId()));
     }
@@ -140,6 +145,7 @@ public class ChatPresenter implements IChatPresenter {
     }
 
     @Override public void startSession(String userName) {
+        this.userName = userName;
         if (chatSession == null) {
             subscriptions.add(new CreateGuestCustomer(chatService, userName, chatToken).execute()
                     .flatMap(new Func1<GuestCustomer, Observable<ChatSession>>() {
@@ -160,8 +166,6 @@ public class ChatPresenter implements IChatPresenter {
                             new Action1<ChatSessionPoll>() {
                                 @Override
                                 public void call(ChatSessionPoll chatSessionPoll) {
-                                    ChatPresenter.this.chatSessionPoll = chatSessionPoll;
-
                                     // first toggle agent started/stopped typing
                                     if (chatSessionPoll._embedded.typists.isEmpty()) {
                                         ChatPresenter.this.view.onAgentStoppedTyping();
@@ -175,7 +179,7 @@ public class ChatPresenter implements IChatPresenter {
                                             }
                                         }
                                         if (containsAgent) {
-                                            ChatPresenter.this.view.onAgentStartedTyping();
+                                            ChatPresenter.this.view.onAgentStartedTyping(agentName);
                                         } else {
                                             ChatPresenter.this.view.onAgentStoppedTyping();
                                         }
@@ -187,9 +191,12 @@ public class ChatPresenter implements IChatPresenter {
                                         for (ChatMessage message : chatSessionPoll._embedded.messages) {
                                             if (message.eventType != null) {
                                                 switch (message.eventType) {
-
                                                     case QUEUE_ITEM_PULLED:
-                                                        ChatPresenter.this.view.onAgentConnected(message.body);
+                                                        Matcher matcher = CONNECTED_WITH_PATTERN.matcher(message.body);
+                                                        if (matcher.find()) {
+                                                            agentName = matcher.group(1);
+                                                            ChatPresenter.this.view.onAgentConnected(agentName);
+                                                        }
                                                         break;
                                                     case QUEUE_ITEM_AVAILABLE:
                                                         ChatPresenter.this.view.onWaitingForAgent();
@@ -200,7 +207,13 @@ public class ChatPresenter implements IChatPresenter {
                                                         break;
                                                 }
                                             } else {
-                                                models.add(new ChatMessageModel(message));
+                                                ChatMessageModel chatMessageModel = new ChatMessageModel(message);
+                                                if (message.direction == MessageDirection.IN) {
+                                                    chatMessageModel.setName(ChatPresenter.this.userName);
+                                                } else {
+                                                    chatMessageModel.setName(agentName);
+                                                }
+                                                models.add(chatMessageModel);
                                             }
                                         }
                                         ChatPresenter.this.view.onNewMessages(models);
@@ -256,6 +269,7 @@ public class ChatPresenter implements IChatPresenter {
                 view.onPendingMessage(jobEvent.pendingMessage);
                 break;
             case PROCESSED:
+                jobEvent.processedMessage.setName(jobEvent.pendingMessage.getName());
                 view.onMessageSent(jobEvent.pendingMessage, jobEvent.processedMessage);
                 break;
         }
