@@ -55,11 +55,10 @@
         <activity
             android:name="com.desk.android.sdk.activity.ContactUsWebActivity"
             android:label="@string/contact_us_form_activity_title"/>
-
         <activity
             android:name="com.desk.android.sdk.activity.ChatActivity"
             android:label="@string/chat_activity_title"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
+            android:windowSoftInputMode="stateVisible"/>
 
     </application>
 

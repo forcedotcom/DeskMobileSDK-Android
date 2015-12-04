@@ -39,8 +39,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.desk.android.sdk.Desk;
@@ -63,7 +63,7 @@ import rx.functions.Action1;
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public class ChatView extends FrameLayout implements IChatView {
+public class ChatView extends LinearLayout implements IChatView {
 
     private static final String TAG = ChatView.class.getCanonicalName();
     private IChatPresenter presenter;
@@ -115,6 +115,7 @@ public class ChatView extends FrameLayout implements IChatView {
 
     @Override public void onNewMessages(List<ChatMessageModel> messages) {
         adapter.addAll(messages);
+        recycler.getLayoutManager().scrollToPosition(0);
     }
 
     @Override public void onPendingMessage(ChatMessageModel message) {
@@ -130,6 +131,7 @@ public class ChatView extends FrameLayout implements IChatView {
     }
 
     private void init() {
+        setOrientation(VERTICAL);
         LayoutInflater.from(getContext()).inflate(R.layout.chat_view, this, true);
         chatInput = (EditText) findViewById(R.id.chat_input);
         sendButton = (ImageButton) findViewById(R.id.btn_send);
