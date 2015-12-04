@@ -31,14 +31,14 @@ import android.os.Looper;
 
 import com.desk.android.sdk.bus.BusProvider;
 import com.desk.android.sdk.mvp.model.ChatMessageModel;
-import com.desk.android.sdk.mvp.usecase.SendChatMessage;
 import com.desk.java.apiclient.model.chat.ChatMessage;
 import com.desk.java.apiclient.model.chat.GuestCustomer;
 import com.desk.java.apiclient.service.RxChatService;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
+import com.path.android.jobqueue.RetryConstraint;
 
-import rx.functions.Action1;
+import rx.observables.BlockingObservable;
 
 import static com.desk.android.sdk.jobqueue.ChatMessageJobEvent.Action.ADDED;
 import static com.desk.android.sdk.jobqueue.ChatMessageJobEvent.Action.CANCELED;
@@ -62,10 +62,8 @@ public class PostChatMessage extends Job {
     private GuestCustomer guestCustomer;
     private long caseId;
 
-    public PostChatMessage(ChatMessageModel chatMessageModel, RxChatService chatService, GuestCustomer guestCustomer,
-                           String chatToken, long caseId) {
-
-        super(new Params(PRIORITY));
+    public PostChatMessage(ChatMessageModel chatMessageModel, RxChatService chatService, GuestCustomer guestCustomer, String chatToken, long caseId) {
+        super(new Params(PRIORITY).groupBy("chat_messages"));
         this.chatMessageModel = chatMessageModel;
         this.chatService = chatService;
         this.chatToken = chatToken;
@@ -84,22 +82,17 @@ public class PostChatMessage extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        SendChatMessage sendChatMessage = new SendChatMessage(chatService, chatMessageModel.getMessage(), caseId, chatToken, guestCustomer.token);
-        sendChatMessage.execute()
-                .subscribe(
-                        new Action1<ChatMessage>() {
-                            @Override
-                            public void call(ChatMessage chatMessage) {
-                                BusProvider.get().post(new ChatMessageJobEvent(PROCESSED, chatMessageModel, new ChatMessageModel(chatMessage)));
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                throwable.printStackTrace();
-                                // TODO handle
-                            }
-                        });
+        final ChatMessage sentMessage = BlockingObservable.from(chatService.sendMessage(caseId, chatMessageModel.getMessage(), chatToken, guestCustomer.token)).first();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                BusProvider.get().post(new ChatMessageJobEvent(PROCESSED, chatMessageModel, new ChatMessageModel(sentMessage)));
+            }
+        });
+    }
+
+    @Override
+    protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
+        return RetryConstraint.createExponentialBackoff(runCount, 1000);
     }
 
     @Override
