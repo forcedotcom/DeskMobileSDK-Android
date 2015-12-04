@@ -27,6 +27,8 @@
 package com.desk.android.sdk.widget;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
@@ -181,6 +183,10 @@ public class ChatView extends LinearLayout implements IChatView {
         disableSendButton();
         setupRecyclerView();
         setupSubscriptions();
+
+        AppCompatActivity activity = (AppCompatActivity) getContext();
+        activity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3498db")));
+        activity.getWindow().setStatusBarColor(Color.parseColor("#168dc3"));
     }
 
     private void setupSubscriptions() {

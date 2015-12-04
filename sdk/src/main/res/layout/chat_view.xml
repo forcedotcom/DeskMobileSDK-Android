@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#e6e6e6"/>
+        android:background="#eceff1"/>
 
     <FrameLayout
         android:id="@+id/chat_input_container"
@@ -43,15 +43,18 @@
         <View
             android:id="@+id/chat_input_divider"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:background="#afafaf"/>
 
         <EditText
             android:id="@+id/chat_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom|left"
+            android:gravity="center_vertical"
             android:layout_marginLeft="8dp"
+            android:textColorHint="#b3b3b3"
+            android:background="@android:color/transparent"
             android:layout_marginRight="48dp"
             android:hint="@string/chat_input_hint">
             <requestFocus/>

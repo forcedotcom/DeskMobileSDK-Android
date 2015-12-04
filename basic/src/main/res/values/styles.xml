@@ -30,4 +30,6 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="ChatTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+
 </resources>

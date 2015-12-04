@@ -34,11 +34,11 @@
         android:name=".BasicApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:label="@string/app_name">
 
         <activity
-            android:name="com.desk.android.sdk.activity.TopicListActivity">
+            android:name="com.desk.android.sdk.activity.TopicListActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -46,19 +46,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.desk.android.sdk.activity.ArticleListActivity"/>
+            android:name="com.desk.android.sdk.activity.ArticleListActivity"
+            android:theme="@style/AppTheme"/>
         <activity
-            android:name="com.desk.android.sdk.activity.ArticleActivity"/>
+            android:name="com.desk.android.sdk.activity.ArticleActivity"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name="com.desk.android.sdk.activity.ContactUsActivity"
-            android:label="@string/contact_us_form_activity_title"/>
+            android:label="@string/contact_us_form_activity_title"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name="com.desk.android.sdk.activity.ContactUsWebActivity"
-            android:label="@string/contact_us_form_activity_title"/>
+            android:label="@string/contact_us_form_activity_title"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name="com.desk.android.sdk.activity.ChatActivity"
             android:label="@string/chat_activity_title"
             android:screenOrientation="portrait"
+            android:theme="@style/ChatTheme"
             android:windowSoftInputMode="stateVisible"/>
 
     </application>
