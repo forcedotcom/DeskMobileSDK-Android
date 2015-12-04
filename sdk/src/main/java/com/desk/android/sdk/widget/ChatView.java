@@ -41,6 +41,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.desk.android.sdk.Desk;
@@ -63,7 +64,7 @@ import rx.functions.Action1;
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public class ChatView extends LinearLayout implements IChatView {
+public class ChatView extends RelativeLayout implements IChatView {
 
     private static final String TAG = ChatView.class.getCanonicalName();
     private IChatPresenter presenter;
@@ -71,6 +72,7 @@ public class ChatView extends LinearLayout implements IChatView {
     private EditText chatInput;
     private ImageButton sendButton;
     private RecyclerView recycler;
+    private RecyclerView.LayoutManager layoutManager;
     private ChatMessageAdapter adapter;
     private boolean typing;
     private String userName;
@@ -130,7 +132,6 @@ public class ChatView extends LinearLayout implements IChatView {
     }
 
     private void init() {
-        setOrientation(VERTICAL);
         LayoutInflater.from(getContext()).inflate(R.layout.chat_view, this, true);
         chatInput = (EditText) findViewById(R.id.chat_input);
         sendButton = (ImageButton) findViewById(R.id.btn_send);
@@ -177,7 +178,7 @@ public class ChatView extends LinearLayout implements IChatView {
     }
 
     private void setupRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
         recycler.setLayoutManager(layoutManager);
         adapter = new ChatMessageAdapter(getContext());
         recycler.setAdapter(adapter);

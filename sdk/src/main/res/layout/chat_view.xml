@@ -27,17 +27,11 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
     <FrameLayout
         android:id="@+id/chat_input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0">
+        android:layout_alignParentBottom="true">
 
         <View
             android:id="@+id/chat_input_divider"
@@ -64,5 +58,11 @@
             android:src="@drawable/ic_send"/>
 
     </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/chat_input_container"/>
 
 </merge>
