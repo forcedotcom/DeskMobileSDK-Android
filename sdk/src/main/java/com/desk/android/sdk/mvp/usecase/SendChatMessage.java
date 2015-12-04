@@ -1,5 +1,6 @@
 package com.desk.android.sdk.mvp.usecase;
 
+import com.desk.android.sdk.util.RetryWithDelay;
 import com.desk.java.apiclient.model.chat.ChatMessage;
 import com.desk.java.apiclient.service.RxChatService;
 
@@ -34,6 +35,7 @@ public class SendChatMessage {
     public Observable<ChatMessage> execute() {
         return chatService
                 .sendMessage(caseId, message, chatToken, customerToken)
+                .retryWhen(new RetryWithDelay(5, 1000))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
