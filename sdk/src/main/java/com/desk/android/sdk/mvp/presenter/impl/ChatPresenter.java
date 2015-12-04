@@ -29,24 +29,17 @@ package com.desk.android.sdk.mvp.presenter.impl;
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.jobqueue.JobManagerProvider;
 import com.desk.android.sdk.jobqueue.PostChatMessage;
-import com.desk.android.sdk.mvp.model.ChatMessage;
+import com.desk.android.sdk.mvp.model.ChatMessageModel;
 import com.desk.android.sdk.mvp.presenter.IChatPresenter;
 import com.desk.android.sdk.mvp.usecase.CreateGuestCustomer;
 import com.desk.android.sdk.mvp.usecase.EndChatSession;
 import com.desk.android.sdk.mvp.usecase.StartChatSession;
 import com.desk.android.sdk.mvp.view.IChatView;
-import com.desk.java.apiclient.model.chat.CustomerInfo;
-import com.desk.java.apiclient.model.chat.SessionInfo;
+import com.desk.java.apiclient.model.chat.ChatSession;
+import com.desk.java.apiclient.model.chat.GuestCustomer;
 import com.desk.java.apiclient.service.RxChatService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -59,8 +52,8 @@ public class ChatPresenter implements IChatPresenter {
     private Desk desk;
     private RxChatService chatService;
     private String chatToken;
-    private CustomerInfo customerInfo;
-    private SessionInfo sessionInfo;
+    private GuestCustomer customerInfo;
+    private ChatSession sessionInfo;
 
     public interface DestroyCallback {
         void onDestroyed();
@@ -79,17 +72,17 @@ public class ChatPresenter implements IChatPresenter {
         init(view);
 
         new CreateGuestCustomer(chatService, "TimmyTester", chatToken).execute()
-                .flatMap(new Func1<CustomerInfo, Observable<SessionInfo>>() {
+                .flatMap(new Func1<GuestCustomer, Observable<ChatSession>>() {
                     @Override
-                    public Observable<SessionInfo> call(CustomerInfo info) {
+                    public Observable<ChatSession> call(GuestCustomer info) {
                         customerInfo = info;
                         return new StartChatSession(chatService, customerInfo.id, chatToken, customerInfo.token).execute();
                     }
                 })
                 .subscribe(
-                        new Action1<SessionInfo>() {
+                        new Action1<ChatSession>() {
                             @Override
-                            public void call(SessionInfo info) {
+                            public void call(ChatSession info) {
                                 sessionInfo = info;
                             }
                         },
@@ -100,33 +93,6 @@ public class ChatPresenter implements IChatPresenter {
                             }
                         }
                 );
-
-        final List<ChatMessage> messages = new ArrayList<>();
-        boolean incoming = false;
-        for (int i = 0; i < 10; i++) {
-            messages.add(new ChatMessage("Message " + i, null, incoming, true));
-            incoming = !incoming;
-        }
-
-        Observable.interval(1, TimeUnit.SECONDS)
-                .take(messages.size())
-                .map(new Func1<Long, ChatMessage>() {
-                    @Override public ChatMessage call(Long aLong) {
-                        return messages.get(aLong.intValue());
-                    }
-                })
-                .map(new Func1<ChatMessage, ChatMessage>() {
-                    @Override public ChatMessage call(ChatMessage chatMessage) {
-                        chatMessage.setTime(new Date());
-                        return chatMessage;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ChatMessage>() {
-                    @Override public void call(ChatMessage chatMessage) {
-                        ChatPresenter.this.view.onNewMessages(Collections.singletonList(chatMessage));
-                    }
-                });
     }
 
     @Override public void userStartedTyping() {
@@ -138,7 +104,7 @@ public class ChatPresenter implements IChatPresenter {
     }
 
     @Override public void handleNewMessage(String message) {
-        ChatMessage chatMessage = new ChatMessage(message);
+        ChatMessageModel chatMessage = new ChatMessageModel(message);
         JobManagerProvider.get(view.getContext()).addJob(new PostChatMessage(chatMessage, chatService, customerInfo, chatToken));
     }
 

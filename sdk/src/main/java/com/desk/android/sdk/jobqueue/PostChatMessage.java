@@ -27,10 +27,10 @@
 package com.desk.android.sdk.jobqueue;
 
 import com.desk.android.sdk.bus.BusProvider;
-import com.desk.android.sdk.mvp.model.ChatMessage;
+import com.desk.android.sdk.mvp.model.ChatMessageModel;
 import com.desk.android.sdk.mvp.usecase.SendChatMessage;
-import com.desk.java.apiclient.model.chat.CustomerInfo;
-import com.desk.java.apiclient.model.chat.SessionInfo;
+import com.desk.java.apiclient.model.chat.ChatMessage;
+import com.desk.java.apiclient.model.chat.GuestCustomer;
 import com.desk.java.apiclient.service.RxChatService;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
@@ -54,17 +54,17 @@ public class PostChatMessage extends Job {
 
     public static final int PRIORITY = 1;
 
-    private ChatMessage chatMessage;
+    private ChatMessageModel chatMessageModel;
     private RxChatService chatService;
     private String chatToken;
-    private CustomerInfo customerInfo;
+    private GuestCustomer guestCustomer;
 
-    public PostChatMessage(ChatMessage chatMessage, RxChatService chatService, CustomerInfo customerInfo, String chatToken) {
+    public PostChatMessage(ChatMessageModel chatMessageModel, RxChatService chatService, GuestCustomer guestCustomer, String chatToken) {
         super(new Params(PRIORITY).requireNetwork().persist());
-        this.chatMessage = chatMessage;
+        this.chatMessageModel = chatMessageModel;
         this.chatService = chatService;
         this.chatToken = chatToken;
-        this.customerInfo = customerInfo;
+        this.guestCustomer = guestCustomer;
     }
 
     @Override
@@ -75,13 +75,13 @@ public class PostChatMessage extends Job {
     @Override
     public void onRun() throws Throwable {
         BusProvider.get().post(new JobEvent(PROCESSING));
-        SendChatMessage sendChatMessage = new SendChatMessage(chatService, chatMessage.getMessage(), customerInfo.guestCustomerId, chatToken, customerInfo.customerToken);
+        SendChatMessage sendChatMessage = new SendChatMessage(chatService, chatMessageModel.getMessage(), guestCustomer.id, chatToken, guestCustomer.token);
         sendChatMessage.execute()
                 .subscribe(
-                        new Action1<SessionInfo>() {
+                        new Action1<ChatMessage>() {
                             @Override
-                            public void call(SessionInfo sessionInfo) {
-                                BusProvider.get().post(new JobEvent(PROCESSED, chatMessage));
+                            public void call(ChatMessage sessionInfo) {
+                                BusProvider.get().post(new JobEvent(PROCESSED, chatMessageModel));
                             }
                         },
                         new Action1<Throwable>() {

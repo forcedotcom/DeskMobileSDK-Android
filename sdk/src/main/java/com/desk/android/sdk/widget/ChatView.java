@@ -44,7 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.desk.android.sdk.R;
-import com.desk.android.sdk.mvp.model.ChatMessage;
+import com.desk.android.sdk.mvp.model.ChatMessageModel;
 import com.desk.android.sdk.mvp.presenter.IChatPresenter;
 import com.desk.android.sdk.mvp.presenter.provider.PresenterProvider;
 import com.desk.android.sdk.mvp.view.IChatView;
@@ -98,15 +98,15 @@ public class ChatView extends LinearLayout implements IChatView {
         presenter.destroy();
     }
 
-    @Override public void onNewMessages(List<ChatMessage> messages) {
+    @Override public void onNewMessages(List<ChatMessageModel> messages) {
         adapter.addAll(messages);
     }
 
-    @Override public void onPendingMessage(ChatMessage message) {
+    @Override public void onPendingMessage(ChatMessageModel message) {
 
     }
 
-    @Override public void onMessageSent(ChatMessage message) {
+    @Override public void onMessageSent(ChatMessageModel message) {
 
     }
 
@@ -201,21 +201,21 @@ public class ChatView extends LinearLayout implements IChatView {
         static final int TYPE_OUTGOING_MESSAGE = 1;
 
         private LayoutInflater inflater;
-        private SortedList<ChatMessage> items;
+        private SortedList<ChatMessageModel> items;
 
         public ChatMessageAdapter(Context context) {
             inflater = LayoutInflater.from(context);
-            items = new SortedList<>(ChatMessage.class, new SortedListAdapterCallback<ChatMessage>(this) {
-                @Override public int compare(ChatMessage o1, ChatMessage o2) {
+            items = new SortedList<>(ChatMessageModel.class, new SortedListAdapterCallback<ChatMessageModel>(this) {
+                @Override public int compare(ChatMessageModel o1, ChatMessageModel o2) {
                     return o2.getTime().compareTo(o1.getTime());
                 }
 
                 @Override
-                public boolean areContentsTheSame(ChatMessage oldItem, ChatMessage newItem) {
+                public boolean areContentsTheSame(ChatMessageModel oldItem, ChatMessageModel newItem) {
                     return oldItem.equals(newItem);
                 }
 
-                @Override public boolean areItemsTheSame(ChatMessage item1, ChatMessage item2) {
+                @Override public boolean areItemsTheSame(ChatMessageModel item1, ChatMessageModel item2) {
                     return item1.equals(item2);
                 }
             });
@@ -236,7 +236,7 @@ public class ChatView extends LinearLayout implements IChatView {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            ChatMessage message = getItem(holder.getAdapterPosition());
+            ChatMessageModel message = getItem(holder.getAdapterPosition());
             holder.chatMessage.setText(message.getMessage());
             holder.chatTimestamp.setText(getTimestampString(message.getTime()));
         }
@@ -246,15 +246,15 @@ public class ChatView extends LinearLayout implements IChatView {
         }
 
         @Override public int getItemViewType(int position) {
-            ChatMessage message = getItem(position);
+            ChatMessageModel message = getItem(position);
             return message.isIncoming() ? TYPE_INCOMING_MESSAGE : TYPE_OUTGOING_MESSAGE;
         }
 
-        public void addAll(List<ChatMessage> messages) {
+        public void addAll(List<ChatMessageModel> messages) {
             items.addAll(messages);
         }
 
-        public ChatMessage getItem(int position) {
+        public ChatMessageModel getItem(int position) {
             return items.get(position);
         }
 
