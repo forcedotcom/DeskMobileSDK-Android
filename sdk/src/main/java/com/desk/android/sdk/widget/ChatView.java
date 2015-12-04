@@ -211,10 +211,6 @@ public class ChatView extends LinearLayout implements IChatView {
         disableSendButton();
         setupRecyclerView();
         setupSubscriptions();
-
-        AppCompatActivity activity = (AppCompatActivity) getContext();
-        activity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3498db")));
-        activity.getWindow().setStatusBarColor(Color.parseColor("#168dc3"));
     }
 
     private void setupSubscriptions() {
@@ -333,39 +329,13 @@ public class ChatView extends LinearLayout implements IChatView {
         public void onBindViewHolder(ViewHolder holder, int position) {
             position = holder.getAdapterPosition();
             ChatMessageModel message = getItem(position);
-            bindTimestamp(holder, position, message);
             holder.chatMessage.setText(message.getMessage());
             holder.avatarView.setAvatarName(message.getName());
+            holder.chatTimestamp.setText(getTimestampString(message));
             if (message.isPending()) {
                 holder.chatMessage.setAlpha(.3f);
             } else {
                 holder.chatMessage.setAlpha(1.0f);
-            }
-        }
-
-        private void bindTimestamp(ViewHolder holder, int position, ChatMessageModel message) {
-            if (shouldShowTimestampForPosition(position)) {
-                String timestamp = getTimestampString(message);
-                holder.chatTimestamp.setText(timestamp);
-                holder.chatTimestamp.setVisibility(View.VISIBLE);
-            } else {
-                holder.chatTimestamp.setVisibility(View.GONE);
-            }
-        }
-
-        private boolean shouldShowTimestampForPosition(int position) {
-            if (position > 0) {
-                ChatMessageModel current = getItem(position);
-                ChatMessageModel previous = getItem(position - 1);
-                if (current.isIncoming() != previous.isIncoming()) {
-                    return true;
-                } else {
-                    String currentTimestamp = getTimestampString(current);
-                    String previousTimestamp = getTimestampString(previous);
-                    return !TextUtils.equals(currentTimestamp, previousTimestamp);
-                }
-            } else {
-                return true;
             }
         }
 
@@ -401,7 +371,7 @@ public class ChatView extends LinearLayout implements IChatView {
 
         private String getTimestampString(ChatMessageModel message) {
             if (message.isPending()) {
-                return message.isIncoming() ? getContext().getString(R.string.sending) : "";
+                return message.isIncoming() ? getContext().getString(R.string.sending) : getContext().getString(R.string.agent_typing);
             }
             return DateUtils.formatDateTime(
                     getContext(),

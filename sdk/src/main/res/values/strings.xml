@@ -39,6 +39,7 @@
     <string name="chat_name_dialog_title">Type your name</string>
     <string name="btn_lets_go">Let\'s go!</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="agent_typing">Agent is typing…</string>
 
     <string name="def_topics_empty_text">There are no topics available.</string>
     <string name="def_topics_error_text">There was an issue loading topics. Please try again later.</string>

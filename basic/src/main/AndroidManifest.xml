@@ -63,7 +63,7 @@
             android:name="com.desk.android.sdk.activity.ChatActivity"
             android:label="@string/chat_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/ChatTheme"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateVisible"/>
 
     </application>

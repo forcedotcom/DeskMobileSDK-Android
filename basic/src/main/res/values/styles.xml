@@ -26,10 +26,23 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#3498db</item>
+        <item name="colorPrimaryDark">#168dc3</item>
+        <item name="actionBarTheme">@style/ActionBarTheme</item>
     </style>
 
-    <style name="ChatTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+    <!-- ActionBar theme for brand 1 which uses a light action bar -->
+    <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <!-- Tint the icons to our primary color -->
+        <item name="colorControlNormal">#fff</item>
+
+        <!-- Set the background to white -->
+        <item name="colorPrimary">#3498db</item>
+
+        <!-- Set the title text color to our primary color -->
+        <item name="android:textColorPrimary">#fff</item>
+    </style>
 
 </resources>
