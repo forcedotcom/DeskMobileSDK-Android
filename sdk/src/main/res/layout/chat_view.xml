@@ -37,7 +37,7 @@
         android:id="@+id/chat_input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"> 
+        android:layout_weight="0">
 
         <View
             android:id="@+id/chat_input_divider"

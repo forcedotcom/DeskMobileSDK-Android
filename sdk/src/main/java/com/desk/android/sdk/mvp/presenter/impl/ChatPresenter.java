@@ -160,7 +160,9 @@ public class ChatPresenter implements IChatPresenter {
                                         for (ChatMessage message : chatSessionPoll._embedded.messages) {
                                             models.add(new ChatMessageModel(message.body, message.createdAt, message.direction == IN));
                                         }
-                                        ChatPresenter.this.view.onNewMessages(models);
+                                        if (!models.isEmpty()) {
+                                            ChatPresenter.this.view.onNewMessages(models);
+                                        }
                                     }
                                 }
                             },
