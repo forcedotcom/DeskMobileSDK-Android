@@ -33,6 +33,7 @@
     <string name="end_session_dialog_message">Leaving this screen will end your session. Are you sure you would like to leave?</string>
     <string name="just_now">Just now</string>
     <string name="sending">Sending…</string>
+    <string name="chat_input_hint">Type your message…</string>
 
     <string name="def_topics_empty_text">There are no topics available.</string>
     <string name="def_topics_error_text">There was an issue loading topics. Please try again later.</string>

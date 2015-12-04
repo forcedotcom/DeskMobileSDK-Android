@@ -67,7 +67,6 @@ import rx.functions.Action1;
  */
 public class ChatView extends LinearLayout implements IChatView {
 
-    private static final String AGENT_IS_TYPING = "is typing...";
     private static final String TAG = ChatView.class.getCanonicalName();
 
     private IChatPresenter presenter;
@@ -77,6 +76,7 @@ public class ChatView extends LinearLayout implements IChatView {
     private ChatMessageAdapter adapter;
     private String userName;
     private boolean typing;
+    private ChatMessageModel agentTypingMessage;
 
     public ChatView(Context context) {
         this(context, null);
@@ -117,14 +117,7 @@ public class ChatView extends LinearLayout implements IChatView {
     }
 
     @Override public void onNewMessages(List<ChatMessageModel> messages) {
-        if (!messages.isEmpty() && !messages.get(0).isIncoming()) {
-            ChatMessageModel existingModel = adapter.getItem(0);
-            if (existingModel != null && existingModel.getMessage().toLowerCase().contains(AGENT_IS_TYPING)) {
-                adapter.swap(existingModel, messages.get(0));
-            }
-        } else {
-            adapter.addAll(messages);
-        }
+        adapter.addAll(messages);
         scrollRecycler();
     }
 
@@ -142,16 +135,19 @@ public class ChatView extends LinearLayout implements IChatView {
         recycler.getLayoutManager().scrollToPosition(0);
     }
 
-    @Override public void onAgentTyping(String name) {
-        ChatMessageModel existingModel = adapter.getItem(0);
-        String message = String.format("%s %s", name, AGENT_IS_TYPING);
-        if (!message.equalsIgnoreCase(existingModel.getMessage())) {
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.YEAR, 1);
-            Date yearFromNow = cal.getTime();
-            ChatMessageModel chatMessageModel = new ChatMessageModel(message, false, false, yearFromNow);
-            adapter.addAll(Collections.singletonList(chatMessageModel));
+    @Override public void onAgentStartedTyping() {
+        if (agentTypingMessage == null) {
+            agentTypingMessage = new ChatMessageModel("...", true, false);
+            adapter.add(agentTypingMessage);
             scrollRecycler();
+        }
+    }
+
+    @Override public void onAgentStoppedTyping() {
+        if (agentTypingMessage != null) {
+            adapter.remove(agentTypingMessage);
+            scrollRecycler();
+            agentTypingMessage = null;
         }
     }
 
@@ -311,6 +307,10 @@ public class ChatView extends LinearLayout implements IChatView {
             items.add(message);
         }
 
+        public void remove(ChatMessageModel message) {
+            items.remove(message);
+        }
+
         public void swap(ChatMessageModel messageOne, ChatMessageModel messageTwo) {
             int index = items.indexOf(messageOne);
             items.updateItemAt(index, messageTwo);
@@ -322,7 +322,7 @@ public class ChatView extends LinearLayout implements IChatView {
 
         private String getTimestampString(ChatMessageModel message) {
             if (message.isPending()) {
-                return getContext().getString(R.string.sending);
+                return message.isIncoming() ? getContext().getString(R.string.sending) : "";
             }
             Date date = message.getTime();
             long now = System.currentTimeMillis();

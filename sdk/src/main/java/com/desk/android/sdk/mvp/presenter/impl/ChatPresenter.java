@@ -160,16 +160,21 @@ public class ChatPresenter implements IChatPresenter {
                                 @Override
                                 public void call(ChatSessionPoll chatSessionPoll) {
                                     ChatPresenter.this.chatSessionPoll = chatSessionPoll;
+
+                                    // first toggle agent started/stopped typing
+                                    if (chatSessionPoll._embedded.typists.isEmpty()) {
+                                        ChatPresenter.this.view.onAgentStoppedTyping();
+                                    } else {
+                                        ChatPresenter.this.view.onAgentStartedTyping();
+                                    }
+
+                                    // then handle messages
                                     if (chatSessionPoll._embedded.messages != null && !chatSessionPoll._embedded.messages.isEmpty()) {
                                         List<ChatMessageModel> models = new ArrayList<>();
                                         for (ChatMessage message : chatSessionPoll._embedded.messages) {
                                             models.add(new ChatMessageModel(message));
                                         }
                                         ChatPresenter.this.view.onNewMessages(models);
-                                    }
-
-                                    if (!chatSessionPoll._embedded.typists.isEmpty() && !TextUtils.isEmpty(chatSessionPoll._embedded.typists.get(0).getName())) {
-                                        ChatPresenter.this.view.onAgentTyping(chatSessionPoll._embedded.typists.get(0).getName());
                                     }
                                 }
                             },

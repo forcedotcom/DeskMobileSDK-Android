@@ -54,20 +54,17 @@ public class ChatMessageModel {
     }
 
     public ChatMessageModel(String message, boolean pending) {
+        this(message, pending, true);
+    }
+
+    public ChatMessageModel(String message, boolean pending, boolean incoming) {
         this.message = message;
         this.pending = pending;
-        this.incoming = true;
+        this.incoming = incoming;
         if (pending) {
             this.time = new Date(System.currentTimeMillis() + DateUtils.YEAR_IN_MILLIS);
         }
         this.id = new Random().nextLong();
-    }
-
-    public ChatMessageModel(String message, boolean pending, boolean incoming, Date time) {
-        this.message = message;
-        this.incoming = incoming;
-        this.pending = pending;
-        this.time = time;
     }
 
     public long getId() {
