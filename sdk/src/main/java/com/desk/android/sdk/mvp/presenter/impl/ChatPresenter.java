@@ -172,7 +172,23 @@ public class ChatPresenter implements IChatPresenter {
                                     if (chatSessionPoll._embedded.messages != null && !chatSessionPoll._embedded.messages.isEmpty()) {
                                         List<ChatMessageModel> models = new ArrayList<>();
                                         for (ChatMessage message : chatSessionPoll._embedded.messages) {
-                                            models.add(new ChatMessageModel(message));
+                                            if (message.eventType != null) {
+                                                switch (message.eventType) {
+
+                                                    case QUEUE_ITEM_PULLED:
+                                                        ChatPresenter.this.view.onAgentConnected(message.body);
+                                                        break;
+                                                    case QUEUE_ITEM_AVAILABLE:
+                                                        ChatPresenter.this.view.onWaitingForAgent();
+                                                        break;
+                                                    case CHAT_AGENT_ENTER:
+                                                        break;
+                                                    case CHAT_AGENT_EXIT:
+                                                        break;
+                                                }
+                                            } else {
+                                                models.add(new ChatMessageModel(message));
+                                            }
                                         }
                                         ChatPresenter.this.view.onNewMessages(models);
                                     }

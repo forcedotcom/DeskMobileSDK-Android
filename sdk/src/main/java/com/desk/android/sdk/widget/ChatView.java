@@ -27,6 +27,7 @@
 package com.desk.android.sdk.widget;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -58,6 +59,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rx.functions.Action1;
 
@@ -68,6 +71,7 @@ import rx.functions.Action1;
 public class ChatView extends LinearLayout implements IChatView {
 
     private static final String TAG = ChatView.class.getCanonicalName();
+    private static final Pattern CONNECTED_WITH_PATTERN = Pattern.compile("^You are now connected with Agent\\s(.*)$");
 
     private IChatPresenter presenter;
     private EditText chatInput;
@@ -94,6 +98,7 @@ public class ChatView extends LinearLayout implements IChatView {
     @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         presenter.attach(this);
+        onWaitingForAgent();
         if (TextUtils.isEmpty(userName)) {
             Identity identity = Desk.with(getContext()).getIdentity();
             if (identity != null && identity instanceof UserIdentity) {
@@ -149,6 +154,23 @@ public class ChatView extends LinearLayout implements IChatView {
             scrollRecycler();
             agentTypingMessage = null;
         }
+    }
+
+    @SuppressWarnings("ConstantConditions") @Override public void onWaitingForAgent() {
+        setSubtitle(getContext().getString(R.string.chat_waiting_for_agent));
+    }
+
+    @Override public void onAgentConnected(String message) {
+        Matcher matcher = CONNECTED_WITH_PATTERN.matcher(message);
+        if (matcher.find()) {
+            String agent = matcher.group(1);
+            setSubtitle(getContext().getString(R.string.chat_connected_with_agent, agent));
+        }
+    }
+
+    private void setSubtitle(String subtitle) {
+        AppCompatActivity activity = (AppCompatActivity) getContext();
+        activity.getSupportActionBar().setSubtitle(subtitle);
     }
 
     private void showUserNameDialog() {
