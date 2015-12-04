@@ -39,9 +39,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.desk.android.sdk.Desk;
@@ -64,7 +63,7 @@ import rx.functions.Action1;
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public class ChatView extends RelativeLayout implements IChatView {
+public class ChatView extends FrameLayout implements IChatView {
 
     private static final String TAG = ChatView.class.getCanonicalName();
     private IChatPresenter presenter;
@@ -72,7 +71,6 @@ public class ChatView extends RelativeLayout implements IChatView {
     private EditText chatInput;
     private ImageButton sendButton;
     private RecyclerView recycler;
-    private RecyclerView.LayoutManager layoutManager;
     private ChatMessageAdapter adapter;
     private boolean typing;
     private String userName;
@@ -178,8 +176,7 @@ public class ChatView extends RelativeLayout implements IChatView {
     }
 
     private void setupRecyclerView() {
-        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
-        recycler.setLayoutManager(layoutManager);
+        recycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true));
         adapter = new ChatMessageAdapter(getContext());
         recycler.setAdapter(adapter);
     }
