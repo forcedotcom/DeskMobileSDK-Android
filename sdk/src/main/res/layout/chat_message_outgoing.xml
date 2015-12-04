@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:background="@drawable/msg_bubble_outgoing"
         tools:text="Hey what\'s up"/>
 
     <TextView

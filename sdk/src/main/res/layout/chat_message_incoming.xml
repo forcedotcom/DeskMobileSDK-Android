@@ -39,6 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="#fff"
+        android:background="@drawable/msg_bubble_incoming"
         tools:text="Hey what\'s up"/>
 
     <TextView

@@ -31,7 +31,8 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:background="#e6e6e6"/>
 
     <FrameLayout
         android:id="@+id/chat_input_container"
@@ -48,7 +49,7 @@
         <EditText
             android:id="@+id/chat_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content"    
             android:layout_gravity="bottom|left"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="48dp">
