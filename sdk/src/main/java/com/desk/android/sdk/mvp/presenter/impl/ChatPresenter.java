@@ -194,10 +194,6 @@ public class ChatPresenter implements IChatPresenter {
                                                     case QUEUE_ITEM_AVAILABLE:
                                                         ChatPresenter.this.view.onWaitingForAgent();
                                                         break;
-                                                    case CHAT_AGENT_ENTER:
-                                                        break;
-                                                    case CHAT_AGENT_EXIT:
-                                                        break;
                                                 }
                                             } else {
                                                 models.add(new ChatMessageModel(message));
