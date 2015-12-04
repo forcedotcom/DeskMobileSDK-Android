@@ -50,6 +50,8 @@ public class DeskPropertyConfig extends BaseDeskConfig implements PropertyConfig
      */
     public static final String KEY_HOSTNAME = "desk.hostname";
 
+    public static final String KEY_CHAT_TOKEN_SECRET = "desk.chat.token";
+
     private Properties properties;
 
     /**
@@ -82,5 +84,10 @@ public class DeskPropertyConfig extends BaseDeskConfig implements PropertyConfig
     @Override
     public String getHostname() {
         return getString(KEY_HOSTNAME, properties);
+    }
+
+    @Override
+    public String getChatToken() {
+        return getString(KEY_CHAT_TOKEN_SECRET, properties);
     }
 }

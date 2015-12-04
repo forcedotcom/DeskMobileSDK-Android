@@ -24,24 +24,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.desk.android.sdk.config;
+package com.desk.android.sdk.jobqueue;
+
+import android.content.Context;
+
+import com.path.android.jobqueue.JobManager;
+import com.path.android.jobqueue.config.Configuration;
 
 /**
- * Configuration options for {@link com.desk.android.sdk.Desk}
+ * <p>
+ *     Provides a singleton instance for obtaining a job manager.
+ * </p>
+ *
+ * Created by Jerrell Mardis
+ * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public interface DeskConfig {
+public final class JobManagerProvider {
 
-    /**
-     * This is the api token used to authenticate with the Desk api.
-     * @return the api token
-     */
-    String getApiToken();
+    private static JobManager jobManager;
 
-    /**
-     * This is the hostname for your Desk site (ex: yourcompany.desk.com)
-     * @return the hostname
-     */
-    String getHostname();
+    public static JobManager get(Context context) {
+        if (jobManager == null) {
+            Context applicationContext = context.getApplicationContext();
+            Configuration configuration = new Configuration.Builder(applicationContext)
+                    .minConsumerCount(1)    // always keep at least one consumer alive
+                    .maxConsumerCount(3)    // up to 3 consumers at a time
+                    .loadFactor(3)          // 3 jobs per consumer
+                    .consumerKeepAlive(120) // wait 2 minute
+                    .build();
+            jobManager = new JobManager(applicationContext, configuration);
+        }
+        return jobManager;
+    }
 
-    String getChatToken();
+    private JobManagerProvider() {
+        // prevents instantiation
+    }
 }

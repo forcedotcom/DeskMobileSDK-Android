@@ -41,4 +41,9 @@ public abstract class BaseDeskConfig implements DeskConfig {
     public String getHostname() {
         return null;
     }
+
+    @Override
+    public String getChatToken() {
+        return null;
+    }
 }

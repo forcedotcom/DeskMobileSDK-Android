@@ -32,16 +32,23 @@ import java.util.Date;
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
  */
-public class ChatMessage {
+public class ChatMessageModel {
 
     private String message;
     private Date time;
     private boolean incoming;
+    private boolean pending;
 
-    public ChatMessage(String message, Date time, boolean incoming) {
+    public ChatMessageModel(String message) {
+        this.message = message;
+        this.pending = true;
+    }
+
+    public ChatMessageModel(String message, Date time, boolean incoming, boolean pending) {
         this.message = message;
         this.time = time;
         this.incoming = incoming;
+        this.pending = pending;
     }
 
     public String getMessage() {
@@ -64,7 +71,7 @@ public class ChatMessage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ChatMessage that = (ChatMessage) o;
+        ChatMessageModel that = (ChatMessageModel) o;
 
         if (incoming != that.incoming) return false;
         if (!message.equals(that.message)) return false;
