@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -55,7 +56,6 @@ import com.desk.android.sdk.mvp.view.IChatView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
-import java.util.Date;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -220,6 +220,7 @@ public class ChatView extends LinearLayout implements IChatView {
 
     private void setupRecyclerView() {
         recycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true));
+        ((SimpleItemAnimator) recycler.getItemAnimator()).setSupportsChangeAnimations(false);
         adapter = new ChatMessageAdapter(getContext());
         recycler.setAdapter(adapter);
     }
@@ -272,7 +273,7 @@ public class ChatView extends LinearLayout implements IChatView {
 
                 @Override
                 public boolean areContentsTheSame(ChatMessageModel oldItem, ChatMessageModel newItem) {
-                    return oldItem.equals(newItem);
+                    return false;
                 }
 
                 @Override public boolean areItemsTheSame(ChatMessageModel item1, ChatMessageModel item2) {
@@ -296,15 +297,41 @@ public class ChatView extends LinearLayout implements IChatView {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            ChatMessageModel message = getItem(holder.getAdapterPosition());
+            position = holder.getAdapterPosition();
+            ChatMessageModel message = getItem(position);
+            bindTimestamp(holder, position, message);
             holder.chatMessage.setText(message.getMessage());
-            holder.chatTimestamp.setText(getTimestampString(message));
             holder.avatarView.setAvatarName(message.getName());
-
             if (message.isPending()) {
                 holder.chatMessage.setAlpha(.3f);
             } else {
                 holder.chatMessage.setAlpha(1.0f);
+            }
+        }
+
+        private void bindTimestamp(ViewHolder holder, int position, ChatMessageModel message) {
+            if (shouldShowTimestampForPosition(position)) {
+                String timestamp = getTimestampString(message);
+                holder.chatTimestamp.setText(timestamp);
+                holder.chatTimestamp.setVisibility(View.VISIBLE);
+            } else {
+                holder.chatTimestamp.setVisibility(View.GONE);
+            }
+        }
+
+        private boolean shouldShowTimestampForPosition(int position) {
+            if (position > 0) {
+                ChatMessageModel current = getItem(position);
+                ChatMessageModel previous = getItem(position - 1);
+                if (current.isIncoming() != previous.isIncoming()) {
+                    return true;
+                } else {
+                    String currentTimestamp = getTimestampString(current);
+                    String previousTimestamp = getTimestampString(previous);
+                    return !TextUtils.equals(currentTimestamp, previousTimestamp);
+                }
+            } else {
+                return true;
             }
         }
 
@@ -342,19 +369,11 @@ public class ChatView extends LinearLayout implements IChatView {
             if (message.isPending()) {
                 return message.isIncoming() ? getContext().getString(R.string.sending) : "";
             }
-            Date date = message.getTime();
-            long now = System.currentTimeMillis();
-
-            if (now - date.getTime() < 1000) {
-                return getContext().getString(R.string.just_now);
-            }
-
-            return DateUtils.getRelativeTimeSpanString(
-                    date.getTime(),
-                    now,
-                    DateUtils.SECOND_IN_MILLIS,
-                    DateUtils.FORMAT_ABBREV_ALL
-            ).toString();
+            return DateUtils.formatDateTime(
+                    getContext(),
+                    message.getTime().getTime(),
+                    DateUtils.FORMAT_SHOW_TIME
+            );
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
