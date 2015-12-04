@@ -1,6 +1,6 @@
 package com.desk.android.sdk.mvp.usecase;
 
-import com.desk.java.apiclient.model.chat.CustomerInfo;
+import com.desk.java.apiclient.model.chat.GuestCustomer;
 import com.desk.java.apiclient.service.RxChatService;
 
 import rx.Observable;
@@ -28,9 +28,9 @@ public class CreateGuestCustomer {
         this.chatToken = chatToken;
     }
 
-    public Observable<CustomerInfo> execute() {
+    public Observable<GuestCustomer> execute() {
         return chatService
-                .createCustomer(firstName, chatToken, FIELDS)
+                .createGuestCustomer(firstName, chatToken, FIELDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

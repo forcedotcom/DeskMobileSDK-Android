@@ -31,8 +31,10 @@ import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.util.SortedListAdapterCallback;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +51,7 @@ import com.desk.android.sdk.mvp.view.IChatView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
+import java.util.Date;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -59,12 +62,14 @@ import rx.functions.Action1;
  */
 public class ChatView extends LinearLayout implements IChatView {
 
+    private static final String TAG = ChatView.class.getCanonicalName();
     private IChatPresenter presenter;
 
     private EditText chatInput;
     private ImageButton sendButton;
     private RecyclerView recycler;
     private ChatMessageAdapter adapter;
+    private boolean typing;
 
     public ChatView(Context context) {
         this(context, null);
@@ -82,6 +87,11 @@ public class ChatView extends LinearLayout implements IChatView {
     @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         presenter.attach(this);
+    }
+
+    @Override protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        presenter.detach(this);
     }
 
     @Override public void destroy() {
@@ -113,6 +123,8 @@ public class ChatView extends LinearLayout implements IChatView {
     }
 
     private void setupSubscriptions() {
+
+        // listen for changes to enable/disable the send button
         RxTextView.textChanges(chatInput)
                 .subscribe(new Action1<CharSequence>() {
                     @Override public void call(CharSequence charSequence) {
@@ -123,6 +135,20 @@ public class ChatView extends LinearLayout implements IChatView {
                         }
                     }
                 });
+
+        // listen for changes to notify user has started & stopped typing
+        RxTextView.textChanges(chatInput)
+                .subscribe(new Action1<CharSequence>() {
+                    @Override public void call(CharSequence charSequence) {
+                        if (TextUtils.isEmpty(charSequence)) {
+                            notifyTypingStopped();
+                        } else {
+                            notifyTypingStarted();
+                        }
+                    }
+                });
+
+        // listen for clicks to send a message
         RxView.clicks(sendButton)
                 .subscribe(new Action1<Object>() {
                     @Override public void call(Object o) {
@@ -151,6 +177,22 @@ public class ChatView extends LinearLayout implements IChatView {
     private void sendMessage() {
         presenter.handleNewMessage(chatInput.getText().toString());
         chatInput.getText().clear();
+    }
+
+    private void notifyTypingStarted() {
+        if (!typing) {
+            presenter.userStartedTyping();
+            typing = true;
+            Log.d(TAG, "notifyTypingStarted: user is typing");
+        }
+    }
+
+    private void notifyTypingStopped() {
+        if (typing) {
+            presenter.userStoppedTyping();
+            typing = false;
+            Log.d(TAG, "notifyTypingStopped: user is not typing");
+        }
     }
 
     private class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.ViewHolder> {
@@ -196,14 +238,7 @@ public class ChatView extends LinearLayout implements IChatView {
         public void onBindViewHolder(ViewHolder holder, int position) {
             ChatMessage message = getItem(holder.getAdapterPosition());
             holder.chatMessage.setText(message.getMessage());
-            holder.chatTimestamp.setText(
-                DateUtils.getRelativeTimeSpanString(
-                    message.getTime().getTime(),
-                    System.currentTimeMillis(),
-                    DateUtils.SECOND_IN_MILLIS,
-                    DateUtils.FORMAT_ABBREV_ALL
-                )
-            );
+            holder.chatTimestamp.setText(getTimestampString(message.getTime()));
         }
 
         @Override public int getItemCount() {
@@ -221,6 +256,21 @@ public class ChatView extends LinearLayout implements IChatView {
 
         public ChatMessage getItem(int position) {
             return items.get(position);
+        }
+
+        private String getTimestampString(Date date) {
+            long now = System.currentTimeMillis();
+
+            if (now - date.getTime() < 1000) {
+                return getContext().getString(R.string.just_now);
+            }
+
+            return DateUtils.getRelativeTimeSpanString(
+                    date.getTime(),
+                    now,
+                    DateUtils.SECOND_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_ALL
+            ).toString();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

@@ -50,14 +50,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
+            android:layout_marginLeft="8dp"
             android:layout_marginRight="48dp"/>
 
         <ImageButton
-            style="?attr/borderlessButtonStyle"
             android:id="@+id/btn_send"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical|right"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_send"/>
 
     </FrameLayout>

@@ -51,15 +51,16 @@ public class ChatPresenter implements IChatPresenter {
         void onDestroyed();
     }
 
+    private DestroyCallback destroyCallback;
+    private IChatView view;
+
     public ChatPresenter(DestroyCallback destroyCallback) {
         this.destroyCallback = destroyCallback;
     }
 
-    private DestroyCallback destroyCallback;
-    private IChatView view;
-
     @Override public void attach(IChatView view) {
         this.view = view;
+
         // TODO start session
         final List<ChatMessage> messages = new ArrayList<>();
         boolean incoming = false;

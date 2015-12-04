@@ -1,6 +1,6 @@
 package com.desk.android.sdk.mvp.usecase;
 
-import com.desk.java.apiclient.model.chat.SessionInfo;
+import com.desk.java.apiclient.model.chat.ChatMessage;
 import com.desk.java.apiclient.service.RxChatService;
 
 import rx.Observable;
@@ -31,7 +31,7 @@ public class SendChatMessage {
         this.customerToken = customerToken;
     }
 
-    public Observable<SessionInfo> execute() {
+    public Observable<ChatMessage> execute() {
         return chatService
                 .sendMessage(guestCustomerId, message, chatToken, customerToken)
                 .subscribeOn(Schedulers.io())

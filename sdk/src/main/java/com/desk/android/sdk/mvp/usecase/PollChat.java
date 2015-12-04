@@ -1,6 +1,7 @@
 package com.desk.android.sdk.mvp.usecase;
 
-import com.desk.java.apiclient.model.chat.PollInfo;
+import com.desk.java.apiclient.model.chat.ChatSessionPoll;
+import com.desk.java.apiclient.model.chat.Requestor;
 import com.desk.java.apiclient.service.RxChatService;
 
 import java.util.concurrent.TimeUnit;
@@ -20,8 +21,6 @@ import rx.schedulers.Schedulers;
  */
 public class PollChat {
 
-    private static final String REQUESTOR = "customer";
-
     private RxChatService chatService;
     private long guestCustomerId;
     private long chatSessionId;
@@ -36,13 +35,13 @@ public class PollChat {
         this.customerToken = customerToken;
     }
 
-    public Observable<PollInfo> execute() {
+    public Observable<ChatSessionPoll> execute() {
         return Observable
-                .interval(30, TimeUnit.SECONDS, Schedulers.io())
-                .flatMap(new Func1<Long, Observable<PollInfo>>() {
+                .interval(5, TimeUnit.SECONDS, Schedulers.io())
+                .flatMap(new Func1<Long, Observable<ChatSessionPoll>>() {
                     @Override
-                    public Observable<PollInfo> call(Long aLong) {
-                        return chatService.poll(guestCustomerId, chatSessionId, chatToken, customerToken, REQUESTOR);
+                    public Observable<ChatSessionPoll> call(Long aLong) {
+                        return chatService.poll(guestCustomerId, chatSessionId, chatToken, customerToken, Requestor.CUSTOMER);
                     }
                 })
                 .retry()

@@ -29,7 +29,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:padding="16dp">
 
 
     <TextView
@@ -37,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         tools:text="Hey what\'s up"/>
 
     <TextView
@@ -44,6 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         tools:text="7:59am"/>
 
 </LinearLayout>

@@ -26,8 +26,10 @@
 
 package com.desk.android.sdk.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.desk.android.sdk.R;
@@ -48,7 +50,30 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override public void onBackPressed() {
-        super.onBackPressed();
+        showEndSessionDialog();
+    }
+
+    @Override public void finish() {
+        super.finish();
         chatView.destroy();
     }
+
+    private void showEndSessionDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.end_session_dialog_title)
+                .setMessage(R.string.end_session_dialog_message)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
 }
