@@ -28,9 +28,6 @@ package com.desk.android.sdk.basic;
 
 import android.app.Application;
 
-import com.desk.android.sdk.Desk;
-import com.desk.android.sdk.identity.UserIdentity;
-
 /**
  * Created by Matt Kranzler on 12/3/15.
  * Copyright (c) 2015 Desk.com. All rights reserved.
@@ -39,6 +36,5 @@ public class BasicApplication extends Application {
 
     @Override public void onCreate() {
         super.onCreate();
-        Desk.with(this).setIdentity(new UserIdentity.Builder("test@test.com").name("Testy").create());
     }
 }
