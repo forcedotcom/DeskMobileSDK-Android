@@ -26,8 +26,6 @@
 
 package com.desk.android.sdk.jobqueue;
 
-import com.desk.android.sdk.mvp.model.ChatMessageModel;
-
 /**
  * <p>
  *     Represent various job-queue related events.
@@ -43,14 +41,8 @@ public class JobEvent {
     }
 
     public Action action;
-    public ChatMessageModel chatMessageModel;
 
     public JobEvent(Action action) {
         this.action = action;
-    }
-
-    public JobEvent(Action action, ChatMessageModel chatMessageModel) {
-        this.action = action;
-        this.chatMessageModel = chatMessageModel;
     }
 }

@@ -41,6 +41,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.desk.android.sdk.Desk;
@@ -74,6 +75,7 @@ public class ChatView extends LinearLayout implements IChatView {
     private ChatMessageAdapter adapter;
     private boolean typing;
     private String userName;
+    private ProgressBar sendProgressBar;
 
     public ChatView(Context context) {
         this(context, null);
@@ -118,12 +120,20 @@ public class ChatView extends LinearLayout implements IChatView {
         recycler.getLayoutManager().scrollToPosition(0);
     }
 
-    @Override public void onPendingMessage(ChatMessageModel message) {
-
+    @Override public void onPendingMessage() {
+        sendButton.setVisibility(View.GONE);
+        sendProgressBar.setVisibility(View.VISIBLE);
     }
 
-    @Override public void onMessageSent(ChatMessageModel message) {
-
+    @Override public void onMessageSent() {
+        sendButton.setVisibility(View.VISIBLE);
+        sendButton.post(new Runnable() {
+            @Override
+            public void run() {
+                disableSendButton();
+            }
+        });
+        sendProgressBar.setVisibility(View.GONE);
     }
 
     private void showUserNameDialog() {
@@ -136,6 +146,7 @@ public class ChatView extends LinearLayout implements IChatView {
         chatInput = (EditText) findViewById(R.id.chat_input);
         sendButton = (ImageButton) findViewById(R.id.btn_send);
         recycler = (RecyclerView) findViewById(R.id.recycler);
+        sendProgressBar = (ProgressBar) findViewById(R.id.btn_send_progress_bar);
         presenter = PresenterProvider.getChatPresenter();
         disableSendButton();
         setupRecyclerView();

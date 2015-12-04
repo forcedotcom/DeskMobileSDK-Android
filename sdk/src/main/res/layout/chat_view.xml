@@ -30,8 +30,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <FrameLayout
         android:id="@+id/chat_input_container"
@@ -55,13 +55,27 @@
             <requestFocus/>
         </EditText>
 
-        <ImageButton
-            android:id="@+id/btn_send"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical|right"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_send"/>
+        <FrameLayout android:layout_width="48dp"
+                     android:layout_height="48dp"
+                     android:layout_gravity="center_vertical|right"
+                     android:animateLayoutChanges="true">
+
+            <ImageButton
+                android:id="@+id/btn_send"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_send"/>
+
+            <ProgressBar
+                android:id="@+id/btn_send_progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
 
     </FrameLayout>
 

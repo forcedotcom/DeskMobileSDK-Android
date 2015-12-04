@@ -55,6 +55,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.desk.android.sdk.jobqueue.JobEvent.Action.PROCESSED;
 import static com.desk.java.apiclient.model.MessageDirection.IN;
 
 /**
@@ -167,6 +168,7 @@ public class ChatPresenter implements IChatPresenter {
                                         }
                                         if (!models.isEmpty()) {
                                             ChatPresenter.this.view.onNewMessages(models);
+                                            BusProvider.get().post(new JobEvent(PROCESSED));
                                         }
                                     }
                                 }
@@ -217,10 +219,10 @@ public class ChatPresenter implements IChatPresenter {
     public void onJobEvent(JobEvent jobEvent) {
         switch (jobEvent.action) {
             case ADDED:
-                view.onPendingMessage(jobEvent.chatMessageModel);
+                view.onPendingMessage();
                 break;
             case PROCESSED:
-                view.onMessageSent(jobEvent.chatMessageModel);
+                view.onMessageSent();
                 break;
         }
     }
