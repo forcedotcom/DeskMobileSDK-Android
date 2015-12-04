@@ -195,7 +195,7 @@ public class ChatView extends LinearLayout implements IChatView {
         RxTextView.textChanges(chatInput)
                 .subscribe(new Action1<CharSequence>() {
                     @Override public void call(CharSequence charSequence) {
-                        if (charSequence.length() >= 3) {
+                        if (charSequence.length() >= 1) {
                             enableSendButton();
                         } else {
                             disableSendButton();

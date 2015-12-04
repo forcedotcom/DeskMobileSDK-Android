@@ -42,6 +42,7 @@ import com.desk.android.sdk.mvp.usecase.SetUserStartedTyping;
 import com.desk.android.sdk.mvp.usecase.SetUserStoppedTyping;
 import com.desk.android.sdk.mvp.usecase.StartChatSession;
 import com.desk.android.sdk.mvp.view.IChatView;
+import com.desk.java.apiclient.model.User;
 import com.desk.java.apiclient.model.chat.ChatMessage;
 import com.desk.java.apiclient.model.chat.ChatSession;
 import com.desk.java.apiclient.model.chat.ChatSessionPoll;
@@ -165,7 +166,19 @@ public class ChatPresenter implements IChatPresenter {
                                     if (chatSessionPoll._embedded.typists.isEmpty()) {
                                         ChatPresenter.this.view.onAgentStoppedTyping();
                                     } else {
-                                        ChatPresenter.this.view.onAgentStartedTyping();
+                                        boolean containsAgent = false;
+                                        List<User> typists = chatSessionPoll._embedded.typists;
+                                        for (User user : typists) {
+                                            if (user.getId() != guestCustomer.id) {
+                                                containsAgent = true;
+                                                break;
+                                            }
+                                        }
+                                        if (containsAgent) {
+                                            ChatPresenter.this.view.onAgentStartedTyping();
+                                        } else {
+                                            ChatPresenter.this.view.onAgentStoppedTyping();
+                                        }
                                     }
 
                                     // then handle messages
