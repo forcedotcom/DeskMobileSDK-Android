@@ -26,6 +26,8 @@
 
 package com.desk.android.sdk.mvp.presenter.impl;
 
+import android.text.TextUtils;
+
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.bus.BusProvider;
 import com.desk.android.sdk.jobqueue.ChatMessageJobEvent;
@@ -164,6 +166,10 @@ public class ChatPresenter implements IChatPresenter {
                                             models.add(new ChatMessageModel(message));
                                         }
                                         ChatPresenter.this.view.onNewMessages(models);
+                                    }
+
+                                    if (!chatSessionPoll._embedded.typists.isEmpty() && !TextUtils.isEmpty(chatSessionPoll._embedded.typists.get(0).getName())) {
+                                        ChatPresenter.this.view.onAgentTyping(chatSessionPoll._embedded.typists.get(0).getName());
                                     }
                                 }
                             },

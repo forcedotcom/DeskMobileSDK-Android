@@ -63,6 +63,13 @@ public class ChatMessageModel {
         this.id = new Random().nextLong();
     }
 
+    public ChatMessageModel(String message, boolean pending, boolean incoming, Date time) {
+        this.message = message;
+        this.incoming = incoming;
+        this.pending = pending;
+        this.time = time;
+    }
+
     public long getId() {
         return id;
     }
