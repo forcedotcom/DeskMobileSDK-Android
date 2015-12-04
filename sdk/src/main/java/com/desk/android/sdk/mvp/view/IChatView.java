@@ -42,5 +42,6 @@ public interface IChatView {
     void onNewMessages(List<ChatMessageModel> messages);
     void onPendingMessage(ChatMessageModel pendingMessage);
     void onMessageSent(ChatMessageModel pendingMessage, ChatMessageModel sentMessage);
+    void onAgentTyping(String name);
     Context getContext();
 }

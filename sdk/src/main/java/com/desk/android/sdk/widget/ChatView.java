@@ -41,7 +41,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.desk.android.sdk.Desk;
@@ -55,6 +54,8 @@ import com.desk.android.sdk.mvp.view.IChatView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -66,15 +67,16 @@ import rx.functions.Action1;
  */
 public class ChatView extends LinearLayout implements IChatView {
 
+    private static final String AGENT_IS_TYPING = "is typing...";
     private static final String TAG = ChatView.class.getCanonicalName();
-    private IChatPresenter presenter;
 
+    private IChatPresenter presenter;
     private EditText chatInput;
     private ImageButton sendButton;
     private RecyclerView recycler;
     private ChatMessageAdapter adapter;
-    private boolean typing;
     private String userName;
+    private boolean typing;
 
     public ChatView(Context context) {
         this(context, null);
@@ -115,7 +117,14 @@ public class ChatView extends LinearLayout implements IChatView {
     }
 
     @Override public void onNewMessages(List<ChatMessageModel> messages) {
-        adapter.addAll(messages);
+        if (!messages.isEmpty() && !messages.get(0).isIncoming()) {
+            ChatMessageModel existingModel = adapter.getItem(0);
+            if (existingModel != null && existingModel.getMessage().toLowerCase().contains(AGENT_IS_TYPING)) {
+                adapter.swap(existingModel, messages.get(0));
+            }
+        } else {
+            adapter.addAll(messages);
+        }
         scrollRecycler();
     }
 
@@ -131,6 +140,19 @@ public class ChatView extends LinearLayout implements IChatView {
 
     private void scrollRecycler() {
         recycler.getLayoutManager().scrollToPosition(0);
+    }
+
+    @Override public void onAgentTyping(String name) {
+        ChatMessageModel existingModel = adapter.getItem(0);
+        String message = String.format("%s %s", name, AGENT_IS_TYPING);
+        if (!message.equalsIgnoreCase(existingModel.getMessage())) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.YEAR, 1);
+            Date yearFromNow = cal.getTime();
+            ChatMessageModel chatMessageModel = new ChatMessageModel(message, false, false, yearFromNow);
+            adapter.addAll(Collections.singletonList(chatMessageModel));
+            scrollRecycler();
+        }
     }
 
     private void showUserNameDialog() {
