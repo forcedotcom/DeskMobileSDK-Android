@@ -26,6 +26,17 @@
 
 apply plugin: 'com.github.dcendents.android-maven'
 
+configurations {
+    published
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+    published javadocJar
+    published sourcesJar
+}
+
 install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
