@@ -47,10 +47,17 @@ android {
     }
 }
 
+//noinspection GroovyAssignabilityCheck
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 1, 'hours' // refresh changing modules every hour
+}
+
 dependencies {
     compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.desk:api-client:1.2.1-SNAPSHOT'
+    compile ('com.desk:api-client:1.2.1-SNAPSHOT') {
+        changing = true; // marking as changing since it can be changed frequently
+    }
 
     // instrumentation test dependencies
     androidTestCompile 'com.android.support.test:runner:0.3'

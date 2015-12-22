@@ -40,9 +40,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.desk.android.sdk.provider.TopicProvider.ALL_BRANDS;
 import static com.desk.android.sdk.provider.TopicProvider.TopicCallbacks;

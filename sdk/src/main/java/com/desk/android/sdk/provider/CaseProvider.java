@@ -35,9 +35,8 @@ import com.desk.java.apiclient.model.Message;
 import com.desk.java.apiclient.model.MessageDirection;
 import com.desk.java.apiclient.service.CaseService;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Wraps a {@link CaseService} to provide a higher level of abstraction.
@@ -98,7 +97,7 @@ public class CaseProvider {
                 .enqueue(
                         new Callback<Case>() {
                             @Override
-                            public void onResponse(Response<Case> response, Retrofit retrofit) {
+                            public void onResponse(Response<Case> response) {
                                 callback.onCaseCreated(response.body());
                             }
 
