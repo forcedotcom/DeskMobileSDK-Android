@@ -1,7 +1,10 @@
 apply plugin: 'com.android.library'
 
 group = 'com.desk'
-version = System.properties['version'] == null ? '0-SNAPSHOT' : System.properties['version'] as String
+version = '1.2.1-SNAPSHOT'
+if (System.properties['version'] != null) {
+    version = System.properties['version'] as String;
+}
 
 ext {
     projectName = 'Desk Android SDK'
@@ -45,10 +48,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.desk:api-client:1.2.0'
+    compile 'com.desk:api-client:1.2.1-SNAPSHOT'
 
     // instrumentation test dependencies
     androidTestCompile 'com.android.support.test:runner:0.3'
@@ -65,6 +67,9 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
-apply from: '../mvn-install.gradle'
+apply from: '../credentials.gradle'
+apply from: '../compile.gradle'
+apply from: '../publishing.gradle'
 apply from: '../git-tag.gradle'
 apply from: '../bintray-upload.gradle'
+apply from: '../artifactory.gradle'

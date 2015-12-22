@@ -24,23 +24,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-apply plugin: 'com.jfrog.bintray'
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
 
-bintray {
-    user = bintrayUser
-    key = bintrayKey
-    configurations = ['archives']
-    pkg {
-        userOrg = bintrayOrg
-        repo = bintrayRepo
-        name = bintrayName
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = [licenseName]
-        publish = false
-        version {
-            name = project.version
-            vcsTag = tag
-        }
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    title = 'Desk Android SDK' + ' ' + version + ' API'
+    options {
+        links "http://docs.oracle.com/javase/7/docs/api/"
+        linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
     }
+    failOnError false
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
