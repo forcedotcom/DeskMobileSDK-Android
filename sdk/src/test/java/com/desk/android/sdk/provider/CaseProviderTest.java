@@ -44,9 +44,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
