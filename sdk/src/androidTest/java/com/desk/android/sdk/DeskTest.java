@@ -38,7 +38,6 @@ import com.desk.android.sdk.identity.Identity;
 import com.desk.android.sdk.identity.UserIdentity;
 import com.desk.android.sdk.util.DeskDefaultsRule;
 import com.desk.java.apiclient.DeskClient;
-import com.squareup.okhttp.Cache;
 
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -46,6 +45,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Locale;
+
+import okhttp3.Cache;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
