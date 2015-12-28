@@ -94,7 +94,7 @@ public class CaseProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((Callback<Case>) invocation.getArguments()[0]).onResponse(Response.success(new Case()), null);
+                ((Callback<Case>) invocation.getArguments()[0]).onResponse(Response.success(new Case()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
