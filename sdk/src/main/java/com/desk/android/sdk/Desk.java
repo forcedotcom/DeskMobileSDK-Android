@@ -43,9 +43,10 @@ import com.desk.android.sdk.provider.InboundMailboxProvider;
 import com.desk.android.sdk.provider.TopicProvider;
 import com.desk.java.apiclient.DeskClient;
 import com.desk.java.apiclient.DeskClientBuilder;
-import com.squareup.okhttp.Cache;
 
 import java.util.Locale;
+
+import okhttp3.Cache;
 
 /**
  * <p>Main class to interact with in the Desk SDK. This class allows you to provide various configurations
