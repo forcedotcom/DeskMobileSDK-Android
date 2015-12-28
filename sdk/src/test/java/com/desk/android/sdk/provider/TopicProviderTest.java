@@ -164,7 +164,7 @@ public class TopicProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Topic>()), null);
+                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Topic>()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
