@@ -93,7 +93,7 @@ public class DeskTest {
     public void getResponseCacheReturnsResponseCache() throws Exception {
         Cache responseCache = desk.getResponseCache(InstrumentationRegistry.getContext());
         assertNotNull(responseCache);
-        assertEquals(responseCache.getMaxSize(), Desk.CACHE_MAX_SIZE);
+        assertEquals(responseCache.maxSize(), Desk.CACHE_MAX_SIZE);
     }
 
     @Test
