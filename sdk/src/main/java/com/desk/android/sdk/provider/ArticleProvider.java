@@ -40,6 +40,7 @@ import com.desk.java.apiclient.service.ArticleService;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -144,7 +145,7 @@ public class ArticleProvider {
             this.callbacks = callbacks;
         }
 
-        @Override public void onResponse(Response<ApiResponse<Article>> response) {
+        @Override public void onResponse(Call<ApiResponse<Article>> call, Response<ApiResponse<Article>> response) {
             ApiResponse<Article> apiResponse = response.body();
             if (apiResponse == null) {
                 callbacks.onArticlesLoaded(0, new ArrayList<Article>(), false);
@@ -153,8 +154,7 @@ public class ArticleProvider {
             callbacks.onArticlesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList(), apiResponse.hasNextPage());
         }
 
-        @Override
-        public void onFailure(Throwable throwable) {
+        @Override public void onFailure(Call<ApiResponse<Article>> call, Throwable throwable) {
             callbacks.onArticlesLoadError(new ErrorResponse(throwable));
         }
     }

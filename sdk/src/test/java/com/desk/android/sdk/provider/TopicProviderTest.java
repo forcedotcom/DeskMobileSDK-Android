@@ -164,7 +164,7 @@ public class TopicProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Topic>()));
+                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onResponse(null, Response.success(new ApiResponse<Topic>()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -187,7 +187,7 @@ public class TopicProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onFailure(null, new RuntimeException());
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
