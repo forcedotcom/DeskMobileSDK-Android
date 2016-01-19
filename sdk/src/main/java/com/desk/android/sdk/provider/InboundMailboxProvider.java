@@ -35,6 +35,7 @@ import com.desk.java.apiclient.service.InboundMailboxService;
 
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -95,14 +96,12 @@ public class InboundMailboxProvider {
             this.callbacks = callbacks;
         }
 
-        @Override
-        public void onResponse(Response<ApiResponse<InboundMailbox>> response) {
+        @Override public void onResponse(Call<ApiResponse<InboundMailbox>> call, Response<ApiResponse<InboundMailbox>> response) {
             ApiResponse<InboundMailbox> apiResponse = response.body();
             callbacks.onInboundMailboxesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList());
         }
 
-        @Override
-        public void onFailure(Throwable throwable) {
+        @Override public void onFailure(Call<ApiResponse<InboundMailbox>> call, Throwable throwable) {
             callbacks.onInboundMailboxLoadError(new ErrorResponse(throwable));
         }
     }
