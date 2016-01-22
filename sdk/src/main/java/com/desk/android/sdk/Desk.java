@@ -71,6 +71,8 @@ import okhttp3.Cache;
  */
 public final class Desk {
 
+    private static final String USER_AGENT = "Desk Android SDK";
+
     @VisibleForTesting
     static final long CACHE_MAX_SIZE = 20 * 1024 * 1024; // 20 mb
 
@@ -194,7 +196,9 @@ public final class Desk {
     @NonNull
     public DeskClient getClient() {
         if (client == null) {
-            client = DeskClient.create(new DeskClientBuilder(getConfig().getHostname(), getConfig().getApiToken()).responseCache(getResponseCache(context)));
+            client = DeskClient.create(new DeskClientBuilder(getConfig().getHostname(), getConfig().getApiToken())
+                    .userAgent(USER_AGENT)
+                    .responseCache(getResponseCache(context)));
         }
         return client;
     }
