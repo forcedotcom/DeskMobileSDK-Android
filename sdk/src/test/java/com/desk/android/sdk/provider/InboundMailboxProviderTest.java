@@ -108,7 +108,7 @@ public class InboundMailboxProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(null, Response.success(new ApiResponse<InboundMailbox>()));
+                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<InboundMailbox>()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -128,7 +128,7 @@ public class InboundMailboxProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(null, new RuntimeException());
+                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
