@@ -35,6 +35,7 @@ import com.desk.java.apiclient.model.Message;
 import com.desk.java.apiclient.model.MessageDirection;
 import com.desk.java.apiclient.service.CaseService;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -95,13 +96,11 @@ public class CaseProvider {
                 null,
                 null)
                 .enqueue(new Callback<Case>() {
-                    @Override
-                    public void onResponse(Response<Case> response) {
+                    @Override public void onResponse(Call<Case> call, Response<Case> response) {
                         callback.onCaseCreated(response.body());
                     }
 
-                    @Override
-                    public void onFailure(Throwable throwable) {
+                    @Override public void onFailure(Call<Case> call, Throwable throwable) {
                         callback.onCreateCaseError(new ErrorResponse(throwable));
                     }
                 });
