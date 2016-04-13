@@ -84,7 +84,7 @@ public class CaseProviderTest {
 
     @Test
     public void createCaseCallsOnCaseCreatedOnSuccess() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockCaseService.createCase(
                 any(Case.class),
@@ -94,7 +94,7 @@ public class CaseProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((Callback<Case>) invocation.getArguments()[0]).onResponse(Response.success(new Case()));
+                ((Callback<Case>) invocation.getArguments()[0]).onResponse(mockCall, Response.success(new Case()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -107,7 +107,7 @@ public class CaseProviderTest {
 
     @Test
     public void createCaseCallsOnCreateCaseErrorOnError() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockCaseService.createCase(
                 any(Case.class),
@@ -117,7 +117,7 @@ public class CaseProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((Callback<Case>) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                ((Callback<Case>) invocation.getArguments()[0]).onFailure(mockCall, new RuntimeException());
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));

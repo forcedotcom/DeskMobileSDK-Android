@@ -152,7 +152,7 @@ public class TopicProviderTest {
 
     @Test
     public void getArticlesNotifiesCallbackOnSuccess() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockTopicService.getTopics(
                 anyString(),
@@ -164,7 +164,7 @@ public class TopicProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Topic>()));
+                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onResponse(mockCall, Response.success(new ApiResponse<Topic>()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -175,7 +175,7 @@ public class TopicProviderTest {
 
     @Test
     public void getArticlesNotifiesCallbackOnError() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockTopicService.getTopics(
                 anyString(),
@@ -187,7 +187,7 @@ public class TopicProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                ((TopicProvider.RetrofitCallback) invocation.getArguments()[0]).onFailure(mockCall, new RuntimeException());
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
