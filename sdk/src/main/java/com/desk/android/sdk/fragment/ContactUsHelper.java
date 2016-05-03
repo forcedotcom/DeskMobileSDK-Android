@@ -220,6 +220,7 @@ public class ContactUsHelper extends Fragment {
         caseCreatedListener.onCaseCreated((Case) data.getSerializableExtra(EXTRA_DESK_CASE));
       }
     }
+    super.onActivityResult(requestCode, resultCode, data);
   }
 
   private void handleContactUs() {
