@@ -29,11 +29,11 @@ package com.desk.android.sdk.fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.R;
 import com.desk.android.sdk.activity.ContactUsActivity;
@@ -43,10 +43,13 @@ import com.desk.android.sdk.error.ErrorResponse;
 import com.desk.android.sdk.helper.DeskThemeHelper;
 import com.desk.android.sdk.helper.MenuHelper;
 import com.desk.android.sdk.provider.InboundMailboxProvider;
+import com.desk.java.apiclient.model.Case;
 import com.desk.java.apiclient.model.InboundMailbox;
 import com.desk.java.apiclient.util.StringUtils;
-
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
+import static com.desk.android.sdk.model.Constants.EXTRA_DESK_CASE;
 
 /**
  * <p>Headless fragment which handles adding contact us options to the overflow menu by getting attributes
@@ -57,15 +60,21 @@ import java.util.List;
 public class ContactUsHelper extends Fragment {
 
     private static final String FRAG_TAG = ContactUsHelper.class.getCanonicalName();
+    private static final int CASE_CREATED_REQUEST_CODE = 43281;
 
     private DeskThemeHelper mThemeHelper;
     private Desk mDesk;
     private ContactUsConfig mConfig;
+    private OnCaseCreatedListener caseCreatedListener;
 
     private boolean mContactUsEnabled;
     private boolean mUseWebForm;
 
     private String mEmailAddress;
+
+    public interface OnCaseCreatedListener {
+        void onCaseCreated(Case deskCase);
+    }
 
     /**
      * Attaches the fragment to the activity
@@ -106,6 +115,11 @@ public class ContactUsHelper extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        if (activity instanceof OnCaseCreatedListener) {
+          caseCreatedListener = (OnCaseCreatedListener) activity;
+        }
+
         mThemeHelper = new DeskThemeHelper(activity);
         mDesk = Desk.with(activity);
         mConfig = mDesk.getContactUsConfig();
@@ -200,11 +214,19 @@ public class ContactUsHelper extends Fragment {
         }
     }
 
-    private void handleContactUs() {
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == CASE_CREATED_REQUEST_CODE) {
+      if (resultCode == RESULT_OK && caseCreatedListener != null) {
+        caseCreatedListener.onCaseCreated((Case) data.getSerializableExtra(EXTRA_DESK_CASE));
+      }
+    }
+  }
+
+  private void handleContactUs() {
         if (mUseWebForm) {
             ContactUsWebActivity.start(getActivity(), mThemeHelper.getThemeResId());
         } else {
-            ContactUsActivity.start(getActivity(), mEmailAddress, mThemeHelper.getThemeResId());
+            ContactUsActivity.start(this, mEmailAddress, mThemeHelper.getThemeResId(), CASE_CREATED_REQUEST_CODE);
         }
     }
 
