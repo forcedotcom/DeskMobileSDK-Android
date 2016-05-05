@@ -49,6 +49,7 @@ import com.desk.java.apiclient.util.StringUtils;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static com.desk.android.sdk.model.Constants.CASE_CREATED_REQUEST_CODE;
 import static com.desk.android.sdk.model.Constants.EXTRA_DESK_CASE;
 
 /**
@@ -60,7 +61,6 @@ import static com.desk.android.sdk.model.Constants.EXTRA_DESK_CASE;
 public class ContactUsHelper extends Fragment {
 
     private static final String FRAG_TAG = ContactUsHelper.class.getCanonicalName();
-    private static final int CASE_CREATED_REQUEST_CODE = 43281;
 
     private DeskThemeHelper mThemeHelper;
     private Desk mDesk;

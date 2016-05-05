@@ -11,4 +11,5 @@ package com.desk.android.sdk.model;
 public class Constants {
 
   public static final String EXTRA_DESK_CASE = "com.desk.android.sdk.model.Constants.EXTRA_DESK_CASE";
+  public static final int CASE_CREATED_REQUEST_CODE = 43281;
 }
