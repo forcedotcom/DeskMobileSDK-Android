@@ -22,8 +22,8 @@ allprojects {
 subprojects {
     ext.projectCompileSdkVersion = 23
     ext.projectBuildToolsVersion = "23.0.2"
-    ext.projectMinSdkVersion = 16
-    ext.projectTargetSdkVersion = 23
+    ext.projectMinSdkVersion = 15
+    ext.projectTargetSdkVersion = 21
 }
 
 configurations {
