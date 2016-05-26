@@ -63,7 +63,7 @@ public class TestUtils {
 
     public static Gson getDeskClientGson() {
         return new GsonBuilder()
-                .registerTypeAdapter(Date.class, new ISO8601DateAdapter())
+                .registerTypeAdapter(Date.class, ISO8601DateAdapter.TYPE_ADAPTER)
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
     }

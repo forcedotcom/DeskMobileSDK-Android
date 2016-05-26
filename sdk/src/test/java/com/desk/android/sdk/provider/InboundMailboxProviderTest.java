@@ -39,9 +39,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.desk.android.sdk.provider.InboundMailboxProvider.InboundMailboxCallbacks;
 import static com.desk.android.sdk.provider.InboundMailboxProvider.PER_PAGE;
@@ -99,7 +99,7 @@ public class InboundMailboxProviderTest {
 
     @Test
     public void getMailboxesNotifiesCallbacksOnSuccess() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockInboundMailboxService.getInboundMailboxes(
                 anyInt(),
@@ -108,7 +108,7 @@ public class InboundMailboxProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<InboundMailbox>()), null);
+                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(mockCall, Response.success(new ApiResponse<InboundMailbox>()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -119,7 +119,7 @@ public class InboundMailboxProviderTest {
 
     @Test
     public void getMailboxesNotifiesCallbacksOnError() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockInboundMailboxService.getInboundMailboxes(
                 anyInt(),
@@ -128,7 +128,7 @@ public class InboundMailboxProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(mockCall, new RuntimeException());
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));

@@ -34,9 +34,9 @@ import com.desk.java.apiclient.service.TopicService;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.desk.java.apiclient.model.SortDirection.ASC;
 import static com.desk.java.apiclient.service.TopicService.FIELD_POSITION;
@@ -100,12 +100,11 @@ public class TopicProvider {
         }
 
         @Override
-        public void onResponse(Response<ApiResponse<Topic>> response, Retrofit retrofit) {
+        public void onResponse(Call<ApiResponse<Topic>> call, Response<ApiResponse<Topic>> response) {
             callbacks.onTopicsLoaded(response.body().getEntriesAsList());
         }
 
-        @Override
-        public void onFailure(Throwable throwable) {
+        @Override public void onFailure(Call<ApiResponse<Topic>> call, Throwable throwable) {
             callbacks.onTopicsLoadError(new ErrorResponse(throwable));
         }
     }

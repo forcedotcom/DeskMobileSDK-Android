@@ -5,7 +5,6 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
-
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.R;
 import com.desk.android.sdk.config.ContactUsPropertyConfig;
@@ -14,7 +13,6 @@ import com.desk.android.sdk.provider.TopicProvider.TopicCallbacks;
 import com.desk.android.sdk.util.DeskDefaultsRule;
 import com.desk.java.apiclient.model.ApiResponse;
 import com.desk.java.apiclient.model.Topic;
-
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -46,7 +44,6 @@ import static com.desk.android.sdk.activity.ArticleListActivity.MODE_SEARCH;
 import static com.desk.android.sdk.activity.ArticleListActivity.MODE_TOPIC;
 import static com.desk.android.sdk.helper.DeskThemeHelper.EXTRA_THEME_RES_ID;
 import static com.desk.android.sdk.helper.DeskThemeHelper.NO_THEME_RES_ID;
-import static com.desk.android.sdk.util.InstrumentationTestUtils.getContactUsComponentName;
 import static com.desk.android.sdk.util.InstrumentationTestUtils.getMockedTopicResponse;
 import static com.desk.android.sdk.util.InstrumentationTestUtils.matchToolbarTitle;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -146,6 +143,6 @@ public class TopicListActivityTest {
         onView(withId(R.id.contact_us)).perform(click());
 
         // verify that the ContactUsWebActivity was launched
-        intended(hasComponent(getContactUsComponentName()));
+        matchToolbarTitle("Contact Us");
     }
 }

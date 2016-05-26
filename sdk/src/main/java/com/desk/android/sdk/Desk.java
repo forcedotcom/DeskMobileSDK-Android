@@ -43,9 +43,10 @@ import com.desk.android.sdk.provider.InboundMailboxProvider;
 import com.desk.android.sdk.provider.TopicProvider;
 import com.desk.java.apiclient.DeskClient;
 import com.desk.java.apiclient.DeskClientBuilder;
-import com.squareup.okhttp.Cache;
 
 import java.util.Locale;
+
+import okhttp3.Cache;
 
 /**
  * <p>Main class to interact with in the Desk SDK. This class allows you to provide various configurations
@@ -69,6 +70,8 @@ import java.util.Locale;
  * the name option will be hidden and the name will be used when creating a case.</p>
  */
 public final class Desk {
+
+    private static final String USER_AGENT = "Desk Android SDK";
 
     @VisibleForTesting
     static final long CACHE_MAX_SIZE = 20 * 1024 * 1024; // 20 mb
@@ -193,7 +196,9 @@ public final class Desk {
     @NonNull
     public DeskClient getClient() {
         if (client == null) {
-            client = DeskClient.create(new DeskClientBuilder(getConfig().getHostname(), getConfig().getApiToken()).responseCache(getResponseCache(context)));
+            client = DeskClient.create(new DeskClientBuilder(getConfig().getHostname(), getConfig().getApiToken())
+                    .userAgent(USER_AGENT)
+                    .responseCache(getResponseCache(context)));
         }
         return client;
     }

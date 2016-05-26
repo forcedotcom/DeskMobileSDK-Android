@@ -27,6 +27,7 @@
 package com.desk.android.sdk.activity;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -40,7 +41,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.R;
 import com.desk.android.sdk.brand.BrandProvider;
@@ -56,6 +56,7 @@ import com.desk.java.apiclient.util.StringUtils;
 
 import static com.desk.android.sdk.helper.DeskThemeHelper.EXTRA_THEME_RES_ID;
 import static com.desk.android.sdk.helper.DeskThemeHelper.NO_THEME_RES_ID;
+import static com.desk.android.sdk.model.Constants.EXTRA_DESK_CASE;
 
 /**
  * Displays a {@link ContactUsView} to allow a user to submit feedback which in return creates a Case.
@@ -70,9 +71,10 @@ public class ContactUsActivity extends AppCompatActivity implements ContactUsVie
      * Starts the activity
      * @param activity the activity
      * @param toEmailAddress the to email address to create the case with
+     * @param requestCode the requestCode returned to onActivityResult
      */
-    public static void start(Activity activity, @NonNull String toEmailAddress) {
-        start(activity, toEmailAddress, NO_THEME_RES_ID);
+    public static void start(Activity activity, @NonNull String toEmailAddress, int requestCode) {
+        start(activity, toEmailAddress, NO_THEME_RES_ID, requestCode);
     }
 
     /**
@@ -80,12 +82,27 @@ public class ContactUsActivity extends AppCompatActivity implements ContactUsVie
      * @param activity the activity
      * @param toEmailAddress the to email address to create the case with
      * @param themeResId the resource id of the theme to use
+     * @param requestCode the requestCode returned to onActivityResult
      */
-    public static void start(Activity activity, @NonNull String toEmailAddress, @StyleRes int themeResId) {
+    public static void start(Activity activity, @NonNull String toEmailAddress, @StyleRes int themeResId, int requestCode) {
         Intent intent = new Intent(activity, ContactUsActivity.class);
         intent.putExtra(EXTRA_TO_EMAIL_ADDRESS, toEmailAddress);
         intent.putExtra(EXTRA_THEME_RES_ID, themeResId);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * Starts the activity with a custom theme
+     * @param fragment the fragment
+     * @param toEmailAddress the to email address to create the case with
+     * @param themeResId the resource id of the theme to use
+     * @param requestCode the requestCode returned to onActivityResult
+     */
+    public static void start(Fragment fragment, @NonNull String toEmailAddress, @StyleRes int themeResId, int requestCode) {
+        Intent intent = new Intent(fragment.getActivity(), ContactUsActivity.class);
+        intent.putExtra(EXTRA_TO_EMAIL_ADDRESS, toEmailAddress);
+        intent.putExtra(EXTRA_THEME_RES_ID, themeResId);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
     private DeskThemeHelper mThemeHelper;
@@ -224,6 +241,11 @@ public class ContactUsActivity extends AppCompatActivity implements ContactUsVie
     @Override
     public void onCaseCreated(Case deskCase) {
         Toast.makeText(this, mThemeHelper.getCreateCaseSuccessToast(), Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_DESK_CASE, deskCase);
+        setResult(RESULT_OK, intent);
+
         finish();
     }
 

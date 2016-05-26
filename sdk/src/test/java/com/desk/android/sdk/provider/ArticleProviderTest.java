@@ -46,9 +46,9 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.desk.android.sdk.provider.ArticleProvider.ALL_BRANDS;
 import static com.desk.android.sdk.provider.ArticleProvider.ALL_TOPICS;
@@ -253,7 +253,7 @@ public class ArticleProviderTest {
 
     @Test
     public void getArticlesNotifiesCallbackOnSuccess() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockArticleService.getArticles(
                 anyString(),
@@ -268,7 +268,7 @@ public class ArticleProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Article>()), null);
+                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(mockCall, Response.success(new ApiResponse<Article>()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -279,7 +279,7 @@ public class ArticleProviderTest {
 
     @Test
     public void getArticlesNotifiesCallbackOnError() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockArticleService.getArticles(
                 anyString(),
@@ -294,7 +294,7 @@ public class ArticleProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(mockCall, new RuntimeException());
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -476,7 +476,7 @@ public class ArticleProviderTest {
 
     @Test
     public void findArticlesNotifiesCallbackOnSuccess() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockArticleService.searchArticles(
                 anyString(),
@@ -492,7 +492,7 @@ public class ArticleProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(Response.success(new ApiResponse<Article>()), null);
+                ((RetrofitCallback) invocation.getArguments()[0]).onResponse(mockCall, Response.success(new ApiResponse<Article>()));
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -504,7 +504,7 @@ public class ArticleProviderTest {
 
     @Test
     public void findArticlesNotifiesCallbackOnError() throws Exception {
-        Call mockCall = mock(Call.class);
+        final Call mockCall = mock(Call.class);
 
         when(mockArticleService.searchArticles(
                 anyString(),
@@ -520,7 +520,7 @@ public class ArticleProviderTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(new RuntimeException());
+                ((RetrofitCallback) invocation.getArguments()[0]).onFailure(mockCall, new RuntimeException());
                 return null;
             }
         }).when(mockCall).enqueue(any(Callback.class));
@@ -537,7 +537,7 @@ public class ArticleProviderTest {
     public void retrofitCallbackPassesCorrectPage() throws Exception {
         ApiResponse<Article> response = getMockApiResponse("/mock_article_response_page_2.json");
         RetrofitCallback articleCallback = new RetrofitCallback(callback);
-        articleCallback.onResponse(Response.success(response), null);
+        articleCallback.onResponse(mock(Call.class), Response.success(response));
         verify(callback).onArticlesLoaded(
                 eq(response.getPage()),
                 anyListOf(Article.class),
@@ -549,7 +549,7 @@ public class ArticleProviderTest {
     public void retrofitCallbackPassesHasNextPage() throws Exception {
         ApiResponse<Article> response = getMockApiResponse("/mock_article_response_with_next.json");
         RetrofitCallback articleCallback = new RetrofitCallback(callback);
-        articleCallback.onResponse(Response.success(response), null);
+        articleCallback.onResponse(mock(Call.class), Response.success(response));
         verify(callback).onArticlesLoaded(
                 anyInt(),
                 anyListOf(Article.class),

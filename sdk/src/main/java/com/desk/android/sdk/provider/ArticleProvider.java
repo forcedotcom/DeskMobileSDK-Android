@@ -40,9 +40,9 @@ import com.desk.java.apiclient.service.ArticleService;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.desk.java.apiclient.model.SortDirection.ASC;
 import static com.desk.java.apiclient.service.ArticleService.FIELD_POSITION;
@@ -146,7 +146,7 @@ public class ArticleProvider {
         }
 
         @Override
-        public void onResponse(Response<ApiResponse<Article>> response, Retrofit retrofit) {
+        public void onResponse(Call<ApiResponse<Article>> call, Response<ApiResponse<Article>> response) {
             ApiResponse<Article> apiResponse = response.body();
             if (apiResponse == null) {
                 callbacks.onArticlesLoaded(0, new ArrayList<Article>(), false);
@@ -155,8 +155,7 @@ public class ArticleProvider {
             callbacks.onArticlesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList(), apiResponse.hasNextPage());
         }
 
-        @Override
-        public void onFailure(Throwable throwable) {
+        @Override public void onFailure(Call<ApiResponse<Article>> call, Throwable throwable) {
             callbacks.onArticlesLoadError(new ErrorResponse(throwable));
         }
     }
