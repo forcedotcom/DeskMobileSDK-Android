@@ -99,12 +99,16 @@ public class InboundMailboxProvider {
         @Override
         public void onResponse(Call<ApiResponse<InboundMailbox>> call, Response<ApiResponse<InboundMailbox>> response) {
             ApiResponse<InboundMailbox> apiResponse = response.body();
-            callbacks.onInboundMailboxesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList());
+            if (callbacks != null) {
+                callbacks.onInboundMailboxesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList());
+            }
         }
 
         @Override
         public void onFailure(Call<ApiResponse<InboundMailbox>> call, Throwable throwable) {
-            callbacks.onInboundMailboxLoadError(new ErrorResponse(throwable));
+            if (callbacks != null) {
+                callbacks.onInboundMailboxLoadError(new ErrorResponse(throwable));
+            }
         }
     }
 }
