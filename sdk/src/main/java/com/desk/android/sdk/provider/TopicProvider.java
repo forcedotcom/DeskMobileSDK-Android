@@ -101,11 +101,15 @@ public class TopicProvider {
 
         @Override
         public void onResponse(Call<ApiResponse<Topic>> call, Response<ApiResponse<Topic>> response) {
-            callbacks.onTopicsLoaded(response.body().getEntriesAsList());
+            if (callbacks != null) {
+                callbacks.onTopicsLoaded(response.body().getEntriesAsList());
+            }
         }
 
         @Override public void onFailure(Call<ApiResponse<Topic>> call, Throwable throwable) {
-            callbacks.onTopicsLoadError(new ErrorResponse(throwable));
+            if (callbacks != null) {
+                callbacks.onTopicsLoadError(new ErrorResponse(throwable));
+            }
         }
     }
 }
