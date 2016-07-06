@@ -10,7 +10,7 @@ Currently, the DeskKit Android SDK supports the following features:
 # Getting Started
 
 ## Minimum Requirements
-The DeskKit Android SDK supports Android API level 16 (Jelly Bean, 4.1) and up.
+The DeskKit Android SDK supports Android API level 15 (Ice Cream Sandwhich, 4.0.3) and up.
 
 ## Installation
 [![Download](https://api.bintray.com/packages/desk/public/sdk/images/download.svg)](https://bintray.com/desk/public/sdk/_latestVersion)
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.desk:sdk:1.3.1-SNAPSHOT'
+  compile 'com.desk:sdk:1.3.1'
 }
 ```
 
