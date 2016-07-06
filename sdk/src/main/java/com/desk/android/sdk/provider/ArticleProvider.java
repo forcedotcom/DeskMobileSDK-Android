@@ -147,16 +147,20 @@ public class ArticleProvider {
 
         @Override
         public void onResponse(Call<ApiResponse<Article>> call, Response<ApiResponse<Article>> response) {
-            ApiResponse<Article> apiResponse = response.body();
-            if (apiResponse == null) {
-                callbacks.onArticlesLoaded(0, new ArrayList<Article>(), false);
-                return;
+            if (callbacks != null) {
+                ApiResponse<Article> apiResponse = response.body();
+                if (apiResponse == null) {
+                    callbacks.onArticlesLoaded(0, new ArrayList<Article>(), false);
+                    return;
+                }
+                callbacks.onArticlesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList(), apiResponse.hasNextPage());
             }
-            callbacks.onArticlesLoaded(apiResponse.getPage(), apiResponse.getEntriesAsList(), apiResponse.hasNextPage());
         }
 
         @Override public void onFailure(Call<ApiResponse<Article>> call, Throwable throwable) {
-            callbacks.onArticlesLoadError(new ErrorResponse(throwable));
+            if (callbacks != null) {
+                callbacks.onArticlesLoadError(new ErrorResponse(throwable));
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 group = 'com.desk'
-version = '1.3.0'
+version = '1.3.1'
 if (System.properties['version'] != null) {
     version = System.properties['version'] as String;
 }
@@ -52,24 +52,35 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor 1, 'hours' // refresh changing modules every hour
 }
 
+ext {
+    versions = [supportLibrary    : '24.0.0',
+                testRules         : '0.5',
+                espresso          : '2.2.2',
+                mockito           : '1.2',
+                mockitoCore       : '1.10.19',
+                assertj           : '1.1.1',
+                junit             : '4.12'
+    ]
+}
+
 dependencies {
-    compile 'com.android.support:support-annotations:23.3.0'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.desk:api-client:1.3.0'
+    compile "com.android.support:support-annotations:$versions.supportLibrary"
+    compile "com.android.support:appcompat-v7:$versions.supportLibrary"
+    compile "com.desk:api-client:1.3.1"
 
     // instrumentation test dependencies
-    androidTestCompile 'com.android.support.test:runner:0.3'
-    androidTestCompile 'com.android.support.test:rules:0.3'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2'
-    androidTestCompile 'com.squareup.assertj:assertj-android:1.0.1'
-    androidTestCompile 'org.mockito:mockito-core:1.10.19'
-    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
-    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    androidTestCompile "com.android.support.test:runner:$versions.testRules"
+    androidTestCompile "com.android.support.test:rules:$versions.testRules"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$versions.espresso"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$versions.espresso"
+    androidTestCompile "com.squareup.assertj:assertj-android:$versions.assertj"
+    androidTestCompile "org.mockito:mockito-core:$versions.mockitoCore"
+    androidTestCompile "com.google.dexmaker:dexmaker:$versions.mockito"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:$versions.mockito"
 
     // unit test dependencies
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile "junit:junit:$versions.junit"
+    testCompile "org.mockito:mockito-core:$versions.mockitoCore"
 }
 
 apply from: '../credentials.gradle'
