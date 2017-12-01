@@ -35,8 +35,9 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import com.desk.android.sdk.R;
+import com.desk.android.sdk.helper.DeskThemeHelper;
+import com.desk.android.sdk.helper.MenuHelper;
 
 /**
  * <p>Headless fragment which adds a SearchView to the action bar and manages action bar state related
@@ -49,6 +50,7 @@ public class SearchViewHelper extends Fragment {
     private static final String FRAG_TAG = SearchViewHelper.class.getCanonicalName();
     private static final String ARG_QUERY_HINT = "queryHint";
 
+    private DeskThemeHelper mThemeHelper;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
 
@@ -73,9 +75,15 @@ public class SearchViewHelper extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    @Override public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mThemeHelper = new DeskThemeHelper(activity);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
+        MenuHelper.tintIcons(menu, mThemeHelper.getColorControlNormal(), R.id.search);
         mSearchMenuItem = menu.findItem(R.id.search);
         if (mSearchMenuItem != null) {
             mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
