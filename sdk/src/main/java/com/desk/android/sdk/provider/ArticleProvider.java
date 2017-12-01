@@ -28,7 +28,6 @@ package com.desk.android.sdk.provider;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.error.ErrorResponse;
 import com.desk.java.apiclient.model.ApiResponse;
@@ -36,10 +35,8 @@ import com.desk.java.apiclient.model.Article;
 import com.desk.java.apiclient.model.BrandIds;
 import com.desk.java.apiclient.model.TopicIds;
 import com.desk.java.apiclient.service.ArticleService;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,7 +92,7 @@ public class ArticleProvider {
      * @param page the current page
      * @param callback the callback upon success or failure
      */
-    public void getArticles(int topicId, int brandId, int page, @NonNull final ArticleCallbacks callback) {
+    public void getArticles(long topicId, long brandId, int page, @NonNull final ArticleCallbacks callback) {
         TopicIds topicIds = ALL_TOPICS != topicId ? TopicIds.ids(topicId) : null;
         BrandIds brandIds = ALL_BRANDS != brandId ? BrandIds.ids(brandId) : null;
 
@@ -120,7 +117,7 @@ public class ArticleProvider {
      * @param page the current page
      * @param callback the callback upon success or failure
      */
-    public void findArticles(int topicId, int brandId, String query, int page, @NonNull final ArticleCallbacks callback) {
+    public void findArticles(long topicId, long brandId, String query, int page, @NonNull final ArticleCallbacks callback) {
         TopicIds topicIds = ALL_TOPICS != topicId ? TopicIds.ids(topicId) : null;
         BrandIds brandIds = ALL_BRANDS != brandId ? BrandIds.ids(brandId) : null;
 

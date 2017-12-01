@@ -39,7 +39,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.desk.android.sdk.Desk;
 import com.desk.android.sdk.R;
 import com.desk.android.sdk.adapter.ArticleListAdapter;
@@ -48,7 +47,6 @@ import com.desk.android.sdk.error.ErrorResponse;
 import com.desk.android.sdk.provider.ArticleProvider;
 import com.desk.android.sdk.util.EndlessScrollListener;
 import com.desk.java.apiclient.model.Article;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,14 +96,14 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
     private ArticleListAdapter mAdapter;
     private List<Article> mArticles;
 
-    private int mTopicId;
+    private long mTopicId;
     private String mQuery;
     private int mMode;
     private int mCurrentPage;
     private boolean mHaveNextPage;
     private boolean mHaveError;
 
-    private int mBrandId;
+    private long mBrandId;
     private boolean mIsBranded;
 
     private ArticleSelectedListener mArticleSelectedListener;
@@ -171,7 +169,7 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
      * Loads all articles for the topic provided
      * @param topicId the topic id to limit articles to
      */
-    public void loadArticles(int topicId) {
+    public void loadArticles(long topicId) {
         mMode = MODE_TOPIC;
         mTopicId = topicId;
         mQuery = null;
@@ -198,7 +196,7 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
      * @param topicId the topic id to limit results to
      * @param query the search query
      */
-    public void searchArticles(int topicId, String query) {
+    public void searchArticles(long topicId, String query) {
         mMode = MODE_SEARCH;
         mTopicId = topicId;
         mQuery = query;
@@ -350,7 +348,7 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
     static class SavedState extends BaseSavedState {
 
         List<Article> articles;
-        int topicId;
+        long topicId;
         String query;
         int mode;
         int currentPage;
@@ -365,7 +363,7 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
         private SavedState(Parcel in) {
             super(in);
             articles = (List<Article>) in.readSerializable();
-            topicId = in.readInt();
+            topicId = in.readLong();
             query = in.readString();
             mode = in.readInt();
             currentPage = in.readInt();
@@ -377,7 +375,7 @@ public class ArticleListView extends FrameLayout implements AdapterView.OnItemCl
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeSerializable((Serializable) articles);
-            dest.writeInt(topicId);
+            dest.writeLong(topicId);
             dest.writeString(query);
             dest.writeInt(mode);
             dest.writeInt(currentPage);
